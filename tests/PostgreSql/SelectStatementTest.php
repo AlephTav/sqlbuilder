@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
-use RuntimeException;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\PostgreSql\ValuesStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 class SelectStatementTest extends TestCase
 {

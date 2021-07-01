@@ -20,4 +20,7 @@ return
             '@PHP74Migration' => true,
             '@PHP74Migration:risky' => true,
             '@PHPUnit84Migration:risky' => true,
+
+            'no_unused_imports' => true,
+            'ordered_imports' => ['imports_order' => ['class', 'function', 'const']],
         ]);

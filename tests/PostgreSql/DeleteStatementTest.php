@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
-use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\PostgreSql\DeleteStatement;
+use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;

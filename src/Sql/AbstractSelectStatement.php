@@ -4,29 +4,29 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql;
 
-use Generator;
-use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
-use AlephTools\SqlBuilder\Sql\Clause\UnionClause;
-use AlephTools\SqlBuilder\Sql\Clause\WithClause;
+use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\Clause\FromClause;
-use AlephTools\SqlBuilder\Sql\Clause\SelectClause;
-use AlephTools\SqlBuilder\Sql\Clause\JoinClause;
-use AlephTools\SqlBuilder\Sql\Clause\WhereClause;
 use AlephTools\SqlBuilder\Sql\Clause\GroupClause;
 use AlephTools\SqlBuilder\Sql\Clause\HavingClause;
-use AlephTools\SqlBuilder\Sql\Clause\OrderClause;
+use AlephTools\SqlBuilder\Sql\Clause\JoinClause;
 use AlephTools\SqlBuilder\Sql\Clause\LimitClause;
 use AlephTools\SqlBuilder\Sql\Clause\OffsetClause;
-use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
+use AlephTools\SqlBuilder\Sql\Clause\OrderClause;
+use AlephTools\SqlBuilder\Sql\Clause\SelectClause;
+use AlephTools\SqlBuilder\Sql\Clause\UnionClause;
+use AlephTools\SqlBuilder\Sql\Clause\WhereClause;
+use AlephTools\SqlBuilder\Sql\Clause\WithClause;
+use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\SelectExpression;
-use AlephTools\SqlBuilder\Sql\Expression\JoinExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
 use AlephTools\SqlBuilder\Sql\Expression\GroupExpression;
 use AlephTools\SqlBuilder\Sql\Expression\HavingExpression;
+use AlephTools\SqlBuilder\Sql\Expression\JoinExpression;
 use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
+use AlephTools\SqlBuilder\Sql\Expression\SelectExpression;
+use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
+use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
-use AlephTools\SqlBuilder\Query;
+use Generator;
 
 abstract class AbstractSelectStatement extends AbstractStatement implements Query
 {

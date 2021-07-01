@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
-use Closure;
 use AlephTools\SqlBuilder\Query;
+use Closure;
 
 class ConditionalExpression extends AbstractExpression
 {
