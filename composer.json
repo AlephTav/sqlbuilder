@@ -1,0 +1,39 @@
+{
+    "name": "alephtools/sqlbuilder",
+    "type": "library",
+    "description": "The library to build plain SQL.",
+    "license": "MIT",
+    "keywords": ["aleph", "sql", "sql builder"],
+    "authors": [
+        {
+            "name": "Aleph Tav",
+            "email": "4lephtav@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.*"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "AlephTools\\SqlBuilder\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\AlephTools\\SqlBuilder\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
