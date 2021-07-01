@@ -12,9 +12,12 @@ use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class DeleteStatementTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         AbstractExpression::resetParameterIndex();
     }
@@ -26,8 +29,8 @@ class DeleteStatementTest extends TestCase
     {
         $st = new DeleteStatement();
 
-        $this->assertSame('DELETE FROM', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //region FROM
@@ -40,8 +43,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from('tb');
 
-        $this->assertSame('DELETE FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -52,8 +55,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from('tb', 't');
 
-        $this->assertSame('DELETE FROM tb t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -64,8 +67,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from(['t1', 't2']);
 
-        $this->assertSame('DELETE FROM t1, t2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM t1, t2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -76,8 +79,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from(['a' => 't1', 'b' => 't2']);
 
-        $this->assertSame('DELETE FROM t1 a, t2 b', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM t1 a, t2 b', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -88,8 +91,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from(new RawExpression('tb AS t'));
 
-        $this->assertSame('DELETE FROM tb AS t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb AS t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -100,8 +103,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->fromOnly('tb');
 
-        $this->assertSame('DELETE FROM ONLY tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM ONLY tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -112,8 +115,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->fromOnly('tb', 't');
 
-        $this->assertSame('DELETE FROM ONLY tb t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM ONLY tb t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -129,8 +132,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->using('t');
 
-        $this->assertSame('DELETE FROM tb USING t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb USING t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -142,8 +145,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->using('t1', 't');
 
-        $this->assertSame('DELETE FROM tb USING t1 t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb USING t1 t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -155,8 +158,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->using(['t1', 't2']);
 
-        $this->assertSame('DELETE FROM tb USING t1, t2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb USING t1, t2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -168,8 +171,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->using(['a' => 't1', 'b' => 't2']);
 
-        $this->assertSame('DELETE FROM tb USING t1 a, t2 b', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb USING t1 a, t2 b', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -181,8 +184,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->using(new RawExpression('t1 AS t'));
 
-        $this->assertEquals('DELETE FROM tb USING t1 AS t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('DELETE FROM tb USING t1 AS t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -198,8 +201,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('c1 = c2');
 
-        $this->assertSame('DELETE FROM tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -211,8 +214,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where(new RawExpression('c1 = c2'));
 
-        $this->assertSame('DELETE FROM tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -224,8 +227,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('col', '=', 1);
 
-        $this->assertSame('DELETE FROM tb WHERE col = :p1', $st->toSql());
-        $this->assertSame(['p1' => 1], $st->getParams());
+        self::assertSame('DELETE FROM tb WHERE col = :p1', $st->toSql());
+        self::assertSame(['p1' => 1], $st->getParams());
     }
 
     /**
@@ -237,8 +240,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('col', '=', null);
 
-        $this->assertSame('DELETE FROM tb WHERE col = NULL', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb WHERE col = NULL', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -250,8 +253,8 @@ class DeleteStatementTest extends TestCase
             ->from('t1')
             ->where('t1.col', '=', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('DELETE FROM t1 WHERE t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM t1 WHERE t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -263,8 +266,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('col', 'IN', [1, 2, 3]);
 
-        $this->assertSame('DELETE FROM tb WHERE col IN (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('DELETE FROM tb WHERE col IN (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
@@ -283,8 +286,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('col', 'BETWEEN', [1, 2]);
 
-        $this->assertSame('DELETE FROM tb WHERE col BETWEEN :p1 AND :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('DELETE FROM tb WHERE col BETWEEN :p1 AND :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -296,8 +299,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('c1', '=', new RawExpression('c2'));
 
-        $this->assertSame('DELETE FROM tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -309,8 +312,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where('NOT', new RawExpression('col'));
 
-        $this->assertSame('DELETE FROM tb WHERE NOT col', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb WHERE NOT col', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -322,8 +325,8 @@ class DeleteStatementTest extends TestCase
             ->from('t1')
             ->where('NOT', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('DELETE FROM t1 WHERE NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM t1 WHERE NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -335,8 +338,8 @@ class DeleteStatementTest extends TestCase
             ->from('t1')
             ->where((new SelectStatement())->from('t2')->select('COUNT(*)'), '>', 5);
 
-        $this->assertSame('DELETE FROM t1 WHERE (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
-        $this->assertSame(['p1' => 5], $st->getParams());
+        self::assertSame('DELETE FROM t1 WHERE (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
+        self::assertSame(['p1' => 5], $st->getParams());
     }
 
     /**
@@ -352,11 +355,11 @@ class DeleteStatementTest extends TestCase
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
-        $this->assertSame(
+        self::assertSame(
             'DELETE FROM t1 WHERE (SELECT COUNT(*) FROM t2) <> (SELECT COUNT(*) FROM t3)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -368,8 +371,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where(['c1 = c2', 'c3 <> c4']);
 
-        $this->assertSame('DELETE FROM tb WHERE c1 = c2 AND c3 <> c4', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 = c2 AND c3 <> c4', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -381,8 +384,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->where(['c1' => 1, 'c2' => 2]);
 
-        $this->assertSame('DELETE FROM tb WHERE c1 = :p1 AND c2 = :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 = :p1 AND c2 = :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -399,8 +402,8 @@ class DeleteStatementTest extends TestCase
                 ->orWhere('c3', '<', 2)
             );
 
-        $this->assertSame('DELETE FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -416,8 +419,8 @@ class DeleteStatementTest extends TestCase
                     ->orWhere('c3', '<', 2);
             });
 
-        $this->assertSame('DELETE FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('DELETE FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     //endregion
@@ -433,8 +436,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->returning();
 
-        $this->assertSame('DELETE FROM tb RETURNING *', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb RETURNING *', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -448,8 +451,8 @@ class DeleteStatementTest extends TestCase
             ->returning('c2', null)
             ->returning('col', 'c3');
 
-        $this->assertSame('DELETE FROM tb RETURNING c1, c2, col c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb RETURNING c1, c2, col c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -461,8 +464,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->returning(['c1', 'c2', 'c3']);
 
-        $this->assertSame('DELETE FROM tb RETURNING c1, c2, c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('DELETE FROM tb RETURNING c1, c2, c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     public function returningColumnListWithAliases(): void
@@ -471,8 +474,8 @@ class DeleteStatementTest extends TestCase
             ->from('tb')
             ->returning(['a' => 'c1', 'b' => 'c2', 'c' => 'c3']);
 
-        $this->assertEquals('DELETE FROM tb RETURNING c1 a, c2 b, c3 c', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('DELETE FROM tb RETURNING c1 a, c2 b, c3 c', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -488,8 +491,8 @@ class DeleteStatementTest extends TestCase
             ->with((new SelectStatement())->from('t1'), 'tb')
             ->from('tb');
 
-        $this->assertSame('WITH tb AS (SELECT * FROM t1) DELETE FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('WITH tb AS (SELECT * FROM t1) DELETE FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -503,11 +506,11 @@ class DeleteStatementTest extends TestCase
             ->with(null, new RawExpression('n2'))
             ->from('tb');
 
-        $this->assertSame(
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1), n1 AS NULL, n2 AS NULL DELETE FROM tb',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -548,7 +551,7 @@ class DeleteStatementTest extends TestCase
             return 7;
         });
 
-        $this->assertSame(7, $st->exec());
+        self::assertSame(7, $st->exec());
     }
 
     //endregion
@@ -572,13 +575,13 @@ class DeleteStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        $this->assertSame($executor, $copy->getStatementExecutor());
-        $this->assertSame(
+        self::assertSame($executor, $copy->getStatementExecutor());
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'DELETE FROM ONLY tb t USING t1 AS t WHERE c1 > :p1 OR c2 IN (:p2, :p3, :p4) RETURNING c3',
             $copy->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 0,
                 'p2' => 1,
@@ -606,9 +609,9 @@ class DeleteStatementTest extends TestCase
 
         $st->clean();
 
-        $this->assertSame($executor, $st->getStatementExecutor());
-        $this->assertSame('DELETE FROM', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame($executor, $st->getStatementExecutor());
+        self::assertSame('DELETE FROM', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion

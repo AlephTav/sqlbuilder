@@ -25,4 +25,10 @@ return
             'ordered_imports' => ['imports_order' => ['class', 'function', 'const']],
 
             'no_superfluous_phpdoc_tags' => ['remove_inheritdoc' => true, 'allow_mixed' => true],
+
+            'php_unit_internal_class' => true,
+            'php_unit_construct' => true,
+            'php_unit_fqcn_annotation' => true,
+            'php_unit_set_up_tear_down_visibility' => true,
+            'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
         ]);
