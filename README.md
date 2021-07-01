@@ -59,3 +59,9 @@ print_r($st->getParams());
 $rows = $st->rows();
 
 ```
+
+## Installation
+
+```
+composer require alephtools/sqlbuilder
+```
