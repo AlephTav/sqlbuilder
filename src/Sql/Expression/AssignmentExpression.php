@@ -31,7 +31,7 @@ class AssignmentExpression extends AbstractExpression
             if (!is_scalar($column)) {
                 $column = $this->convertNameToString($column);
             }
-            $this->sql .= $this->convertNameToString([$column => $value]);
+            $this->sql .= $this->convertNameToString([(string)$column => $value]);
         }
         return $this;
     }

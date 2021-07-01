@@ -38,7 +38,7 @@ abstract class AbstractListExpression extends AbstractExpression
             return $alias;
         }
         if (is_scalar($alias)) {
-            return [$alias => $name];
+            return [(string)$alias => $name];
         }
         return [[$alias, $name]];
     }

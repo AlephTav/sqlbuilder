@@ -28,7 +28,7 @@ class WithExpression extends AbstractExpression
         if ($alias === null) {
             $expression = $query;
         } elseif (is_scalar($alias)) {
-            $expression = [$alias => $query];
+            $expression = [(string)$alias => $query];
         } else {
             $expression = [[$alias, $query]];
         }
