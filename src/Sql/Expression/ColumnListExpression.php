@@ -6,7 +6,7 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
 
-class ListExpression extends AbstractExpression
+class ColumnListExpression extends AbstractExpression
 {
     public function __construct($column = null, $alias = null)
     {

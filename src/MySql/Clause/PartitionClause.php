@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\MySql\Clause;
 
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait PartitionClause
 {
     /**
-     * @var ListExpression
+     * @var ColumnListExpression
      */
     protected $partition;
 
@@ -19,7 +19,7 @@ trait PartitionClause
      */
     public function partition($partition)
     {
-        $this->partition = $this->partition ?? new ListExpression();
+        $this->partition = $this->partition ?? new ColumnListExpression();
         $this->partition->append($partition);
         $this->built = false;
         return $this;

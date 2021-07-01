@@ -33,7 +33,7 @@ class JoinExpression extends AbstractExpression
 
     protected function convertTableToString($table, $alias): string
     {
-        $tb = new ListExpression($table, $alias);
+        $tb = new ColumnListExpression($table, $alias);
         $this->addParams($tb->getParams());
         if (is_array($table) && \count($table) > 1) {
             return "($tb)";
@@ -50,7 +50,7 @@ class JoinExpression extends AbstractExpression
             $conditions = new ConditionalExpression($condition);
             $this->sql .= " ON $conditions";
         } else {
-            $conditions = new ListExpression($condition);
+            $conditions = new ColumnListExpression($condition);
             $this->sql .= " USING ($conditions)";
         }
         $this->addParams($conditions->getParams());

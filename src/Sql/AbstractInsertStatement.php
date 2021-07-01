@@ -10,8 +10,8 @@ use AlephTools\SqlBuilder\Sql\Clause\ColumnsClause;
 use AlephTools\SqlBuilder\Sql\Clause\InsertClause;
 use AlephTools\SqlBuilder\Sql\Clause\QueryClause;
 use AlephTools\SqlBuilder\Sql\Clause\ValueListClause;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 
@@ -25,7 +25,7 @@ abstract class AbstractInsertStatement extends AbstractStatement implements Comm
     public function __construct(
         StatementExecutor $db = null,
         FromExpression $table = null,
-        ListExpression $columns = null,
+        ColumnListExpression $columns = null,
         ValueListExpression $values = null,
         Query $query = null
     ) {

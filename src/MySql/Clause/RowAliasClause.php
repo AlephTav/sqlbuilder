@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\MySql\Clause;
 
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait RowAliasClause
 {
     protected ?string $rowAlias = null;
 
     /**
-     * @var ListExpression
+     * @var ColumnListExpression
      */
     protected $columnAliases;
 
@@ -23,7 +23,7 @@ trait RowAliasClause
     {
         $this->rowAlias = $rowAlias;
         if ($columnAliases !== null) {
-            $this->columnAliases = $this->columnAliases ?? new ListExpression();
+            $this->columnAliases = $this->columnAliases ?? new ColumnListExpression();
             $this->columnAliases->append($columnAliases);
         }
         $this->built = false;
