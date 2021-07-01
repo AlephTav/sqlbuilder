@@ -31,4 +31,6 @@ return
             'php_unit_fqcn_annotation' => true,
             'php_unit_set_up_tear_down_visibility' => true,
             'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
+
+            'global_namespace_import' => true,
         ]);
