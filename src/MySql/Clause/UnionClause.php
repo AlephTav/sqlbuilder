@@ -12,7 +12,6 @@ trait UnionClause
     use BaseUnionClause;
 
     /**
-     * @param Query $query
      * @return static
      */
     public function unionDistinct(Query $query)

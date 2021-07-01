@@ -16,7 +16,6 @@ class JoinExpression extends AbstractExpression
     }
 
     /**
-     * @param string $type
      * @param mixed $table
      * @param mixed $alias
      * @param mixed $condition

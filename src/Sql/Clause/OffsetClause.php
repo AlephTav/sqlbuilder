@@ -9,7 +9,6 @@ trait OffsetClause
     protected ?int $offset = null;
 
     /**
-     * @param int|null $offset
      * @return static
      */
     public function offset(?int $offset)

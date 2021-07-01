@@ -16,7 +16,6 @@ trait RowAliasClause
     protected $columnAliases;
 
     /**
-     * @param string $rowAlias
      * @param mixed $columnAliases
      * @return static
      */

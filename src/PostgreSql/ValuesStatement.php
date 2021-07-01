@@ -54,8 +54,6 @@ class ValuesStatement extends AbstractValuesStatement
     }
 
     /**
-     * @param int $page
-     * @param int $size
      * @return static
      */
     public function paginate(int $page, int $size)

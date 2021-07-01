@@ -146,7 +146,6 @@ trait JoinClause
     }
 
     /**
-     * @param string $type
      * @param mixed $table
      * @param mixed $aliasOrCondition
      * @param mixed $condition

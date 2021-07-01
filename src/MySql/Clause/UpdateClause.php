@@ -29,7 +29,6 @@ trait UpdateClause
     }
 
     /**
-     * @param string $modifier
      * @return static
      */
     public function modifier(string $modifier)

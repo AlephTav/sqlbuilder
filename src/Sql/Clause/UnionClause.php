@@ -18,12 +18,10 @@ trait UnionClause
      *     ...
      * ]
      *
-     * @var array
      */
     protected array $union = [];
 
     /**
-     * @param Query $query
      * @return static
      */
     public function union(Query $query)
@@ -32,7 +30,6 @@ trait UnionClause
     }
 
     /**
-     * @param Query $query
      * @return static
      */
     public function unionAll(Query $query)
@@ -41,8 +38,6 @@ trait UnionClause
     }
 
     /**
-     * @param string $type
-     * @param Query $query
      * @return static
      */
     protected function typeUnion(string $type, Query $query)

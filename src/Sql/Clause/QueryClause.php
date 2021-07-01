@@ -11,7 +11,6 @@ trait QueryClause
     protected ?Query $query = null;
 
     /**
-     * @param Query $query
      * @return static
      */
     public function select(Query $query)

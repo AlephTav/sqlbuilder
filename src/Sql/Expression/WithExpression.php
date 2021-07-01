@@ -18,7 +18,6 @@ class WithExpression extends AbstractExpression
     /**
      * @param mixed $query
      * @param mixed $alias
-     * @param bool $recursive
      * @return static
      */
     public function append($query, $alias = null, bool $recursive = false)

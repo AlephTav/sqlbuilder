@@ -44,7 +44,6 @@ abstract class AbstractExpression
     /**
      * Generates the next parameter name of a query.
      *
-     * @return string
      */
     protected static function nextParameterName(): string
     {

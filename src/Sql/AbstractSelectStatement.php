@@ -107,8 +107,6 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
     }
 
     /**
-     * @param int $page
-     * @param int $size
      * @return static
      */
     public function paginate(int $page, int $size)
@@ -206,9 +204,6 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
     }
 
     /**
-     * @param int $size
-     * @param int $page
-     * @return Generator
      */
     public function pages(int $size = 1000, int $page = 0): Generator
     {
@@ -233,9 +228,6 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
     }
 
     /**
-     * @param int $size
-     * @param int $page
-     * @return Generator
      */
     public function batches(int $size = 1000, int $page = 0): Generator
     {

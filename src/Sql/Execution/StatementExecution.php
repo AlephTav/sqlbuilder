@@ -9,7 +9,6 @@ trait StatementExecution
     /**
      * Executes this delete statement.
      *
-     * @return int
      */
     public function exec(): int
     {

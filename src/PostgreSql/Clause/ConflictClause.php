@@ -79,7 +79,6 @@ trait ConflictClause
     }
 
     /**
-     * @param string $indexConstraint
      * @return static
      */
     public function onConstraint(string $indexConstraint)
@@ -168,7 +167,6 @@ trait ConflictClause
      * @param mixed $column
      * @param mixed $operator
      * @param mixed $value
-     * @param string $connector
      * @return static
      */
     public function where($column, $operator = null, $value = null, string $connector = 'AND')

@@ -37,7 +37,6 @@ trait DeleteClause
     }
 
     /**
-     * @param string $modifier
      * @return static
      */
     public function modifier(string $modifier)

@@ -23,4 +23,6 @@ return
 
             'no_unused_imports' => true,
             'ordered_imports' => ['imports_order' => ['class', 'function', 'const']],
+
+            'no_superfluous_phpdoc_tags' => ['remove_inheritdoc' => true, 'allow_mixed' => true],
         ]);
