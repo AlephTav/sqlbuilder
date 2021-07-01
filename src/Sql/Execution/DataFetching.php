@@ -9,7 +9,7 @@ trait DataFetching
     public function rows(): array
     {
         $this->validateAndBuild();
-        return $this->db->rows($this->sql, $this->params);
+        return $this->db->rows($this->toSql(), $this->getParams());
     }
 
     public function pairs(string $key = ''): array
@@ -81,7 +81,7 @@ trait DataFetching
     public function row(): array
     {
         $this->validateAndBuild();
-        return $this->db->row($this->sql, $this->params);
+        return $this->db->row($this->toSql(), $this->getParams());
     }
 
     public function column(): array
