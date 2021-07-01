@@ -1491,19 +1491,6 @@ class SelectStatementTest extends TestCase
     /**
      * @test
      */
-    public function validateExecutorInstance(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The statement executor must not be null.');
-
-        (new SelectStatement())
-            ->from('tb')
-            ->rows();
-    }
-
-    /**
-     * @test
-     */
     public function scalar(): void
     {
         $executor = $this->getExecutorMock();
@@ -1514,12 +1501,12 @@ class SelectStatementTest extends TestCase
             return 7;
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        self::assertSame(7, $st->scalar());
+        self::assertSame(7, $st->scalar($executor));
     }
 
     /**
@@ -1535,12 +1522,12 @@ class SelectStatementTest extends TestCase
             return 7;
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        self::assertSame(7, $st->scalar('c1'));
+        self::assertSame(7, $st->scalar($executor, 'c1'));
     }
 
     /**
@@ -1556,14 +1543,14 @@ class SelectStatementTest extends TestCase
             return 7;
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5)
             ->groupBy('c2')
             ->limit(10);
 
-        self::assertSame(7, $st->count());
+        self::assertSame(7, $st->count($executor));
     }
 
     /**
@@ -1579,14 +1566,14 @@ class SelectStatementTest extends TestCase
             return 7;
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5)
             ->groupBy('c2')
             ->limit(10);
 
-        self::assertSame(7, $st->countWithNonConditionalClauses());
+        self::assertSame(7, $st->countWithNonConditionalClauses($executor));
     }
 
     /**
@@ -1602,14 +1589,14 @@ class SelectStatementTest extends TestCase
             return 7;
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5)
             ->groupBy('c2')
             ->limit(10);
 
-        self::assertSame(7, $st->count('c4'));
+        self::assertSame(7, $st->count($executor, 'c4'));
     }
 
     /**
@@ -1625,14 +1612,14 @@ class SelectStatementTest extends TestCase
             return 7;
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5)
             ->groupBy('c2')
             ->limit(10);
 
-        self::assertSame(7, $st->countWithNonConditionalClauses('c4'));
+        self::assertSame(7, $st->countWithNonConditionalClauses($executor, 'c4'));
     }
 
     /**
@@ -1648,12 +1635,12 @@ class SelectStatementTest extends TestCase
             return [7];
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        self::assertSame([7], $st->column());
+        self::assertSame([7], $st->column($executor));
     }
 
     /**
@@ -1669,12 +1656,12 @@ class SelectStatementTest extends TestCase
             return [7];
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        self::assertSame([7], $st->column('c1'));
+        self::assertSame([7], $st->column($executor, 'c1'));
     }
 
     /**
@@ -1690,12 +1677,12 @@ class SelectStatementTest extends TestCase
             return [7];
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        self::assertSame([7], $st->row());
+        self::assertSame([7], $st->row($executor));
     }
 
     /**
@@ -1711,12 +1698,12 @@ class SelectStatementTest extends TestCase
             return [[7]];
         });
 
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->from('tb')
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        self::assertSame([[7]], $st->rows());
+        self::assertSame([[7]], $st->rows($executor));
     }
 
     /**
@@ -1724,10 +1711,12 @@ class SelectStatementTest extends TestCase
      */
     public function pairsWithNonExistentKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Key "c4" is not found in the row set.');
 
-        $this->getSelectStatementMock()->pairs('c4');
+        (new SelectStatement())->pairs($executor, 'c4');
     }
 
     /**
@@ -1735,24 +1724,26 @@ class SelectStatementTest extends TestCase
      */
     public function pairs(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         self::assertSame(
             ['v1' => 'v2', 'v3' => 'v4', 'v5' => 'v6'],
-            $this->getSelectStatementMock()->pairs()
+            (new SelectStatement())->pairs($executor)
         );
 
         self::assertSame(
             ['v1' => 'v2', 'v3' => 'v4', 'v5' => 'v6'],
-            $this->getSelectStatementMock()->pairs('c1')
+            (new SelectStatement())->pairs($executor, 'c1')
         );
 
         self::assertSame(
             ['v2' => 'v1', 'v4' => 'v3', 'v6' => 'v5'],
-            $this->getSelectStatementMock()->pairs('c2')
+            (new SelectStatement())->pairs($executor, 'c2')
         );
 
         self::assertSame(
             ['a' => 'v1', 'b' => 'v5'],
-            $this->getSelectStatementMock()->pairs('c3')
+            (new SelectStatement())->pairs($executor, 'c3')
         );
     }
 
@@ -1761,10 +1752,12 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByNonExistentKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Key "c4" is not found in the row set.');
 
-        $this->getSelectStatementMock()->rowsByKey('c4');
+        (new SelectStatement())->rowsByKey($executor, 'c4');
     }
 
     /**
@@ -1772,13 +1765,15 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByKeyWithKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         self::assertSame(
             [
                 'v2' => ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 'v4' => ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
                 'v6' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
             ],
-            $this->getSelectStatementMock()->rowsByKey('c2')
+            (new SelectStatement())->rowsByKey($executor, 'c2')
         );
 
         self::assertSame(
@@ -1786,7 +1781,7 @@ class SelectStatementTest extends TestCase
                 'a' => ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 'b' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
             ],
-            $this->getSelectStatementMock()->rowsByKey('c3')
+            (new SelectStatement())->rowsByKey($executor, 'c3')
         );
     }
 
@@ -1795,13 +1790,15 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByKeyWithoutKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         self::assertSame(
             [
                 'v1' => ['c2' => 'v2', 'c3' => 'a'],
                 'v3' => ['c2' => 'v4', 'c3' => 'b'],
                 'v5' => ['c2' => 'v6', 'c3' => 'b'],
             ],
-            $this->getSelectStatementMock()->rowsByKey('c1', true)
+            (new SelectStatement())->rowsByKey($executor, 'c1', true)
         );
 
         self::assertSame(
@@ -1809,7 +1806,7 @@ class SelectStatementTest extends TestCase
                 'a' => ['c1' => 'v1', 'c2' => 'v2'],
                 'b' => ['c1' => 'v5', 'c2' => 'v6'],
             ],
-            $this->getSelectStatementMock()->rowsByKey('c3', true)
+            (new SelectStatement())->rowsByKey($executor, 'c3', true)
         );
     }
 
@@ -1818,10 +1815,12 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByGroupWithNonExistentKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Key "c4" is not found in the row set.');
 
-        $this->getSelectStatementMock()->rowsByGroup('c4');
+        (new SelectStatement())->rowsByGroup($executor, 'c4');
     }
 
     /**
@@ -1829,6 +1828,8 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByGroupWithKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         self::assertSame(
             [
                 'v2' => [
@@ -1841,7 +1842,7 @@ class SelectStatementTest extends TestCase
                     ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
                 ],
             ],
-            $this->getSelectStatementMock()->rowsByGroup('c2')
+            (new SelectStatement())->rowsByGroup($executor, 'c2')
         );
 
         self::assertSame(
@@ -1854,7 +1855,7 @@ class SelectStatementTest extends TestCase
                     ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
                 ],
             ],
-            $this->getSelectStatementMock()->rowsByGroup('c3')
+            (new SelectStatement())->rowsByGroup($executor, 'c3')
         );
     }
 
@@ -1863,6 +1864,8 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByGroupWithoutKey(): void
     {
+        $executor = $this->getSelectStatementExecutorMock();
+
         self::assertSame(
             [
                 'v2' => [
@@ -1875,7 +1878,7 @@ class SelectStatementTest extends TestCase
                     ['c1' => 'v5', 'c3' => 'b'],
                 ],
             ],
-            $this->getSelectStatementMock()->rowsByGroup('c2', true)
+            (new SelectStatement())->rowsByGroup($executor, 'c2', true)
         );
 
         self::assertSame(
@@ -1888,7 +1891,7 @@ class SelectStatementTest extends TestCase
                     ['c1' => 'v5', 'c2' => 'v6'],
                 ],
             ],
-            $this->getSelectStatementMock()->rowsByGroup('c3', true)
+            (new SelectStatement())->rowsByGroup($executor, 'c3', true)
         );
     }
 
@@ -1897,8 +1900,10 @@ class SelectStatementTest extends TestCase
      */
     public function pagesWithZeroSize(): void
     {
+        $executor = $this->getExecutorMock();
+
         $st = $this->getSelectStatementMockWithGenerator();
-        $pages = $st->pages(0);
+        $pages = $st->pages($executor, 0);
 
         self::assertEmpty(iterator_to_array($pages));
     }
@@ -1908,8 +1913,10 @@ class SelectStatementTest extends TestCase
      */
     public function pagesWithZeroOffset(): void
     {
+        $executor = $this->getExecutorMock();
+
         $st = $this->getSelectStatementMockWithGenerator();
-        $pages = $st->pages(2);
+        $pages = $st->pages($executor, 2);
 
         $i = 0;
         foreach ($pages as $row) {
@@ -1929,8 +1936,10 @@ class SelectStatementTest extends TestCase
      */
     public function pagesWithOffset(): void
     {
+        $executor = $this->getExecutorMock();
+
         $st = $this->getSelectStatementMockWithGenerator();
-        $pages = $st->pages(2, 1);
+        $pages = $st->pages($executor, 2, 1);
 
         foreach ($pages as $row) {
             self::assertSame(['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'], $row);
@@ -1942,8 +1951,10 @@ class SelectStatementTest extends TestCase
      */
     public function batchesWithZeroSize(): void
     {
+        $executor = $this->getExecutorMock();
+
         $st = $this->getSelectStatementMockWithGenerator();
-        $pages = $st->batches(0);
+        $pages = $st->batches($executor, 0);
 
         self::assertEmpty(iterator_to_array($pages));
     }
@@ -1953,8 +1964,10 @@ class SelectStatementTest extends TestCase
      */
     public function batchesWithZeroOffset(): void
     {
+        $executor = $this->getExecutorMock();
+
         $st = $this->getSelectStatementMockWithGenerator();
-        $pages = $st->batches(2);
+        $pages = $st->batches($executor, 2);
 
         $i = 0;
         foreach ($pages as $row) {
@@ -1983,8 +1996,10 @@ class SelectStatementTest extends TestCase
      */
     public function batchesWithOffset(): void
     {
+        $executor = $this->getExecutorMock();
+
         $st = $this->getSelectStatementMockWithGenerator();
-        $pages = $st->batches(2, 1);
+        $pages = $st->batches($executor, 2, 1);
 
         foreach ($pages as $row) {
             self::assertSame([['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']], $row);
@@ -2012,11 +2027,14 @@ class SelectStatementTest extends TestCase
         return $st;
     }
 
-    private function getSelectStatementMock(): SelectStatement
+    /**
+     * @psalm-return MockObject&StatementExecutor
+     */
+    private function getSelectStatementExecutorMock()
     {
         $executor = $this->getExecutorMock();
         $executor->method('rows')->willReturn($this->getRowSet());
-        return new SelectStatement($executor);
+        return $executor;
     }
 
     private function getRowSet(): array
@@ -2045,9 +2063,7 @@ class SelectStatementTest extends TestCase
      */
     public function copy(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->with('(SELECT * FROM t1)', 'tb')
             ->select('c1, c2')
             ->from('tb1', 't')
@@ -2061,7 +2077,6 @@ class SelectStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        self::assertSame($executor, $copy->getStatementExecutor());
         self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'SELECT c1, c2 FROM tb1 t INNER JOIN tb ON tb.id = t.id WHERE c1 > :p1 ' .
@@ -2082,9 +2097,7 @@ class SelectStatementTest extends TestCase
      */
     public function clean(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new SelectStatement($executor))
+        $st = (new SelectStatement())
             ->with('(SELECT * FROM t1)', 'tb')
             ->select('c1, c2')
             ->from('tb1', 't')
@@ -2098,7 +2111,6 @@ class SelectStatementTest extends TestCase
 
         $st->clean();
 
-        self::assertSame($executor, $st->getStatementExecutor());
         self::assertSame('SELECT *', $st->toSql());
         self::assertEmpty($st->getParams());
     }

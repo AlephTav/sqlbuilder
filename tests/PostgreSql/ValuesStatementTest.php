@@ -8,7 +8,6 @@ use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\PostgreSql\ValuesStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -379,9 +378,7 @@ class ValuesStatementTest extends TestCase
      */
     public function copy(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new ValuesStatement($executor))
+        $st = (new ValuesStatement())
             ->values([1])
             ->orderBy('column1', 'DESC')
             ->limit(2)
@@ -389,7 +386,6 @@ class ValuesStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        self::assertSame($executor, $copy->getStatementExecutor());
         self::assertSame(
             'VALUES (:p1) ORDER BY column1 DESC LIMIT 2 OFFSET 1',
             $copy->toSql()
@@ -407,9 +403,7 @@ class ValuesStatementTest extends TestCase
      */
     public function clean(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new ValuesStatement($executor))
+        $st = (new ValuesStatement())
             ->values([1])
             ->orderBy('column1', 'DESC')
             ->limit(2)
@@ -417,7 +411,6 @@ class ValuesStatementTest extends TestCase
 
         $st->clean();
 
-        self::assertSame($executor, $st->getStatementExecutor());
         self::assertSame('VALUES', $st->toSql());
         self::assertEmpty($st->getParams());
     }

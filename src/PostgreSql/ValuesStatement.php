@@ -22,7 +22,7 @@ class ValuesStatement extends AbstractValuesStatement
      */
     public function copy()
     {
-        $copy = new static($this->db);
+        $copy = new static();
         $copy->values = $this->values ? clone $this->values : null;
         $copy->order = $this->order ? clone $this->order : null;
         $copy->limit = $this->limit;

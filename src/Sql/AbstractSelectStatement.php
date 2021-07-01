@@ -17,6 +17,7 @@ use AlephTools\SqlBuilder\Sql\Clause\UnionClause;
 use AlephTools\SqlBuilder\Sql\Clause\WhereClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
+use AlephTools\SqlBuilder\StatementExecutor;
 use Generator;
 
 abstract class AbstractSelectStatement extends AbstractStatement implements Query
@@ -42,7 +43,7 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
      */
     public function copy()
     {
-        $copy = new static($this->db);
+        $copy = new static();
         $copy->with = $this->with ? clone $this->with : null;
         $copy->from = $this->from ? clone $this->from : null;
         $copy->select = $this->select ? clone $this->select : null;
@@ -114,46 +115,46 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
     /**
      * @param mixed $column
      */
-    public function column($column = null): array
+    public function column(StatementExecutor $db, $column = null): array
     {
         if ($column !== null && $column !== '') {
             $prevSelect = $this->select;
             $this->select = $this->createSelectExpression();
             $this->select->append($column);
             $this->built = false;
-            $result = $this->parentColumn();
+            $result = $this->parentColumn($db);
             $this->select = $prevSelect;
             $this->built = false;
             return $result;
         }
-        return $this->parentColumn();
+        return $this->parentColumn($db);
     }
 
     /**
      * @param mixed $column
      * @return mixed
      */
-    public function scalar($column = null)
+    public function scalar(StatementExecutor $db, $column = null)
     {
         if ($column !== null && $column !== '') {
             $prevSelect = $this->select;
             $this->select = $this->createSelectExpression();
             $this->select->append($column);
             $this->built = false;
-            $result = $this->parentScalar();
+            $result = $this->parentScalar($db);
             $this->select = $prevSelect;
             $this->built = false;
             return $result;
         }
-        return $this->parentScalar();
+        return $this->parentScalar($db);
     }
 
-    public function countWithNonConditionalClauses(string $column = '*'): int
+    public function countWithNonConditionalClauses(StatementExecutor $db, string $column = '*'): int
     {
-        return $this->count($column, false);
+        return $this->count($db, $column, false);
     }
 
-    public function count(string $column = '*', bool $clearNonConditionalClauses = true): int
+    public function count(StatementExecutor $db, string $column = '*', bool $clearNonConditionalClauses = true): int
     {
         $this->built = false;
         if ($clearNonConditionalClauses) {
@@ -162,19 +163,19 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
             $prevOrder = $this->order;
             $prevGroup = $this->group;
             $this->limit = $this->offset = $this->order = $this->group = null;
-            $total = (int)$this->scalar("COUNT($column)");
+            $total = (int)$this->scalar($db, "COUNT($column)");
             $this->order = $prevOrder;
             $this->limit = $prevLimit;
             $this->offset = $prevOffset;
             $this->group = $prevGroup;
         } else {
-            $total = (int)$this->scalar("COUNT($column)");
+            $total = (int)$this->scalar($db, "COUNT($column)");
         }
         $this->built = false;
         return $total;
     }
 
-    public function pages(int $size = 1000, int $page = 0): Generator
+    public function pages(StatementExecutor $db, int $size = 1000, int $page = 0): Generator
     {
         if ($size <= 0) {
             return;
@@ -182,7 +183,7 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         while (true) {
             $rows = $this
                 ->paginate($page, $size)
-                ->rows();
+                ->rows($db);
 
             $count = count($rows);
             if ($count > 0) {
@@ -196,7 +197,7 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         }
     }
 
-    public function batches(int $size = 1000, int $page = 0): Generator
+    public function batches(StatementExecutor $db, int $size = 1000, int $page = 0): Generator
     {
         if ($size <= 0) {
             return;
@@ -204,7 +205,7 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         while (true) {
             $rows = $this
                 ->paginate($page, $size)
-                ->rows();
+                ->rows($db);
 
             $count = count($rows);
             if ($count > 0) {

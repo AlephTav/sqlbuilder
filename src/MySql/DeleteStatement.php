@@ -22,7 +22,7 @@ class DeleteStatement extends AbstractDeleteStatement
      */
     public function copy()
     {
-        $copy = new static($this->db);
+        $copy = new static();
         $copy->with = $this->with ? clone $this->with : null;
         $copy->modifiers = $this->modifiers;
         $copy->from = $this->from ? clone $this->from : null;

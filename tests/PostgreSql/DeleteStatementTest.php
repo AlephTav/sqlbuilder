@@ -11,7 +11,6 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @internal
@@ -521,38 +520,21 @@ class DeleteStatementTest extends TestCase
     /**
      * @test
      */
-    public function validateExecutorInstance(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The statement executor must not be null.');
-
-        (new DeleteStatement())
-            ->with((new SelectStatement())->from('t1'), 'tb')
-            ->from("tb")
-            ->where("c1", ">", 5)
-            ->orWhere("c2", "<", 0)
-            ->exec();
-    }
-
-    /**
-     * @test
-     */
     public function exec(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new DeleteStatement($executor))
+        $st = (new DeleteStatement())
             ->from('tb')
             ->where('c1', '>', 5)
             ->orWhere('c2', '<', 0);
 
+        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
         $executor->method('execute')->willReturnCallback(function (string $sql, array $params) use ($st) {
             $this->assertSame($st->toSql(), $sql);
             $this->assertSame($st->getParams(), $params);
             return 7;
         });
 
-        self::assertSame(7, $st->exec());
+        self::assertSame(7, $st->exec($executor));
     }
 
     //endregion
@@ -564,9 +546,7 @@ class DeleteStatementTest extends TestCase
      */
     public function copy(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new DeleteStatement($executor))
+        $st = (new DeleteStatement())
             ->with('(SELECT * FROM t1)', 'tb')
             ->fromOnly('tb', 't')
             ->using('t1 AS t')
@@ -576,7 +556,6 @@ class DeleteStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        self::assertSame($executor, $copy->getStatementExecutor());
         self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'DELETE FROM ONLY tb t USING t1 AS t WHERE c1 > :p1 OR c2 IN (:p2, :p3, :p4) RETURNING c3',
@@ -598,9 +577,7 @@ class DeleteStatementTest extends TestCase
      */
     public function clean(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new DeleteStatement($executor))
+        $st = (new DeleteStatement())
             ->with('(SELECT * FROM t1)', 'tb')
             ->fromOnly('tb', 't')
             ->using('t1 AS t')
@@ -610,7 +587,6 @@ class DeleteStatementTest extends TestCase
 
         $st->clean();
 
-        self::assertSame($executor, $st->getStatementExecutor());
         self::assertSame('DELETE FROM', $st->toSql());
         self::assertEmpty($st->getParams());
     }

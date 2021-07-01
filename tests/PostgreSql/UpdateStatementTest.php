@@ -11,7 +11,6 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @internal
@@ -553,38 +552,21 @@ class UpdateStatementTest extends TestCase
     /**
      * @test
      */
-    public function validateExecutorInstance(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The statement executor must not be null.');
-
-        (new UpdateStatement())
-            ->with((new SelectStatement())->from('t1'), 'tb')
-            ->from("tb")
-            ->where("c1", ">", 5)
-            ->orWhere("c2", "<", 0)
-            ->exec();
-    }
-
-    /**
-     * @test
-     */
     public function exec(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new UpdateStatement($executor))
+        $st = (new UpdateStatement())
             ->from('tb')
             ->where('c1', '>', 5)
             ->orWhere('c2', '<', 0);
 
+        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
         $executor->method('execute')->willReturnCallback(function (string $sql, array $params) use ($st) {
             $this->assertSame($st->toSql(), $sql);
             $this->assertSame($st->getParams(), $params);
             return 7;
         });
 
-        self::assertSame(7, $st->exec());
+        self::assertSame(7, $st->exec($executor));
     }
 
     //endregion
@@ -596,9 +578,7 @@ class UpdateStatementTest extends TestCase
      */
     public function copy(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new UpdateStatement($executor))
+        $st = (new UpdateStatement())
             ->with('(SELECT * FROM t1)', 'tb')
             ->onlyTable('tb', 't')
             ->assign('c2', 'abc')
@@ -607,7 +587,6 @@ class UpdateStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        self::assertSame($executor, $copy->getStatementExecutor());
         self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'UPDATE ONLY tb t SET c2 = :p1 WHERE c1 > :p2 RETURNING c3',
@@ -627,9 +606,7 @@ class UpdateStatementTest extends TestCase
      */
     public function clean(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new UpdateStatement($executor))
+        $st = (new UpdateStatement())
             ->with('(SELECT * FROM t1)', 'tb')
             ->onlyTable('tb', 't')
             ->where('c1', '>', 0)
@@ -638,7 +615,6 @@ class UpdateStatementTest extends TestCase
 
         $st->clean();
 
-        self::assertSame($executor, $st->getStatementExecutor());
         self::assertSame('UPDATE', $st->toSql());
         self::assertEmpty($st->getParams());
     }

@@ -26,7 +26,7 @@ class InsertStatement extends AbstractInsertStatement
      */
     public function copy()
     {
-        $copy = new static($this->db);
+        $copy = new static();
         $copy->with = $this->with ? clone $this->with : null;
         $copy->table = $this->table ? clone $this->table : null;
         $copy->columns = $this->columns ? clone $this->columns : null;

@@ -9,6 +9,7 @@ use AlephTools\SqlBuilder\Sql\Clause\ColumnsClause;
 use AlephTools\SqlBuilder\Sql\Clause\InsertClause;
 use AlephTools\SqlBuilder\Sql\Clause\QueryClause;
 use AlephTools\SqlBuilder\Sql\Clause\ValueListClause;
+use AlephTools\SqlBuilder\StatementExecutor;
 
 abstract class AbstractInsertStatement extends AbstractStatement implements Command
 {
@@ -23,8 +24,8 @@ abstract class AbstractInsertStatement extends AbstractStatement implements Comm
      * @param string|null $sequence Name of the sequence object from which the ID should be returned.
      * @return mixed Returns the ID of the last inserted row or sequence value.
      */
-    public function exec(string $sequence = null)
+    public function exec(StatementExecutor $db, string $sequence = null)
     {
-        return $this->db()->insert($this->toSql(), $this->getParams(), $sequence);
+        return $db->insert($this->toSql(), $this->getParams(), $sequence);
     }
 }

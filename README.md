@@ -55,8 +55,8 @@ echo $st->toSql();
 // ['p1' => 'ADMIN', 'p2' => 'RESELLER', 'p3' => 5]
 print_r($st->getParams());
 
-// Executes statement if StatementExecutor is defined, otherwise an exception is thrown
-$rows = $st->rows();
+// Executes statement by StatementExecutor
+$rows = $st->rows($db);
 
 ```
 

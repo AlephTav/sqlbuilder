@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Execution;
 
+use AlephTools\SqlBuilder\StatementExecutor;
+
 trait StatementExecution
 {
     /**
      * Executes this command.
      */
-    public function exec(): int
+    public function exec(StatementExecutor $db): int
     {
-        return $this->db()->execute($this->toSql(), $this->getParams());
+        return $db->execute($this->toSql(), $this->getParams());
     }
 }

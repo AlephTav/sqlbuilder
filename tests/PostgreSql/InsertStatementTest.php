@@ -11,7 +11,6 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @internal
@@ -568,35 +567,20 @@ class InsertStatementTest extends TestCase
     /**
      * @test
      */
-    public function validateExecutorInstance(): void
-    {
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('The statement executor must not be null.');
-
-        (new InsertStatement())
-            ->into('tb')
-            ->values(['c1' => 'v1'])
-            ->exec();
-    }
-
-    /**
-     * @test
-     */
     public function exec(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new InsertStatement($executor))
+        $st = (new InsertStatement())
             ->into('tb')
             ->values(['c1' => 'v1']);
 
+        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
         $executor->method('insert')->willReturnCallback(function (string $sql, array $params) use ($st) {
             $this->assertSame($st->toSql(), $sql);
             $this->assertSame($st->getParams(), $params);
             return 7;
         });
 
-        self::assertSame(7, $st->exec());
+        self::assertSame(7, $st->exec($executor));
     }
 
     //endregion
@@ -608,9 +592,7 @@ class InsertStatementTest extends TestCase
      */
     public function copy(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new InsertStatement($executor))
+        $st = (new InsertStatement())
             ->into('tb', 't')
             ->with('(SELECT * FROM t1)', 'tb')
             ->onConflict('c1')
@@ -620,7 +602,6 @@ class InsertStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        self::assertSame($executor, $copy->getStatementExecutor());
         self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'INSERT INTO tb t (c1) VALUES (:p1) ON CONFLICT (c1) DO NOTHING RETURNING c1, c2, c3',
@@ -639,9 +620,7 @@ class InsertStatementTest extends TestCase
      */
     public function clean(): void
     {
-        $executor = $this->getMockBuilder(StatementExecutor::class)->getMock();
-
-        $st = (new InsertStatement($executor))
+        $st = (new InsertStatement())
             ->into('tb', 't')
             ->with('(SELECT * FROM t1)', 'tb')
             ->onConflict('c1')
@@ -651,7 +630,6 @@ class InsertStatementTest extends TestCase
 
         $st->clean();
 
-        self::assertSame($executor, $st->getStatementExecutor());
         self::assertSame('INSERT INTO DEFAULT VALUES', $st->toSql());
         self::assertEmpty($st->getParams());
     }
