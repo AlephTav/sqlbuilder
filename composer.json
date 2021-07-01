@@ -10,7 +10,6 @@
             "email": "4lephtav@gmail.com"
         }
     ],
-    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=7.4"
