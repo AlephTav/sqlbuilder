@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
@@ -242,7 +244,7 @@ class DeleteStatementTest extends TestCase
     /**
      * @test
      */
-    public function whereBinaryOpWithQuery()
+    public function whereBinaryOpWithQuery(): void
     {
         $st = (new DeleteStatement())
             ->from('t1')
@@ -266,7 +268,7 @@ class DeleteStatementTest extends TestCase
             [
                 'p1' => 1,
                 'p2' => 2,
-                'p3' => 3
+                'p3' => 3,
             ],
             $st->getParams()
         );
@@ -346,7 +348,7 @@ class DeleteStatementTest extends TestCase
             ->from('t1')
             ->where(
                 (new SelectStatement())->from('t2')->select('COUNT(*)'),
-        '<>',
+                '<>',
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
@@ -391,7 +393,8 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from('tb')
             ->where('c1 IS NULL')
-            ->where((new ConditionalExpression())
+            ->where(
+                (new ConditionalExpression())
                 ->orWhere('c2', '=', 1)
                 ->orWhere('c3', '<', 2)
             );
@@ -408,7 +411,7 @@ class DeleteStatementTest extends TestCase
         $st = (new DeleteStatement())
             ->from('tb')
             ->where('c1 IS NULL')
-            ->where(function (ConditionalExpression $condition) {
+            ->where(function (ConditionalExpression $condition): void {
                 $condition->orWhere('c2', '=', 1)
                     ->orWhere('c3', '<', 2);
             });
@@ -580,7 +583,7 @@ class DeleteStatementTest extends TestCase
                 'p1' => 0,
                 'p2' => 1,
                 'p3' => 2,
-                'p4' => 3
+                'p4' => 3,
             ],
             $copy->getParams()
         );

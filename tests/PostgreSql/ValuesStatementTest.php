@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
@@ -66,7 +68,7 @@ class ValuesStatementTest extends TestCase
             [
                 'p1' => 1,
                 'p2' => 2,
-                'p3' => 3
+                'p3' => 3,
             ],
             $st->getParams()
         );
@@ -81,7 +83,7 @@ class ValuesStatementTest extends TestCase
             ->values([
                 'k1' => 1,
                 'k2' => 2,
-                'k3' => 3
+                'k3' => 3,
             ]);
 
         $this->assertSame('VALUES (:p1, :p2, :p3)', $st->toSql());
@@ -89,7 +91,7 @@ class ValuesStatementTest extends TestCase
             [
                 'p1' => 1,
                 'p2' => 2,
-                'p3' => 3
+                'p3' => 3,
             ],
             $st->getParams()
         );
@@ -103,7 +105,7 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 [1, 2],
-                ['a', ['b', 'c']]
+                ['a', ['b', 'c']],
             ]);
 
         $this->assertSame('VALUES (:p1, :p2), (:p3, :p4, :p5)', $st->toSql());
@@ -113,7 +115,7 @@ class ValuesStatementTest extends TestCase
                 'p2' => 2,
                 'p3' => 'a',
                 'p4' => 'b',
-                'p5' => 'c'
+                'p5' => 'c',
             ],
             $st->getParams()
         );
@@ -127,7 +129,7 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 'k1' => [1, 2],
-                'k2' => ['a', 'b']
+                'k2' => ['a', 'b'],
             ]);
 
         $this->assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
@@ -136,7 +138,7 @@ class ValuesStatementTest extends TestCase
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
-                'p4' => 'b'
+                'p4' => 'b',
             ],
             $st->getParams()
         );
@@ -150,7 +152,7 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 ['k1' => 1, 'k2' => 2],
-                ['k1' => 'a', 'k2' => 'b']
+                ['k1' => 'a', 'k2' => 'b'],
             ]);
 
         $this->assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
@@ -159,7 +161,7 @@ class ValuesStatementTest extends TestCase
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
-                'p4' => 'b'
+                'p4' => 'b',
             ],
             $st->getParams()
         );
@@ -173,7 +175,7 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 'k1' => ['k1' => 1, 'k2' => 2],
-                'k2' => ['k1' => 'a', 'k2' => 'b']
+                'k2' => ['k1' => 'a', 'k2' => 'b'],
             ]);
 
         $this->assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
@@ -182,7 +184,7 @@ class ValuesStatementTest extends TestCase
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
-                'p4' => 'b'
+                'p4' => 'b',
             ],
             $st->getParams()
         );
@@ -198,7 +200,7 @@ class ValuesStatementTest extends TestCase
             ->values(['a'])
             ->values([
                 [1, 2],
-                [true]
+                [true],
             ]);
 
         $this->assertSame('VALUES (:p1), (:p2), (:p3, :p4), (:p5)', $st->toSql());
@@ -208,7 +210,7 @@ class ValuesStatementTest extends TestCase
                 'p2' => 'a',
                 'p3' => 1,
                 'p4' => 2,
-                'p5' => true
+                'p5' => true,
             ],
             $st->getParams()
         );
@@ -391,7 +393,7 @@ class ValuesStatementTest extends TestCase
         );
         $this->assertSame(
             [
-                'p1' => 1
+                'p1' => 1,
             ],
             $copy->getParams()
         );

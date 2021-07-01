@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
@@ -72,7 +74,7 @@ class ListExpression extends AbstractExpression
         foreach ($expression as $alias => $column) {
             if (is_numeric($alias)) {
                 if (is_array($column) && \count($column) === 2) {
-                    list($alias, $column) = $column;
+                    [$alias, $column] = $column;
                 } else {
                     $alias = null;
                 }

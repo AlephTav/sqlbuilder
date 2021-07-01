@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
@@ -166,7 +168,7 @@ class UpdateStatementTest extends TestCase
     /**
      * @test
      */
-    public function fromTableWithAlias()
+    public function fromTableWithAlias(): void
     {
         $st = (new UpdateStatement())
             ->table('t1')
@@ -420,7 +422,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table('tb')
             ->where('c1 IS NULL')
-            ->where((new ConditionalExpression())
+            ->where(
+                (new ConditionalExpression())
                 ->orWhere('c2', '=', 1)
                 ->orWhere('c3', '<', 2)
             );
@@ -437,7 +440,7 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table('tb')
             ->where('c1 IS NULL')
-            ->where(function (ConditionalExpression $condition) {
+            ->where(function (ConditionalExpression $condition): void {
                 $condition->orWhere('c2', '=', 1)
                     ->orWhere('c3', '<', 2);
             });
@@ -609,7 +612,7 @@ class UpdateStatementTest extends TestCase
         $this->assertSame(
             [
                 'p1' => 'abc',
-                'p2' => 0
+                'p2' => 0,
             ],
             $copy->getParams()
         );

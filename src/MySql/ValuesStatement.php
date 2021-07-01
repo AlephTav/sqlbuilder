@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql;
 
 use AlephTools\SqlBuilder\MySql\Clause\LimitByClause;
@@ -11,8 +13,8 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 class ValuesStatement extends AbstractValuesStatement
 {
-    use RowListClause,
-        LimitByClause;
+    use RowListClause;
+    use LimitByClause;
 
     public function __construct(
         StatementExecutor $db = null,

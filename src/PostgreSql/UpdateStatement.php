@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\Clause\UpdateClause;
@@ -16,10 +18,10 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 class UpdateStatement extends AbstractUpdateStatement
 {
-    use UpdateClause,
-        FromClause,
-        ReturningClause,
-        DataFetching;
+    use UpdateClause;
+    use FromClause;
+    use ReturningClause;
+    use DataFetching;
 
     public function __construct(
         StatementExecutor $db = null,

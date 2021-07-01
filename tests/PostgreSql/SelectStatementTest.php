@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use RuntimeException;
@@ -89,7 +91,7 @@ class SelectStatementTest extends TestCase
             ->from([
                 'a1' => 't1',
                 'a2' => 't2',
-                'a3' => 't3'
+                'a3' => 't3',
             ]);
 
         $this->assertSame('SELECT * FROM t1 a1, t2 a2, t3 a3', $st->toSql());
@@ -169,7 +171,7 @@ class SelectStatementTest extends TestCase
             ->from([
                     (new SelectStatement())->from('t1'),
                     (new SelectStatement())->from('t2'),
-                    (new SelectStatement())->from('t3')
+                    (new SelectStatement())->from('t3'),
             ]);
 
         $this->assertSame(
@@ -182,13 +184,13 @@ class SelectStatementTest extends TestCase
     /**
      * @test
      */
-    public function fromMapOfQueriesWithAliases()
+    public function fromMapOfQueriesWithAliases(): void
     {
         $st = (new SelectStatement())
             ->from([
                 'a1' => (new SelectStatement())->from('t1'),
                 'a2' => (new SelectStatement())->from('t2'),
-                'a3' => (new SelectStatement())->from('t3')
+                'a3' => (new SelectStatement())->from('t3'),
             ]);
 
         $this->assertSame(
@@ -278,7 +280,7 @@ class SelectStatementTest extends TestCase
             ->select([
                 'a1' => 'c1',
                 'a2' => 'c2',
-                'a3' => 'c3'
+                'a3' => 'c3',
             ])
             ->from('tb');
 
@@ -334,7 +336,7 @@ class SelectStatementTest extends TestCase
             ->select([
                 'a1' => (new SelectStatement())->from('t2'),
                 'a2' => 'c2',
-                null
+                null,
             ])
             ->select('c3')
             ->select(new ValueListExpression([1, 2, 3]), new RawExpression('a4'))
@@ -381,12 +383,13 @@ class SelectStatementTest extends TestCase
     {
         $st = (new SelectStatement())
             ->from('t1')
-            ->join([
+            ->join(
+                [
                 'a2' => 't2',
-                'a3' => 't3'
+                'a3' => 't3',
             ],
-            't2.id = t1.id AND t3.id = t1.id'
-        );
+                't2.id = t1.id AND t3.id = t1.id'
+            );
 
         $this->assertSame(
             'SELECT * FROM t1 JOIN (t2 a2, t3 a3) ON t2.id = t1.id AND t3.id = t1.id',
@@ -444,7 +447,7 @@ class SelectStatementTest extends TestCase
             ->join(
                 [
                     'a2' => (new SelectStatement())->from('t2'),
-                    'a3' => (new SelectStatement())->from('t3')
+                    'a3' => (new SelectStatement())->from('t3'),
                 ],
                 't1.id = a2.id AND t1.id = a3.id'
             );
@@ -483,7 +486,9 @@ class SelectStatementTest extends TestCase
     {
         $st = (new SelectStatement())
             ->from('t1')
-            ->join('t2', (new ConditionalExpression())
+            ->join(
+                't2',
+                (new ConditionalExpression())
                 ->with('t2.id', '=', new RawExpression('t1.id'))
                 ->andWhere('t1.f1', '>', new RawExpression('t2.f2'))
                 ->orWhere('t2.f3', '<>', new RawExpression('t1.f3'))
@@ -571,7 +576,7 @@ class SelectStatementTest extends TestCase
                 'p3' => 'a2',
                 'p4' => 2,
                 'p5' => 'a3',
-                'p6' => 3
+                'p6' => 3,
             ],
             $st->getParams()
         );
@@ -733,7 +738,7 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->where(
                 (new SelectStatement())->from('t2')->select('COUNT(*)'),
-        '<>',
+                '<>',
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
@@ -864,7 +869,7 @@ class SelectStatementTest extends TestCase
     /**
      * @test
      */
-    public function havingBinaryOpWithQuery()
+    public function havingBinaryOpWithQuery(): void
     {
         $st = (new SelectStatement())
             ->from('t1')
@@ -961,7 +966,7 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->having(
                 (new SelectStatement())->from('t2')->select('COUNT(*)'),
-        '<>',
+                '<>',
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
@@ -1430,7 +1435,7 @@ class SelectStatementTest extends TestCase
             ->select('product')
             ->select([
                 'product_units' => 'SUM(quantity)',
-                'product_sales' => 'SUM(amount)'
+                'product_sales' => 'SUM(amount)',
             ])
             ->where('region', 'IN', (new SelectStatement())->from('top_regions')->select('region'))
             ->orderBy(['region', 'product']);
@@ -1767,7 +1772,7 @@ class SelectStatementTest extends TestCase
             [
                 'v2' => ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 'v4' => ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
-                'v6' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+                'v6' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c2')
         );
@@ -1775,7 +1780,7 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'a' => ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
-                'b' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+                'b' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c3')
         );
@@ -1790,7 +1795,7 @@ class SelectStatementTest extends TestCase
             [
                 'v1' => ['c2' => 'v2', 'c3' => 'a'],
                 'v3' => ['c2' => 'v4', 'c3' => 'b'],
-                'v5' => ['c2' => 'v6', 'c3' => 'b']
+                'v5' => ['c2' => 'v6', 'c3' => 'b'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c1', true)
         );
@@ -1798,7 +1803,7 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'a' => ['c1' => 'v1', 'c2' => 'v2'],
-                'b' => ['c1' => 'v5', 'c2' => 'v6']
+                'b' => ['c1' => 'v5', 'c2' => 'v6'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c3', true)
         );
@@ -1823,14 +1828,14 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'v2' => [
-                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a']
+                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 ],
                 'v4' => [
-                    ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b']
+                    ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
                 ],
                 'v6' => [
-                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
-                ]
+                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c2')
         );
@@ -1838,12 +1843,12 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'a' => [
-                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a']
+                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 ],
                 'b' => [
                     ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
-                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
-                ]
+                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c3')
         );
@@ -1857,14 +1862,14 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'v2' => [
-                    ['c1' => 'v1', 'c3' => 'a']
+                    ['c1' => 'v1', 'c3' => 'a'],
                 ],
                 'v4' => [
-                    ['c1' => 'v3', 'c3' => 'b']
+                    ['c1' => 'v3', 'c3' => 'b'],
                 ],
                 'v6' => [
-                    ['c1' => 'v5', 'c3' => 'b']
-                ]
+                    ['c1' => 'v5', 'c3' => 'b'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c2', true)
         );
@@ -1872,12 +1877,12 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'a' => [
-                    ['c1' => 'v1', 'c2' => 'v2']
+                    ['c1' => 'v1', 'c2' => 'v2'],
                 ],
                 'b' => [
                     ['c1' => 'v3', 'c2' => 'v4'],
-                    ['c1' => 'v5', 'c2' => 'v6']
-                ]
+                    ['c1' => 'v5', 'c2' => 'v6'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c3', true)
         );
@@ -1906,7 +1911,7 @@ class SelectStatementTest extends TestCase
         foreach ($pages as $row) {
             if ($i === 0) {
                 $this->assertSame(['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'], $row);
-            } else if ($i === 1) {
+            } elseif ($i === 1) {
                 $this->assertSame(['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'], $row);
             } else {
                 $this->assertSame(['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'], $row);
@@ -1953,14 +1958,14 @@ class SelectStatementTest extends TestCase
                 $this->assertSame(
                     [
                         ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
-                        ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b']
+                        ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
                     ],
                     $row
                 );
             } else {
                 $this->assertSame(
                     [
-                        ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+                        ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
                     ],
                     $row
                 );
@@ -2012,10 +2017,10 @@ class SelectStatementTest extends TestCase
 
     private function getRowSet(): array
     {
-         return [
+        return [
             ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
             ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
-            ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+            ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
          ];
     }
 
@@ -2059,7 +2064,7 @@ class SelectStatementTest extends TestCase
         $this->assertSame(
             [
                 'p1' => 0,
-                'p2' => 1
+                'p2' => 1,
             ],
             $copy->getParams()
         );

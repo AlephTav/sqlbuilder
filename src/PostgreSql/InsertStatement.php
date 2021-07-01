@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\Clause\ConflictClause;
@@ -21,12 +23,12 @@ use AlephTools\SqlBuilder\Query;
 
 class InsertStatement extends AbstractInsertStatement
 {
-    use WithClause,
-        InsertClause,
-        ValueListClause,
-        ConflictClause,
-        ReturningClause,
-        DataFetching;
+    use WithClause;
+    use InsertClause;
+    use ValueListClause;
+    use ConflictClause;
+    use ReturningClause;
+    use DataFetching;
 
     public function __construct(
         StatementExecutor $db = null,

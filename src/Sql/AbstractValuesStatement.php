@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql;
 
 use AlephTools\SqlBuilder\Query;
@@ -11,9 +13,9 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 abstract class AbstractValuesStatement extends AbstractStatement implements Query
 {
-    use UnionClause,
-        OrderClause,
-        LimitClause;
+    use UnionClause;
+    use OrderClause;
+    use LimitClause;
 
     public function __construct(
         StatementExecutor $db = null,

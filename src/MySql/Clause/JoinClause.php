@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Clause\JoinClause as BaseJoinClause;

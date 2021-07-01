@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
@@ -117,7 +119,8 @@ trait ConflictClause
      * @param mixed $assignmentPredicate
      * @return static
      */
-    public function doUpdateWithCondition($column, $valueOrAssignmentPredicate, $assignmentPredicate = null) {
+    public function doUpdateWithCondition($column, $valueOrAssignmentPredicate, $assignmentPredicate = null)
+    {
         if ($assignmentPredicate === null) {
             $value = null;
             $assignmentPredicate = $valueOrAssignmentPredicate;
@@ -198,7 +201,7 @@ trait ConflictClause
             $this->sql .= " WHERE $this->indexPredicate";
             $this->addParams($this->indexPredicate->getParams());
         }
-        if (strlen($this->indexConstraint)) {
+        if ($this->indexConstraint !== null && $this->indexConstraint !== '') {
             $this->sql .= " ON CONSTRAINT $this->indexConstraint";
         }
         $this->sql .= ' DO ';

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
@@ -126,7 +128,7 @@ class InsertStatementTest extends TestCase
             ->values([
                 ['v1', 'v2', 'v3'],
                 ['v4', 'v5', 'v6'],
-                ['v7', 'v8', 'v9']
+                ['v7', 'v8', 'v9'],
             ]);
 
         $this->assertSame(
@@ -137,7 +139,7 @@ class InsertStatementTest extends TestCase
             [
                 'p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3',
                 'p4' => 'v4', 'p5' => 'v5', 'p6' => 'v6',
-                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9'
+                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9',
             ],
             $st->getParams()
         );
@@ -167,7 +169,7 @@ class InsertStatementTest extends TestCase
                 [
                     ['v1', 'v2', 'v3'],
                     ['v4', 'v5', 'v6'],
-                    ['v7', 'v8', 'v9']
+                    ['v7', 'v8', 'v9'],
                 ],
                 ['c1', 'c2', 'c3']
             );
@@ -180,7 +182,7 @@ class InsertStatementTest extends TestCase
             [
                 'p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3',
                 'p4' => 'v4', 'p5' => 'v5', 'p6' => 'v6',
-                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9'
+                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9',
             ],
             $st->getParams()
         );
@@ -209,7 +211,7 @@ class InsertStatementTest extends TestCase
             ->values([
                 ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'v3'],
                 ['c1' => 'v4', 'c2' => 'v5', 'c3' => 'v6'],
-                ['c1' => 'v7', 'c2' => null, 'c3' => new RawExpression('DEFAULT')]
+                ['c1' => 'v7', 'c2' => null, 'c3' => new RawExpression('DEFAULT')],
             ]);
 
         $this->assertSame(
@@ -220,7 +222,7 @@ class InsertStatementTest extends TestCase
             [
                 'p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3',
                 'p4' => 'v4', 'p5' => 'v5', 'p6' => 'v6',
-                'p7' => 'v7'
+                'p7' => 'v7',
             ],
             $st->getParams()
         );
@@ -251,7 +253,8 @@ class InsertStatementTest extends TestCase
         $st = (new InsertStatement())
             ->into('t1')
             ->columns(['t1.c1', 't1.c2', 't1.c3'])
-            ->select((new SelectStatement())
+            ->select(
+                (new SelectStatement())
                 ->from('t2')
                 ->select(['t2.c1', 't2.c2', 't3.c3'])
                 ->where('t2.c1', '=', 123)

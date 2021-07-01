@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql;
 
 use AlephTools\SqlBuilder\Command;
@@ -16,11 +18,11 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 abstract class AbstractUpdateStatement extends AbstractStatement implements Command
 {
-    use WithClause,
-        UpdateClause,
-        AssignmentClause,
-        WhereClause,
-        StatementExecution;
+    use WithClause;
+    use UpdateClause;
+    use AssignmentClause;
+    use WhereClause;
+    use StatementExecution;
 
     public function __construct(
         StatementExecutor $db = null,

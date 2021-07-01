@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql;
 
 use AlephTools\SqlBuilder\MySql\Clause\DuplicateKeyClause;
@@ -18,12 +20,12 @@ use AlephTools\SqlBuilder\Query;
 
 class InsertStatement extends AbstractInsertStatement
 {
-    use InsertClause,
-        PartitionClause,
-        RowAliasClause,
-        ValueListClause,
-        AssignmentClause,
-        DuplicateKeyClause;
+    use InsertClause;
+    use PartitionClause;
+    use RowAliasClause;
+    use ValueListClause;
+    use AssignmentClause;
+    use DuplicateKeyClause;
 
     public function __construct(
         StatementExecutor $db = null,
