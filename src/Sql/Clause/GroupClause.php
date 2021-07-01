@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\GroupExpression;
 
 trait GroupClause
 {
-    /**
-     * @var GroupExpression
-     */
-    protected $group;
+    protected ?GroupExpression $group = null;
 
     /**
      * @param mixed $column

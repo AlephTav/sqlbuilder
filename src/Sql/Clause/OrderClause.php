@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
 
 trait OrderClause
 {
-    /**
-     * @var OrderExpression
-     */
-    protected $order;
+    protected ?OrderExpression $order = null;
 
     /**
      * @param mixed $column

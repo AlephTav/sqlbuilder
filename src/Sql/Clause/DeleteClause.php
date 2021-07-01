@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 
 trait DeleteClause
 {
-    /**
-     * @var FromExpression
-     */
-    protected $from;
+    protected ?FromExpression $from = null;
 
     /**
      * @param mixed $table

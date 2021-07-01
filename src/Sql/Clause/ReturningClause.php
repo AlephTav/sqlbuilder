@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
 
 trait ReturningClause
 {
-    /**
-     * @var ReturningExpression
-     */
-    protected $returning;
+    protected ?ReturningExpression $returning = null;
 
     /**
      * @param mixed $column

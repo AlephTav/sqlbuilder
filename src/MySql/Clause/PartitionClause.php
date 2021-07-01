@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait PartitionClause
 {
-    /**
-     * @var ColumnListExpression
-     */
-    protected $partition;
+    protected ?ColumnListExpression $partition = null;
 
     /**
      * @param mixed $partition

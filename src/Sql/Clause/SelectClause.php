@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\SelectExpression;
 
 trait SelectClause
 {
-    /**
-     * @var SelectExpression
-     */
-    protected $select;
+    protected ?SelectExpression $select = null;
 
     /**
      * @param mixed $column

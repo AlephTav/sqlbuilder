@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 
 trait UpdateClause
 {
-    /**
-     * @var FromExpression
-     */
-    protected $table;
+    protected ?FromExpression $table = null;
 
     /**
      * @param mixed $table

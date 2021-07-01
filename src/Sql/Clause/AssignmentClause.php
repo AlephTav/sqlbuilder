@@ -8,8 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 
 trait AssignmentClause
 {
-    /** @var AssignmentExpression */
-    protected $assignment;
+    protected ?AssignmentExpression $assignment = null;
 
     /**
      * @param mixed $column

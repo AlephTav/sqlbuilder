@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
 
 trait WhereClause
 {
-    /**
-     * @var WhereExpression
-     */
-    protected $where;
+    protected ?WhereExpression $where = null;
 
     /**
      * @param mixed $column

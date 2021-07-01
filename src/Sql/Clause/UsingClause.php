@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 
 trait UsingClause
 {
-    /**
-     * @var FromExpression
-     */
-    protected $using;
+    protected ?FromExpression $using = null;
 
     /**
      * @param mixed $table

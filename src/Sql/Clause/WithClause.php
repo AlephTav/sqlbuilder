@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
 
 trait WithClause
 {
-    /**
-     * @var WithExpression
-     */
-    protected $with;
+    protected ?WithExpression $with = null;
 
     /**
      * @param mixed $query

@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 
 trait DuplicateKeyClause
 {
-    /**
-     * @var AssignmentExpression
-     */
-    protected $assignmentOnUpdate;
+    protected ?AssignmentExpression $assignmentOnUpdate = null;
 
     /**
      * @param mixed $column

@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\HavingExpression;
 
 trait HavingClause
 {
-    /**
-     * @var HavingExpression
-     */
-    protected $having;
+    protected ?HavingExpression $having = null;
 
     /**
      * @param mixed $column

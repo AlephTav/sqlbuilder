@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait ColumnsClause
 {
-    /**
-     * @var ColumnListExpression
-     */
-    protected $columns;
+    protected ?ColumnListExpression $columns = null;
 
     /**
      * @param mixed $columns

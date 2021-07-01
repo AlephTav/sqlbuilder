@@ -10,26 +10,10 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 
 trait ConflictClause
 {
-    /**
-     * @var ColumnListExpression
-     */
-    protected $indexColumn;
-
-    /**
-     * @var ConditionalExpression
-     */
-    protected $indexPredicate;
-
-    /**
-     * @var AssignmentExpression
-     */
-    protected $assignment;
-
-    /**
-     * @var ConditionalExpression
-     */
-    protected $assignmentPredicate;
-
+    protected ?ColumnListExpression $indexColumn = null;
+    protected ?ConditionalExpression $indexPredicate = null;
+    protected ?AssignmentExpression $assignment = null;
+    protected ?ConditionalExpression $assignmentPredicate = null;
     protected ?string $indexConstraint = null;
 
     private bool $whereBelongsToConflict = false;

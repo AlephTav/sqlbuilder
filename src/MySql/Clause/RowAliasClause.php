@@ -10,10 +10,7 @@ trait RowAliasClause
 {
     protected ?string $rowAlias = null;
 
-    /**
-     * @var ColumnListExpression
-     */
-    protected $columnAliases;
+    protected ?ColumnListExpression $columnAliases = null;
 
     /**
      * @param mixed $columnAliases

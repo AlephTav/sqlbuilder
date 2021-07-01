@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\JoinExpression;
 
 trait JoinClause
 {
-    /**
-     * @var JoinExpression
-     */
-    protected $join;
+    protected ?JoinExpression $join = null;
 
     /**
      * @param mixed $table

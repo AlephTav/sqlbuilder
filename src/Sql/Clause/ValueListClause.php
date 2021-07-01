@@ -8,10 +8,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 
 trait ValueListClause
 {
-    /**
-     * @var ValueListExpression
-     */
-    protected $values;
+    protected ?ValueListExpression $values = null;
 
     /**
      * @param mixed $values
