@@ -6,7 +6,6 @@ namespace AlephTools\SqlBuilder\Sql;
 
 use AlephTools\SqlBuilder\Statement;
 use AlephTools\SqlBuilder\StatementExecutor;
-use RuntimeException;
 
 abstract class AbstractStatement implements Statement
 {
@@ -66,13 +65,5 @@ abstract class AbstractStatement implements Statement
     public function __toString(): string
     {
         return $this->toSql();
-    }
-
-    protected function validateAndBuild(): void
-    {
-        if ($this->db === null) {
-            throw new RuntimeException('The statement executor must not be null.');
-        }
-        $this->build();
     }
 }

@@ -7,6 +7,9 @@ namespace AlephTools\SqlBuilder\MySql\Clause;
 use AlephTools\SqlBuilder\MySql\Expression\RowListExpression;
 use AlephTools\SqlBuilder\Sql\Clause\ValuesClause;
 
+/**
+ * @property RowListExpression|null $values
+ */
 trait RowListClause
 {
     use ValuesClause;

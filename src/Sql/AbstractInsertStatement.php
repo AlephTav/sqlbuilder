@@ -14,6 +14,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
+use RuntimeException;
 
 abstract class AbstractInsertStatement extends AbstractStatement implements Command
 {
@@ -44,7 +45,9 @@ abstract class AbstractInsertStatement extends AbstractStatement implements Comm
      */
     public function exec(string $sequence = null)
     {
-        $this->validateAndBuild();
+        if ($this->db === null) {
+            throw new RuntimeException('The statement executor must not be null.');
+        }
         return $this->db->insert($this->toSql(), $this->getParams(), $sequence);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Execution;
 
+use RuntimeException;
+
 trait StatementExecution
 {
     /**
@@ -12,7 +14,9 @@ trait StatementExecution
      */
     public function exec(): int
     {
-        $this->validateAndBuild();
+        if ($this->db === null) {
+            throw new RuntimeException('The statement executor must not be null.');
+        }
         return $this->db->execute($this->toSql(), $this->getParams());
     }
 }

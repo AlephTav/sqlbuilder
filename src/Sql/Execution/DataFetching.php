@@ -10,7 +10,9 @@ trait DataFetching
 {
     public function rows(): array
     {
-        $this->validateAndBuild();
+        if ($this->db === null) {
+            throw new RuntimeException('The statement executor must not be null.');
+        }
         return $this->db->rows($this->toSql(), $this->getParams());
     }
 
@@ -82,19 +84,25 @@ trait DataFetching
 
     public function row(): array
     {
-        $this->validateAndBuild();
+        if ($this->db === null) {
+            throw new RuntimeException('The statement executor must not be null.');
+        }
         return $this->db->row($this->toSql(), $this->getParams());
     }
 
     public function column(): array
     {
-        $this->validateAndBuild();
+        if ($this->db === null) {
+            throw new RuntimeException('The statement executor must not be null.');
+        }
         return $this->db->column($this->toSql(), $this->getParams());
     }
 
     public function scalar()
     {
-        $this->validateAndBuild();
+        if ($this->db === null) {
+            throw new RuntimeException('The statement executor must not be null.');
+        }
         return $this->db->scalar($this->toSql(), $this->getParams());
     }
 }
