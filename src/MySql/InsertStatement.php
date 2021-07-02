@@ -9,6 +9,7 @@ use AlephTools\SqlBuilder\MySql\Clause\InsertClause;
 use AlephTools\SqlBuilder\MySql\Clause\PartitionClause;
 use AlephTools\SqlBuilder\MySql\Clause\RowAliasClause;
 use AlephTools\SqlBuilder\MySql\Clause\ValueListClause;
+use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\AbstractInsertStatement;
 use AlephTools\SqlBuilder\Sql\Clause\AssignmentClause;
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
@@ -16,7 +17,6 @@ use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
-use AlephTools\SqlBuilder\Query;
 
 class InsertStatement extends AbstractInsertStatement
 {
