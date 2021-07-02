@@ -11,6 +11,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 /**
  * @internal
@@ -554,7 +555,7 @@ class UpdateStatementTest extends TestCase
      */
     public function validateExecutorInstance(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('The statement executor must not be null.');
 
         (new UpdateStatement())
