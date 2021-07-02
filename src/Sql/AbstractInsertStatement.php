@@ -11,8 +11,8 @@ use AlephTools\SqlBuilder\Sql\Clause\InsertClause;
 use AlephTools\SqlBuilder\Sql\Clause\QueryClause;
 use AlephTools\SqlBuilder\Sql\Clause\ValueListClause;
 use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 
 abstract class AbstractInsertStatement extends AbstractStatement implements Command
