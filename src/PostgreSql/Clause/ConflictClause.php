@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 
 trait ConflictClause
 {
