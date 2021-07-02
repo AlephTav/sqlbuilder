@@ -32,7 +32,7 @@ trait RowAliasClause
 
     protected function buildRowAndColumnAliases(): void
     {
-        if (strlen((string)$this->rowAlias)) {
+        if ($this->rowAlias !== null && $this->rowAlias !== '') {
             $this->sql .= "AS $this->rowAlias";
             if ($this->columnAliases) {
                 $this->sql .= " ($this->columnAliases)";
