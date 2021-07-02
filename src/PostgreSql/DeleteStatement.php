@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\Clause\DeleteClause;
@@ -14,9 +16,9 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 class DeleteStatement extends AbstractDeleteStatement
 {
-    use DeleteClause,
-        ReturningClause,
-        DataFetching;
+    use DeleteClause;
+    use ReturningClause;
+    use DataFetching;
 
     public function __construct(
         StatementExecutor $db = null,

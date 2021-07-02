@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Clause\UpdateClause as BaseUpdateClause;
@@ -27,7 +29,6 @@ trait UpdateClause
     }
 
     /**
-     * @param string $modifier
      * @return static
      */
     public function modifier(string $modifier)

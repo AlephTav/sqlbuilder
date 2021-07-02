@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
@@ -10,9 +12,12 @@ use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class UpdateStatementTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         AbstractExpression::resetParameterIndex();
     }
@@ -24,8 +29,8 @@ class UpdateStatementTest extends TestCase
     {
         $st = new UpdateStatement();
 
-        $this->assertEquals('UPDATE', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('UPDATE', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //region TABLE
@@ -38,8 +43,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table('tb');
 
-        $this->assertSame('UPDATE tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -50,8 +55,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table('tb', 't');
 
-        $this->assertSame('UPDATE tb t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -62,8 +67,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table(['t1', 't2']);
 
-        $this->assertEquals('UPDATE t1, t2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('UPDATE t1, t2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -74,8 +79,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table(['a' => 't1', 'b' => 't2']);
 
-        $this->assertSame('UPDATE t1 a, t2 b', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE t1 a, t2 b', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -86,8 +91,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table(new RawExpression('tb AS t'));
 
-        $this->assertSame('UPDATE tb AS t', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb AS t', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -98,8 +103,8 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->onlyTable('tb');
 
-        $this->assertSame('UPDATE ONLY tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE ONLY tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -115,8 +120,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->assign('c1', 'v1');
 
-        $this->assertSame('UPDATE tb SET c1 = :p1', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('UPDATE tb SET c1 = :p1', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -137,12 +142,12 @@ class UpdateStatementTest extends TestCase
             ->assign(['c6 = 5'])
             ->assign(null);
 
-        $this->assertSame(
+        self::assertSame(
             'UPDATE t1 SET c1 = :p1, c2 = DEFAULT, c3 = NULL, ' .
             '(c4, c5) = (SELECT t2.c1, t2.c2 FROM t2), (SELECT * FROM t3), c6 = 5, NULL',
             $st->toSql()
         );
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     //endregion
@@ -159,22 +164,22 @@ class UpdateStatementTest extends TestCase
             ->assign('c1', 'v1')
             ->from('t2');
 
-        $this->assertSame('UPDATE t1 SET c1 = :p1 FROM t2', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('UPDATE t1 SET c1 = :p1 FROM t2', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
      * @test
      */
-    public function fromTableWithAlias()
+    public function fromTableWithAlias(): void
     {
         $st = (new UpdateStatement())
             ->table('t1')
             ->assign('c1', 'v1')
             ->from('t2', 't');
 
-        $this->assertSame('UPDATE t1 SET c1 = :p1 FROM t2 t', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('UPDATE t1 SET c1 = :p1 FROM t2 t', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -187,8 +192,8 @@ class UpdateStatementTest extends TestCase
             ->assign('c1', 'v1')
             ->from(['t1', 't2']);
 
-        $this->assertSame('UPDATE tb SET c1 = :p1 FROM t1, t2', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('UPDATE tb SET c1 = :p1 FROM t1, t2', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -201,8 +206,8 @@ class UpdateStatementTest extends TestCase
             ->assign('c1', 'v1')
             ->from(['a' => 't1', 'b' => 't2']);
 
-        $this->assertSame('UPDATE tb SET c1 = :p1 FROM t1 a, t2 b', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('UPDATE tb SET c1 = :p1 FROM t1 a, t2 b', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -215,8 +220,8 @@ class UpdateStatementTest extends TestCase
             ->assign('c1', 'v1')
             ->from(new RawExpression('t2 AS t'));
 
-        $this->assertSame('UPDATE t1 SET c1 = :p1 FROM t2 AS t', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('UPDATE t1 SET c1 = :p1 FROM t2 AS t', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     //endregion
@@ -232,8 +237,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('c1 = c2');
 
-        $this->assertSame('UPDATE tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -245,8 +250,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where(new RawExpression('c1 = c2'));
 
-        $this->assertSame('UPDATE tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -258,8 +263,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('col', '=', 1);
 
-        $this->assertSame('UPDATE tb WHERE col = :p1', $st->toSql());
-        $this->assertSame(['p1' => 1], $st->getParams());
+        self::assertSame('UPDATE tb WHERE col = :p1', $st->toSql());
+        self::assertSame(['p1' => 1], $st->getParams());
     }
 
     /**
@@ -271,8 +276,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('col', '=', null);
 
-        $this->assertSame('UPDATE tb WHERE col = NULL', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb WHERE col = NULL', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -284,8 +289,8 @@ class UpdateStatementTest extends TestCase
             ->table('t1')
             ->where('t1.col', '=', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertEquals('UPDATE t1 WHERE t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('UPDATE t1 WHERE t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -297,8 +302,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('col', 'IN', [1, 2, 3]);
 
-        $this->assertSame('UPDATE tb WHERE col IN (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
+        self::assertSame('UPDATE tb WHERE col IN (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
     }
 
     /**
@@ -310,8 +315,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('col', 'BETWEEN', [1, 2]);
 
-        $this->assertSame('UPDATE tb WHERE col BETWEEN :p1 AND :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('UPDATE tb WHERE col BETWEEN :p1 AND :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -323,8 +328,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('c1', '=', new RawExpression('c2'));
 
-        $this->assertSame('UPDATE tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -336,8 +341,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where('NOT', new RawExpression('col'));
 
-        $this->assertSame('UPDATE tb WHERE NOT col', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb WHERE NOT col', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -349,8 +354,8 @@ class UpdateStatementTest extends TestCase
             ->table('t1')
             ->where('NOT', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('UPDATE t1 WHERE NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE t1 WHERE NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -362,8 +367,8 @@ class UpdateStatementTest extends TestCase
             ->table('t1')
             ->where((new SelectStatement())->from('t2')->select('COUNT(*)'), '>', 5);
 
-        $this->assertSame('UPDATE t1 WHERE (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
-        $this->assertSame(['p1' => 5], $st->getParams());
+        self::assertSame('UPDATE t1 WHERE (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
+        self::assertSame(['p1' => 5], $st->getParams());
     }
 
     /**
@@ -379,11 +384,11 @@ class UpdateStatementTest extends TestCase
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
-        $this->assertSame(
+        self::assertSame(
             'UPDATE t1 WHERE (SELECT COUNT(*) FROM t2) <> (SELECT COUNT(*) FROM t3)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -395,8 +400,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where(['c1 = c2', 'c3 <> c4']);
 
-        $this->assertSame('UPDATE tb WHERE c1 = c2 AND c3 <> c4', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 = c2 AND c3 <> c4', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -408,8 +413,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->where(['c1' => 1, 'c2' => 2]);
 
-        $this->assertSame('UPDATE tb WHERE c1 = :p1 AND c2 = :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 = :p1 AND c2 = :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -420,13 +425,14 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table('tb')
             ->where('c1 IS NULL')
-            ->where((new ConditionalExpression())
+            ->where(
+                (new ConditionalExpression())
                 ->orWhere('c2', '=', 1)
                 ->orWhere('c3', '<', 2)
             );
 
-        $this->assertSame('UPDATE tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -437,13 +443,13 @@ class UpdateStatementTest extends TestCase
         $st = (new UpdateStatement())
             ->table('tb')
             ->where('c1 IS NULL')
-            ->where(function (ConditionalExpression $condition) {
+            ->where(function (ConditionalExpression $condition): void {
                 $condition->orWhere('c2', '=', 1)
                     ->orWhere('c3', '<', 2);
             });
 
-        $this->assertSame('UPDATE tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('UPDATE tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     //endregion
@@ -459,8 +465,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->returning();
 
-        $this->assertSame('UPDATE tb RETURNING *', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb RETURNING *', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -474,8 +480,8 @@ class UpdateStatementTest extends TestCase
             ->returning('c2', null)
             ->returning('col', 'c3');
 
-        $this->assertSame('UPDATE tb RETURNING c1, c2, col c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb RETURNING c1, c2, col c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -487,8 +493,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->returning(['c1', 'c2', 'c3']);
 
-        $this->assertSame('UPDATE tb RETURNING c1, c2, c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb RETURNING c1, c2, c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -500,8 +506,8 @@ class UpdateStatementTest extends TestCase
             ->table('tb')
             ->returning(['a' => 'c1', 'b' => 'c2', 'c' => 'c3']);
 
-        $this->assertSame('UPDATE tb RETURNING c1 a, c2 b, c3 c', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('UPDATE tb RETURNING c1 a, c2 b, c3 c', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -517,8 +523,8 @@ class UpdateStatementTest extends TestCase
             ->with((new SelectStatement())->from('t1'), 'tb')
             ->table('tb');
 
-        $this->assertSame('WITH tb AS (SELECT * FROM t1) UPDATE tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('WITH tb AS (SELECT * FROM t1) UPDATE tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -532,11 +538,11 @@ class UpdateStatementTest extends TestCase
             ->with(null, 'n2')
             ->table('tb');
 
-        $this->assertSame(
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1), n1 AS NULL, n2 AS NULL UPDATE tb',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -577,7 +583,7 @@ class UpdateStatementTest extends TestCase
             return 7;
         });
 
-        $this->assertSame(7, $st->exec());
+        self::assertSame(7, $st->exec());
     }
 
     //endregion
@@ -600,16 +606,16 @@ class UpdateStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        $this->assertSame($executor, $copy->getStatementExecutor());
-        $this->assertSame(
+        self::assertSame($executor, $copy->getStatementExecutor());
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'UPDATE ONLY tb t SET c2 = :p1 WHERE c1 > :p2 RETURNING c3',
             $copy->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 'abc',
-                'p2' => 0
+                'p2' => 0,
             ],
             $copy->getParams()
         );
@@ -631,9 +637,9 @@ class UpdateStatementTest extends TestCase
 
         $st->clean();
 
-        $this->assertSame($executor, $st->getStatementExecutor());
-        $this->assertSame('UPDATE', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame($executor, $st->getStatementExecutor());
+        self::assertSame('UPDATE', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion

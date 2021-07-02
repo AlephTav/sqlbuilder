@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Clause;
 
 use AlephTools\SqlBuilder\Query;
@@ -9,7 +11,6 @@ trait QueryClause
     protected ?Query $query = null;
 
     /**
-     * @param Query $query
      * @return static
      */
     public function select(Query $query)

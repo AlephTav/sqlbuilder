@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Clause;
 
 trait OffsetClause
@@ -7,7 +9,6 @@ trait OffsetClause
     protected ?int $offset = null;
 
     /**
-     * @param int|null $offset
      * @return static
      */
     public function offset(?int $offset)

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 class OrderExpression extends ListExpression
@@ -38,7 +40,7 @@ class OrderExpression extends ListExpression
         foreach ($expression as $column => $order) {
             if (is_numeric($column)) {
                 if (is_array($order) && \count($order) === 2) {
-                    list($column, $order) = $order;
+                    [$column, $order] = $order;
                 } else {
                     $column = $order;
                     $order = null;

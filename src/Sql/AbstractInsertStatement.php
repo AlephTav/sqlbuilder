@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql;
 
 use AlephTools\SqlBuilder\Command;
@@ -15,10 +17,10 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 abstract class AbstractInsertStatement extends AbstractStatement implements Command
 {
-    use InsertClause,
-        ColumnsClause,
-        ValueListClause,
-        QueryClause;
+    use InsertClause;
+    use ColumnsClause;
+    use ValueListClause;
+    use QueryClause;
 
     public function __construct(
         StatementExecutor $db = null,

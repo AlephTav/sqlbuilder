@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
@@ -9,9 +11,12 @@ use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class ValuesStatementTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         AbstractExpression::resetParameterIndex();
     }
@@ -23,8 +28,8 @@ class ValuesStatementTest extends TestCase
     {
         $st = new ValuesStatement();
 
-        $this->assertSame('VALUES', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //region VALUES
@@ -37,8 +42,8 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values('(1), (2), (3)');
 
-        $this->assertSame('VALUES (1), (2), (3)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES (1), (2), (3)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -49,8 +54,8 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values(new RawExpression('(1), (2), (3)'));
 
-        $this->assertSame('VALUES (1), (2), (3)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES (1), (2), (3)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -61,12 +66,12 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([1, 2, 3]);
 
-        $this->assertSame('VALUES (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
-                'p3' => 3
+                'p3' => 3,
             ],
             $st->getParams()
         );
@@ -81,15 +86,15 @@ class ValuesStatementTest extends TestCase
             ->values([
                 'k1' => 1,
                 'k2' => 2,
-                'k3' => 3
+                'k3' => 3,
             ]);
 
-        $this->assertSame('VALUES (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
-                'p3' => 3
+                'p3' => 3,
             ],
             $st->getParams()
         );
@@ -103,17 +108,17 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 [1, 2],
-                ['a', ['b', 'c']]
+                ['a', ['b', 'c']],
             ]);
 
-        $this->assertSame('VALUES (:p1, :p2), (:p3, :p4, :p5)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1, :p2), (:p3, :p4, :p5)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
                 'p4' => 'b',
-                'p5' => 'c'
+                'p5' => 'c',
             ],
             $st->getParams()
         );
@@ -127,16 +132,16 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 'k1' => [1, 2],
-                'k2' => ['a', 'b']
+                'k2' => ['a', 'b'],
             ]);
 
-        $this->assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
-                'p4' => 'b'
+                'p4' => 'b',
             ],
             $st->getParams()
         );
@@ -150,16 +155,16 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 ['k1' => 1, 'k2' => 2],
-                ['k1' => 'a', 'k2' => 'b']
+                ['k1' => 'a', 'k2' => 'b'],
             ]);
 
-        $this->assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
-                'p4' => 'b'
+                'p4' => 'b',
             ],
             $st->getParams()
         );
@@ -173,16 +178,16 @@ class ValuesStatementTest extends TestCase
         $st = (new ValuesStatement())
             ->values([
                 'k1' => ['k1' => 1, 'k2' => 2],
-                'k2' => ['k1' => 'a', 'k2' => 'b']
+                'k2' => ['k1' => 'a', 'k2' => 'b'],
             ]);
 
-        $this->assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1, :p2), (:p3, :p4)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 2,
                 'p3' => 'a',
-                'p4' => 'b'
+                'p4' => 'b',
             ],
             $st->getParams()
         );
@@ -198,17 +203,17 @@ class ValuesStatementTest extends TestCase
             ->values(['a'])
             ->values([
                 [1, 2],
-                [true]
+                [true],
             ]);
 
-        $this->assertSame('VALUES (:p1), (:p2), (:p3, :p4), (:p5)', $st->toSql());
-        $this->assertSame(
+        self::assertSame('VALUES (:p1), (:p2), (:p3, :p4), (:p5)', $st->toSql());
+        self::assertSame(
             [
                 'p1' => 1,
                 'p2' => 'a',
                 'p3' => 1,
                 'p4' => 2,
-                'p5' => true
+                'p5' => true,
             ],
             $st->getParams()
         );
@@ -226,8 +231,8 @@ class ValuesStatementTest extends TestCase
                     ->values('(3)')
             );
 
-        $this->assertEquals('VALUES (1), (2), ((VALUES (3)))', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('VALUES (1), (2), ((VALUES (3)))', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -243,8 +248,8 @@ class ValuesStatementTest extends TestCase
             ->values('(1), (2), (3)')
             ->orderBy('column1');
 
-        $this->assertSame('VALUES (1), (2), (3) ORDER BY column1', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES (1), (2), (3) ORDER BY column1', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -256,8 +261,8 @@ class ValuesStatementTest extends TestCase
             ->values('(1), (2), (3)')
             ->orderBy('column1', 'DESC');
 
-        $this->assertSame('VALUES (1), (2), (3) ORDER BY column1 DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES (1), (2), (3) ORDER BY column1 DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -274,8 +279,8 @@ class ValuesStatementTest extends TestCase
             ->limit(2)
             ->offset(1);
 
-        $this->assertSame('VALUES (1), (2), (3) LIMIT 2 OFFSET 1', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES (1), (2), (3) LIMIT 2 OFFSET 1', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -287,8 +292,8 @@ class ValuesStatementTest extends TestCase
             ->values('(1), (2), (3)')
             ->paginate(1, 2);
 
-        $this->assertSame('VALUES (1), (2), (3) LIMIT 2 OFFSET 2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('VALUES (1), (2), (3) LIMIT 2 OFFSET 2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -307,8 +312,8 @@ class ValuesStatementTest extends TestCase
                     ->from('tb')
             );
 
-        $this->assertSame('(VALUES (1), (2), (3)) UNION (SELECT * FROM tb)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('(VALUES (1), (2), (3)) UNION (SELECT * FROM tb)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -330,12 +335,12 @@ class ValuesStatementTest extends TestCase
             )
             ->orderBy('column1', 'ASC');
 
-        $this->assertSame(
+        self::assertSame(
             '(VALUES (1), (2), (3)) UNION (SELECT * FROM tb ORDER BY id ASC) UNION ' .
             "(VALUES ('a'), ('b'), ('b') ORDER BY column1 DESC) ORDER BY column1 ASC",
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -352,7 +357,7 @@ class ValuesStatementTest extends TestCase
             ->unionExceptAll((new SelectStatement())->from('t6'))
             ->paginate(10, 5);
 
-        $this->assertSame(
+        self::assertSame(
             '(VALUES (1), (2), (3)) ' .
             'UNION ALL (SELECT * FROM t2) ' .
             'INTERSECT (SELECT * FROM t3) ' .
@@ -362,7 +367,7 @@ class ValuesStatementTest extends TestCase
             'LIMIT 5 OFFSET 50',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -384,14 +389,14 @@ class ValuesStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        $this->assertSame($executor, $copy->getStatementExecutor());
-        $this->assertSame(
+        self::assertSame($executor, $copy->getStatementExecutor());
+        self::assertSame(
             'VALUES (:p1) ORDER BY column1 DESC LIMIT 2 OFFSET 1',
             $copy->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
-                'p1' => 1
+                'p1' => 1,
             ],
             $copy->getParams()
         );
@@ -412,9 +417,9 @@ class ValuesStatementTest extends TestCase
 
         $st->clean();
 
-        $this->assertSame($executor, $st->getStatementExecutor());
-        $this->assertSame('VALUES', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame($executor, $st->getStatementExecutor());
+        self::assertSame('VALUES', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion

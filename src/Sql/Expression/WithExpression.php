@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
@@ -16,7 +18,6 @@ class WithExpression extends AbstractExpression
     /**
      * @param mixed $query
      * @param mixed $alias
-     * @param bool $recursive
      * @return static
      */
     public function append($query, $alias = null, bool $recursive = false)
@@ -26,7 +27,7 @@ class WithExpression extends AbstractExpression
         }
         if ($alias === null) {
             $expression = $query;
-        } else if (is_scalar($alias)) {
+        } elseif (is_scalar($alias)) {
             $expression = [$alias => $query];
         } else {
             $expression = [[$alias, $query]];
@@ -58,7 +59,7 @@ class WithExpression extends AbstractExpression
         foreach ($expression as $alias => $query) {
             if (is_numeric($alias)) {
                 if (is_array($query) && \count($query) === 2) {
-                    list($alias, $query) = $query;
+                    [$alias, $query] = $query;
                 } else {
                     $alias = null;
                 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql;
 
 use AlephTools\SqlBuilder\MySql\Clause\DuplicateKeyClause;
@@ -7,6 +9,7 @@ use AlephTools\SqlBuilder\MySql\Clause\InsertClause;
 use AlephTools\SqlBuilder\MySql\Clause\PartitionClause;
 use AlephTools\SqlBuilder\MySql\Clause\RowAliasClause;
 use AlephTools\SqlBuilder\MySql\Clause\ValueListClause;
+use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\AbstractInsertStatement;
 use AlephTools\SqlBuilder\Sql\Clause\AssignmentClause;
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
@@ -14,16 +17,15 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
-use AlephTools\SqlBuilder\Query;
 
 class InsertStatement extends AbstractInsertStatement
 {
-    use InsertClause,
-        PartitionClause,
-        RowAliasClause,
-        ValueListClause,
-        AssignmentClause,
-        DuplicateKeyClause;
+    use InsertClause;
+    use PartitionClause;
+    use RowAliasClause;
+    use ValueListClause;
+    use AssignmentClause;
+    use DuplicateKeyClause;
 
     public function __construct(
         StatementExecutor $db = null,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql;
 
 use AlephTools\SqlBuilder\MySql\Clause\UpdateClause;
@@ -15,9 +17,9 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 class UpdateStatement extends AbstractUpdateStatement
 {
-    use UpdateClause,
-        OrderClause,
-        LimitClause;
+    use UpdateClause;
+    use OrderClause;
+    use LimitClause;
 
     public function __construct(
         StatementExecutor $db = null,

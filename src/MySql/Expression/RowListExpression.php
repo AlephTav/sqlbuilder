@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql\Expression;
 
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;

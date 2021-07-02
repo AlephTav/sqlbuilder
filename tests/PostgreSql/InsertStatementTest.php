@@ -1,18 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
-use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\PostgreSql\InsertStatement;
+use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ */
 class InsertStatementTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         AbstractExpression::resetParameterIndex();
     }
@@ -25,8 +30,8 @@ class InsertStatementTest extends TestCase
         $st = (new InsertStatement())
             ->into('tb');
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //region TABLE
@@ -40,8 +45,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->values(['col' => 'val']);
 
-        $this->assertSame('INSERT INTO tb (col) VALUES (:p1)', $st->toSql());
-        $this->assertSame(['p1' => 'val'], $st->getParams());
+        self::assertSame('INSERT INTO tb (col) VALUES (:p1)', $st->toSql());
+        self::assertSame(['p1' => 'val'], $st->getParams());
     }
 
     /**
@@ -53,8 +58,8 @@ class InsertStatementTest extends TestCase
             ->into('tb', 't')
             ->values(['col' => 'val']);
 
-        $this->assertSame('INSERT INTO tb t (col) VALUES (:p1)', $st->toSql());
-        $this->assertSame(['p1' => 'val'], $st->getParams());
+        self::assertSame('INSERT INTO tb t (col) VALUES (:p1)', $st->toSql());
+        self::assertSame(['p1' => 'val'], $st->getParams());
     }
 
     /**
@@ -66,8 +71,8 @@ class InsertStatementTest extends TestCase
             ->into(new RawExpression('tb AS t'))
             ->values(['col' => 'val']);
 
-        $this->assertSame('INSERT INTO tb AS t (col) VALUES (:p1)', $st->toSql());
-        $this->assertSame(['p1' => 'val'], $st->getParams());
+        self::assertSame('INSERT INTO tb AS t (col) VALUES (:p1)', $st->toSql());
+        self::assertSame(['p1' => 'val'], $st->getParams());
     }
 
     //endregion
@@ -83,8 +88,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->columns(['c1', 'c2', 'c3']);
 
-        $this->assertSame('INSERT INTO tb (c1, c2, c3) DEFAULT VALUES', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb (c1, c2, c3) DEFAULT VALUES', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -97,8 +102,8 @@ class InsertStatementTest extends TestCase
             ->columns('c1, c2, c3')
             ->values('(1, 2, 3)');
 
-        $this->assertSame('INSERT INTO tb (c1, c2, c3) VALUES (1, 2, 3)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb (c1, c2, c3) VALUES (1, 2, 3)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -111,8 +116,8 @@ class InsertStatementTest extends TestCase
             ->columns(['c1', 'c2', 'c3'])
             ->values(['v1', 'v2', 'v3']);
 
-        $this->assertSame('INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
     }
 
     /**
@@ -126,18 +131,18 @@ class InsertStatementTest extends TestCase
             ->values([
                 ['v1', 'v2', 'v3'],
                 ['v4', 'v5', 'v6'],
-                ['v7', 'v8', 'v9']
+                ['v7', 'v8', 'v9'],
             ]);
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3), (:p4, :p5, :p6), (:p7, :p8, :p9)',
             $st->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3',
                 'p4' => 'v4', 'p5' => 'v5', 'p6' => 'v6',
-                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9'
+                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9',
             ],
             $st->getParams()
         );
@@ -152,8 +157,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->values(['v1', 'v2', 'v3'], ['c1', 'c2', 'c3']);
 
-        $this->assertSame('INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
     }
 
     /**
@@ -167,20 +172,20 @@ class InsertStatementTest extends TestCase
                 [
                     ['v1', 'v2', 'v3'],
                     ['v4', 'v5', 'v6'],
-                    ['v7', 'v8', 'v9']
+                    ['v7', 'v8', 'v9'],
                 ],
                 ['c1', 'c2', 'c3']
             );
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3), (:p4, :p5, :p6), (:p7, :p8, :p9)',
             $st->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3',
                 'p4' => 'v4', 'p5' => 'v5', 'p6' => 'v6',
-                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9'
+                'p7' => 'v7', 'p8' => 'v8', 'p9' => 'v9',
             ],
             $st->getParams()
         );
@@ -195,8 +200,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->values(['c1' => 'v1', 'c2' => 'v2', 'c3' => 'v3']);
 
-        $this->assertSame('INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
     }
 
     /**
@@ -209,18 +214,18 @@ class InsertStatementTest extends TestCase
             ->values([
                 ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'v3'],
                 ['c1' => 'v4', 'c2' => 'v5', 'c3' => 'v6'],
-                ['c1' => 'v7', 'c2' => null, 'c3' => new RawExpression('DEFAULT')]
+                ['c1' => 'v7', 'c2' => null, 'c3' => new RawExpression('DEFAULT')],
             ]);
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb (c1, c2, c3) VALUES (:p1, :p2, :p3), (:p4, :p5, :p6), (:p7, NULL, DEFAULT)',
             $st->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3',
                 'p4' => 'v4', 'p5' => 'v5', 'p6' => 'v6',
-                'p7' => 'v7'
+                'p7' => 'v7',
             ],
             $st->getParams()
         );
@@ -235,8 +240,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->values(['v1', 'v2', 'v3']);
 
-        $this->assertSame('INSERT INTO tb VALUES (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
+        self::assertSame('INSERT INTO tb VALUES (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 'v1', 'p2' => 'v2', 'p3' => 'v3'], $st->getParams());
     }
 
     //endregion
@@ -251,17 +256,18 @@ class InsertStatementTest extends TestCase
         $st = (new InsertStatement())
             ->into('t1')
             ->columns(['t1.c1', 't1.c2', 't1.c3'])
-            ->select((new SelectStatement())
+            ->select(
+                (new SelectStatement())
                 ->from('t2')
                 ->select(['t2.c1', 't2.c2', 't3.c3'])
                 ->where('t2.c1', '=', 123)
             );
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO t1 (t1.c1, t1.c2, t1.c3) SELECT t2.c1, t2.c2, t3.c3 FROM t2 WHERE t2.c1 = :p1',
             $st->toSql()
         );
-        $this->assertSame(['p1' => 123], $st->getParams());
+        self::assertSame(['p1' => 123], $st->getParams());
     }
 
     //endregion
@@ -278,8 +284,8 @@ class InsertStatementTest extends TestCase
             ->onConflict()
             ->doNothing();
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT DO NOTHING', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT DO NOTHING', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -291,8 +297,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->onConflictDoNothing();
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT DO NOTHING', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT DO NOTHING', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -305,8 +311,8 @@ class InsertStatementTest extends TestCase
             ->onConflict('col')
             ->doNothing();
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (col) DO NOTHING', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (col) DO NOTHING', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -318,8 +324,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->onConflictDoNothing('col');
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (col) DO NOTHING', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (col) DO NOTHING', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -332,8 +338,8 @@ class InsertStatementTest extends TestCase
             ->onConflict('c1')
             ->doUpdate('c2', 123);
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) DO UPDATE SET c2 = :p1', $st->toSql());
-        $this->assertSame(['p1' => 123], $st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) DO UPDATE SET c2 = :p1', $st->toSql());
+        self::assertSame(['p1' => 123], $st->getParams());
     }
 
     /**
@@ -345,8 +351,8 @@ class InsertStatementTest extends TestCase
             ->into('tb')
             ->onConflictDoUpdate('c1', 'c2', 123);
 
-        $this->assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) DO UPDATE SET c2 = :p1', $st->toSql());
-        $this->assertSame(['p1' => 123], $st->getParams());
+        self::assertSame('INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) DO UPDATE SET c2 = :p1', $st->toSql());
+        self::assertSame(['p1' => 123], $st->getParams());
     }
 
     /**
@@ -359,11 +365,11 @@ class InsertStatementTest extends TestCase
             ->onConflict(['c1', 'c2', 'c3'])
             ->doUpdate(['c4' => 123, 'c5' => 'abc']);
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1, c2, c3) DO UPDATE SET c4 = :p1, c5 = :p2',
             $st->toSql()
         );
-        $this->assertSame(['p1' => 123, 'p2' => 'abc'], $st->getParams());
+        self::assertSame(['p1' => 123, 'p2' => 'abc'], $st->getParams());
     }
 
     /**
@@ -379,11 +385,11 @@ class InsertStatementTest extends TestCase
             ->doUpdate('c4', 'abc')
             ->doUpdate('c5', new RawExpression('NULL'));
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1, c2) DO UPDATE SET c3 = :p1, c4 = :p2, c5 = NULL',
             $st->toSql()
         );
-        $this->assertSame(['p1' => 123, 'p2' => 'abc'], $st->getParams());
+        self::assertSame(['p1' => 123, 'p2' => 'abc'], $st->getParams());
     }
 
     /**
@@ -396,11 +402,11 @@ class InsertStatementTest extends TestCase
             ->onConflict('c1')
             ->onConstraint('const_name');
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) ON CONSTRAINT const_name DO NOTHING',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -413,11 +419,11 @@ class InsertStatementTest extends TestCase
             ->onConflict('c1', 'c1 IS NULL')
             ->onConflict('c2', 'c2 IS NULL');
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1, c2) WHERE c1 IS NULL AND c2 IS NULL DO NOTHING',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -434,11 +440,11 @@ class InsertStatementTest extends TestCase
                     ->orWhere('c3', '>', 5)
             );
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) WHERE c2 = :p1 OR c3 > :p2 DO NOTHING',
             $st->toSql()
         );
-        $this->assertSame(['p1' => true, 'p2' => 5], $st->getParams());
+        self::assertSame(['p1' => true, 'p2' => 5], $st->getParams());
     }
 
     /**
@@ -458,12 +464,12 @@ class InsertStatementTest extends TestCase
                     ->and('c3', '>', 5)
             );
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) DO UPDATE SET ' .
             'c1 = NULL, c2 = :p3 WHERE c1 > 5 AND (c2 < :p1 AND c3 > :p2)',
             $st->toSql()
         );
-        $this->assertEquals(['p1' => 300, 'p2' => 5, 'p3' => 123], $st->getParams());
+        self::assertEquals(['p1' => 300, 'p2' => 5, 'p3' => 123], $st->getParams());
     }
 
     /**
@@ -481,12 +487,12 @@ class InsertStatementTest extends TestCase
             ->andwhere('c5', '>', 10)
             ->orWhere('c6', '<', 0);
 
-        $this->assertSame(
+        self::assertSame(
             'INSERT INTO tb DEFAULT VALUES ON CONFLICT (c1) WHERE c2 = :p1 AND c3 < :p2 ON CONSTRAINT const ' .
             'DO UPDATE SET c3 = :p3 WHERE c5 > :p4 OR c6 < :p5',
             $st->toSql()
         );
-        $this->assertEquals(
+        self::assertEquals(
             ['p1' => true, 'p2' => 3, 'p3' => 1, 'p4' => 10, 'p5' => 0],
             $st->getParams()
         );
@@ -506,8 +512,8 @@ class InsertStatementTest extends TestCase
             ->values(['c1' => 'v1'])
             ->returning();
 
-        $this->assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING *', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING *', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -522,8 +528,8 @@ class InsertStatementTest extends TestCase
             ->returning('c2', null)
             ->returning('col', 'c3');
 
-        $this->assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1, c2, col c3', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1, c2, col c3', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -536,8 +542,8 @@ class InsertStatementTest extends TestCase
             ->values(['c1' => 'v1'])
             ->returning(['c1', 'c2', 'c3']);
 
-        $this->assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1, c2, c3', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1, c2, c3', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     /**
@@ -550,8 +556,8 @@ class InsertStatementTest extends TestCase
             ->values(['c1' => 'v1'])
             ->returning(['a' => 'c1', 'b' => 'c2', 'c' => 'c3']);
 
-        $this->assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1 a, c2 b, c3 c', $st->toSql());
-        $this->assertSame(['p1' => 'v1'], $st->getParams());
+        self::assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1 a, c2 b, c3 c', $st->toSql());
+        self::assertSame(['p1' => 'v1'], $st->getParams());
     }
 
     //endregion
@@ -589,7 +595,7 @@ class InsertStatementTest extends TestCase
             return 7;
         });
 
-        $this->assertSame(7, $st->exec());
+        self::assertSame(7, $st->exec());
     }
 
     //endregion
@@ -613,13 +619,13 @@ class InsertStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        $this->assertSame($executor, $copy->getStatementExecutor());
-        $this->assertSame(
+        self::assertSame($executor, $copy->getStatementExecutor());
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'INSERT INTO tb t (c1) VALUES (:p1) ON CONFLICT (c1) DO NOTHING RETURNING c1, c2, c3',
             $copy->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 'v1',
             ],
@@ -644,9 +650,9 @@ class InsertStatementTest extends TestCase
 
         $st->clean();
 
-        $this->assertSame($executor, $st->getStatementExecutor());
-        $this->assertSame('INSERT INTO DEFAULT VALUES', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame($executor, $st->getStatementExecutor());
+        self::assertSame('INSERT INTO DEFAULT VALUES', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion

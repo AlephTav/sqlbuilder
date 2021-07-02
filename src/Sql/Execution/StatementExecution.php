@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Execution;
 
 trait StatementExecution
@@ -7,7 +9,6 @@ trait StatementExecution
     /**
      * Executes this delete statement.
      *
-     * @return int
      */
     public function exec(): int
     {

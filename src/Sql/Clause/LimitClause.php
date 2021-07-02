@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Clause;
 
 trait LimitClause
@@ -7,7 +9,6 @@ trait LimitClause
     protected ?int $limit = null;
 
     /**
-     * @param int|null $limit
      * @return static
      */
     public function limit(?int $limit)

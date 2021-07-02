@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
-use Closure;
 use AlephTools\SqlBuilder\Query;
+use Closure;
 
 class ConditionalExpression extends AbstractExpression
 {
@@ -40,7 +42,6 @@ class ConditionalExpression extends AbstractExpression
      * @param mixed $column
      * @param mixed $operator
      * @param mixed $value
-     * @param string $connector
      * @return static
      */
     public function where($column, $operator = null, $value = null, string $connector = 'AND')
@@ -74,7 +75,6 @@ class ConditionalExpression extends AbstractExpression
      * @param mixed $column
      * @param mixed $operator
      * @param mixed $value
-     * @param string $connector
      * @return static
      */
     public function with($column, $operator = null, $value = null, string $connector = 'AND')

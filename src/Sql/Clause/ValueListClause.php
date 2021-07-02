@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
@@ -26,7 +28,7 @@ trait ValueListClause
             $first = reset($values);
             if ($this->isAssociativeArray($first)) {
                 $this->columns(array_keys($first));
-            } else if ($this->isAssociativeArray($values)) {
+            } elseif ($this->isAssociativeArray($values)) {
                 $this->columns(array_keys($values));
             }
         }

@@ -1,20 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
-use RuntimeException;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
 use AlephTools\SqlBuilder\PostgreSql\ValuesStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
+/**
+ * @internal
+ */
 class SelectStatementTest extends TestCase
 {
-    public function setUp(): void
+    protected function setUp(): void
     {
         AbstractExpression::resetParameterIndex();
     }
@@ -26,8 +31,8 @@ class SelectStatementTest extends TestCase
     {
         $st = new SelectStatement();
 
-        $this->assertSame('SELECT *', $st->toString());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT *', $st->toString());
+        self::assertEmpty($st->getParams());
     }
 
     //region FROM
@@ -40,8 +45,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from('tb');
 
-        $this->assertSame('SELECT * FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -52,8 +57,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from('tb', 't1');
 
-        $this->assertSame('SELECT * FROM tb t1', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb t1', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -64,8 +69,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from(['t1', 't2', 't3']);
 
-        $this->assertSame('SELECT * FROM t1, t2, t3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1, t2, t3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -76,8 +81,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from(['t1', 't2', 't3']);
 
-        $this->assertSame('SELECT * FROM t1, t2, t3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1, t2, t3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -89,11 +94,11 @@ class SelectStatementTest extends TestCase
             ->from([
                 'a1' => 't1',
                 'a2' => 't2',
-                'a3' => 't3'
+                'a3' => 't3',
             ]);
 
-        $this->assertSame('SELECT * FROM t1 a1, t2 a2, t3 a3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 a1, t2 a2, t3 a3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -106,8 +111,8 @@ class SelectStatementTest extends TestCase
             ->from('t2')
             ->from('t3');
 
-        $this->assertSame('SELECT * FROM t1, t2, t3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1, t2, t3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -120,8 +125,8 @@ class SelectStatementTest extends TestCase
             ->from('t2', 'a2')
             ->from('t3', 'a3');
 
-        $this->assertSame('SELECT * FROM t1 a1, t2 a2, t3 a3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 a1, t2 a2, t3 a3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -132,8 +137,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from(new RawExpression('tb AS a'));
 
-        $this->assertSame('SELECT * FROM tb AS a', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb AS a', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -144,8 +149,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from((new SelectStatement())->from('tb'));
 
-        $this->assertSame('SELECT * FROM (SELECT * FROM tb)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM (SELECT * FROM tb)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -156,8 +161,8 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from((new SelectStatement())->from('tb'), 'a1');
 
-        $this->assertSame('SELECT * FROM (SELECT * FROM tb) a1', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM (SELECT * FROM tb) a1', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -169,33 +174,33 @@ class SelectStatementTest extends TestCase
             ->from([
                     (new SelectStatement())->from('t1'),
                     (new SelectStatement())->from('t2'),
-                    (new SelectStatement())->from('t3')
+                    (new SelectStatement())->from('t3'),
             ]);
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM (SELECT * FROM t1), (SELECT * FROM t2), (SELECT * FROM t3)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
      * @test
      */
-    public function fromMapOfQueriesWithAliases()
+    public function fromMapOfQueriesWithAliases(): void
     {
         $st = (new SelectStatement())
             ->from([
                 'a1' => (new SelectStatement())->from('t1'),
                 'a2' => (new SelectStatement())->from('t2'),
-                'a3' => (new SelectStatement())->from('t3')
+                'a3' => (new SelectStatement())->from('t3'),
             ]);
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM (SELECT * FROM t1) a1, (SELECT * FROM t2) a2, (SELECT * FROM t3) a3',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -208,8 +213,8 @@ class SelectStatementTest extends TestCase
             ->from((new SelectStatement())->from('t2'), 'a2')
             ->from(['t3']);
 
-        $this->assertSame('SELECT * FROM t1 a1, (SELECT * FROM t2) a2, t3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 a1, (SELECT * FROM t2) a2, t3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -225,8 +230,8 @@ class SelectStatementTest extends TestCase
             ->select('column')
             ->from('tb');
 
-        $this->assertSame('SELECT column FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT column FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -238,8 +243,8 @@ class SelectStatementTest extends TestCase
             ->select('column', 'a1')
             ->from('tb');
 
-        $this->assertSame('SELECT column a1 FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT column a1 FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -252,8 +257,8 @@ class SelectStatementTest extends TestCase
             ->select('c2', 'a2')
             ->from('tb');
 
-        $this->assertSame('SELECT c1, c2 a2 FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT c1, c2 a2 FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -265,8 +270,8 @@ class SelectStatementTest extends TestCase
             ->select(['c1', 'c2', 'c3'])
             ->from('tb');
 
-        $this->assertSame('SELECT c1, c2, c3 FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT c1, c2, c3 FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -278,12 +283,12 @@ class SelectStatementTest extends TestCase
             ->select([
                 'a1' => 'c1',
                 'a2' => 'c2',
-                'a3' => 'c3'
+                'a3' => 'c3',
             ])
             ->from('tb');
 
-        $this->assertSame('SELECT c1 a1, c2 a2, c3 a3 FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT c1 a1, c2 a2, c3 a3 FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -295,8 +300,8 @@ class SelectStatementTest extends TestCase
             ->select(new RawExpression('c1, c2, c3'))
             ->from('tb');
 
-        $this->assertSame('SELECT c1, c2, c3 FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT c1, c2, c3 FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -308,8 +313,8 @@ class SelectStatementTest extends TestCase
             ->select((new SelectStatement())->from('t2'))
             ->from('t1');
 
-        $this->assertSame('SELECT (SELECT * FROM t2) FROM t1', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT (SELECT * FROM t2) FROM t1', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -321,8 +326,8 @@ class SelectStatementTest extends TestCase
             ->select((new SelectStatement())->from('t2'), 'a1')
             ->from('t1');
 
-        $this->assertSame('SELECT (SELECT * FROM t2) a1 FROM t1', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT (SELECT * FROM t2) a1 FROM t1', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -334,14 +339,14 @@ class SelectStatementTest extends TestCase
             ->select([
                 'a1' => (new SelectStatement())->from('t2'),
                 'a2' => 'c2',
-                null
+                null,
             ])
             ->select('c3')
             ->select(new ValueListExpression([1, 2, 3]), new RawExpression('a4'))
             ->from('t1');
 
-        $this->assertSame('SELECT (SELECT * FROM t2) a1, c2 a2, NULL, c3, (VALUES (:p1, :p2, :p3)) a4 FROM t1', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
+        self::assertSame('SELECT (SELECT * FROM t2) a1, c2 a2, NULL, c3, (VALUES (:p1, :p2, :p3)) a4 FROM t1', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
     }
 
     //endregion
@@ -357,8 +362,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->join('t2', 't2.id = t1.id');
 
-        $this->assertSame('SELECT * FROM t1 JOIN t2 ON t2.id = t1.id', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 JOIN t2 ON t2.id = t1.id', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -370,8 +375,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->join(['t2', 't3'], 't2.id = t1.id AND t3.id = t1.id');
 
-        $this->assertSame('SELECT * FROM t1 JOIN (t2, t3) ON t2.id = t1.id AND t3.id = t1.id', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 JOIN (t2, t3) ON t2.id = t1.id AND t3.id = t1.id', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -381,18 +386,19 @@ class SelectStatementTest extends TestCase
     {
         $st = (new SelectStatement())
             ->from('t1')
-            ->join([
+            ->join(
+                [
                 'a2' => 't2',
-                'a3' => 't3'
+                'a3' => 't3',
             ],
-            't2.id = t1.id AND t3.id = t1.id'
-        );
+                't2.id = t1.id AND t3.id = t1.id'
+            );
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 JOIN (t2 a2, t3 a3) ON t2.id = t1.id AND t3.id = t1.id',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -404,8 +410,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->join('t2', ['t2.c1', 't2.c2']);
 
-        $this->assertSame('SELECT * FROM t1 JOIN t2 USING (t2.c1, t2.c2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 JOIN t2 USING (t2.c1, t2.c2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -417,8 +423,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->join((new SelectStatement())->from('t2'), 't1.id = t2.id');
 
-        $this->assertSame('SELECT * FROM t1 JOIN (SELECT * FROM t2) ON t1.id = t2.id', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 JOIN (SELECT * FROM t2) ON t1.id = t2.id', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -430,8 +436,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->join((new SelectStatement())->from('t2'), 'a2', 't1.id = a2.id');
 
-        $this->assertSame('SELECT * FROM t1 JOIN (SELECT * FROM t2) a2 ON t1.id = a2.id', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 JOIN (SELECT * FROM t2) a2 ON t1.id = a2.id', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -444,16 +450,16 @@ class SelectStatementTest extends TestCase
             ->join(
                 [
                     'a2' => (new SelectStatement())->from('t2'),
-                    'a3' => (new SelectStatement())->from('t3')
+                    'a3' => (new SelectStatement())->from('t3'),
                 ],
                 't1.id = a2.id AND t1.id = a3.id'
             );
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 JOIN ((SELECT * FROM t2) a2, (SELECT * FROM t3) a3) ON t1.id = a2.id AND t1.id = a3.id',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -469,11 +475,11 @@ class SelectStatementTest extends TestCase
                     ->or('t2.f3', '<>', 'a');
             });
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 JOIN t2 ON (t2.id = t1.id AND t1.f1 > :p1 OR t2.f3 <> :p2)',
             $st->toSql()
         );
-        $this->assertSame(['p1' => 5, 'p2' => 'a'], $st->getParams());
+        self::assertSame(['p1' => 5, 'p2' => 'a'], $st->getParams());
     }
 
     /**
@@ -483,18 +489,20 @@ class SelectStatementTest extends TestCase
     {
         $st = (new SelectStatement())
             ->from('t1')
-            ->join('t2', (new ConditionalExpression())
+            ->join(
+                't2',
+                (new ConditionalExpression())
                 ->with('t2.id', '=', new RawExpression('t1.id'))
                 ->andWhere('t1.f1', '>', new RawExpression('t2.f2'))
                 ->orWhere('t2.f3', '<>', new RawExpression('t1.f3'))
                 ->or(null)
             );
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 JOIN t2 ON (t2.id = t1.id AND t1.f1 > t2.f2 OR t2.f3 <> t1.f3 OR NULL)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -520,7 +528,7 @@ class SelectStatementTest extends TestCase
             ->naturalFullOuterJoin('t15')
             ->crossJoin('t16');
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 ' .
             'INNER JOIN t2 ' .
             'NATURAL INNER JOIN t3 ' .
@@ -539,7 +547,7 @@ class SelectStatementTest extends TestCase
             'CROSS JOIN t16',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -560,18 +568,18 @@ class SelectStatementTest extends TestCase
                 't1.id = t2.id'
             );
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 RIGHT JOIN (VALUES (:p1, :p2), (:p3, :p4), (:p5, :p6)) t2 (name, id) ON t1.id = t2.id',
             $st->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 'a1',
                 'p2' => 1,
                 'p3' => 'a2',
                 'p4' => 2,
                 'p5' => 'a3',
-                'p6' => 3
+                'p6' => 3,
             ],
             $st->getParams()
         );
@@ -590,8 +598,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('c1 = c2');
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -603,8 +611,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where(new RawExpression('c1 = c2'));
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -616,8 +624,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('col', '=', 1);
 
-        $this->assertSame('SELECT * FROM tb WHERE col = :p1', $st->toSql());
-        $this->assertSame(['p1' => 1], $st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE col = :p1', $st->toSql());
+        self::assertSame(['p1' => 1], $st->getParams());
     }
 
     /**
@@ -629,8 +637,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('col', '=', null);
 
-        $this->assertSame('SELECT * FROM tb WHERE col = NULL', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE col = NULL', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -642,8 +650,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->where('t1.col', '=', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('SELECT * FROM t1 WHERE t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 WHERE t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -655,8 +663,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('col', 'IN', [1, 2, 3]);
 
-        $this->assertSame('SELECT * FROM tb WHERE col IN (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE col IN (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
     }
 
     /**
@@ -668,8 +676,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('col', 'BETWEEN', [1, 2]);
 
-        $this->assertSame('SELECT * FROM tb WHERE col BETWEEN :p1 AND :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE col BETWEEN :p1 AND :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -681,8 +689,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('c1', '=', new RawExpression('c2'));
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -694,8 +702,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where('NOT', new RawExpression('col'));
 
-        $this->assertSame('SELECT * FROM tb WHERE NOT col', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE NOT col', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -707,8 +715,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->where('NOT', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('SELECT * FROM t1 WHERE NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 WHERE NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -720,8 +728,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->where((new SelectStatement())->from('t2')->select('COUNT(*)'), '>', 5);
 
-        $this->assertSame('SELECT * FROM t1 WHERE (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
-        $this->assertSame(['p1' => 5], $st->getParams());
+        self::assertSame('SELECT * FROM t1 WHERE (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
+        self::assertSame(['p1' => 5], $st->getParams());
     }
 
     /**
@@ -733,15 +741,15 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->where(
                 (new SelectStatement())->from('t2')->select('COUNT(*)'),
-        '<>',
+                '<>',
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 WHERE (SELECT COUNT(*) FROM t2) <> (SELECT COUNT(*) FROM t3)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -753,8 +761,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where(['c1 = c2', 'c3 <> c4']);
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 = c2 AND c3 <> c4', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 = c2 AND c3 <> c4', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -766,8 +774,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->where(['c1' => 1, 'c2' => 2]);
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 = :p1 AND c2 = :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 = :p1 AND c2 = :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -784,8 +792,8 @@ class SelectStatementTest extends TestCase
                     ->orWhere('c3', '<', 2)
             );
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -801,8 +809,8 @@ class SelectStatementTest extends TestCase
                     ->orWhere('c3', '<', 2);
             });
 
-        $this->assertSame('SELECT * FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb WHERE c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     //endregion
@@ -818,8 +826,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('c1 = c2');
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -831,8 +839,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having(new RawExpression('c1 = c2'));
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -844,8 +852,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('col', '=', 1);
 
-        $this->assertSame('SELECT * FROM tb HAVING col = :p1', $st->toSql());
-        $this->assertSame(['p1' => 1], $st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING col = :p1', $st->toSql());
+        self::assertSame(['p1' => 1], $st->getParams());
     }
 
     /**
@@ -857,21 +865,21 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('col', '=', null);
 
-        $this->assertSame('SELECT * FROM tb HAVING col = NULL', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING col = NULL', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
      * @test
      */
-    public function havingBinaryOpWithQuery()
+    public function havingBinaryOpWithQuery(): void
     {
         $st = (new SelectStatement())
             ->from('t1')
             ->having('t1.col', '=', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('SELECT * FROM t1 HAVING t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 HAVING t1.col = (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -883,8 +891,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('col', 'IN', [1, 2, 3]);
 
-        $this->assertSame('SELECT * FROM tb HAVING col IN (:p1, :p2, :p3)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING col IN (:p1, :p2, :p3)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2, 'p3' => 3], $st->getParams());
     }
 
     /**
@@ -896,8 +904,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('col', 'BETWEEN', [1, 2]);
 
-        $this->assertSame('SELECT * FROM tb HAVING col BETWEEN :p1 AND :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING col BETWEEN :p1 AND :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -909,8 +917,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('c1', '=', new RawExpression('c2'));
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 = c2', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 = c2', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -922,8 +930,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having('NOT', new RawExpression('col'));
 
-        $this->assertSame('SELECT * FROM tb HAVING NOT col', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING NOT col', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -935,8 +943,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->having('NOT', (new SelectStatement())->from('t2')->select('COUNT(*)'));
 
-        $this->assertSame('SELECT * FROM t1 HAVING NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 HAVING NOT (SELECT COUNT(*) FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -948,8 +956,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->having((new SelectStatement())->from('t2')->select('COUNT(*)'), '>', 5);
 
-        $this->assertSame('SELECT * FROM t1 HAVING (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
-        $this->assertSame(['p1' => 5], $st->getParams());
+        self::assertSame('SELECT * FROM t1 HAVING (SELECT COUNT(*) FROM t2) > :p1', $st->toSql());
+        self::assertSame(['p1' => 5], $st->getParams());
     }
 
     /**
@@ -961,15 +969,15 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->having(
                 (new SelectStatement())->from('t2')->select('COUNT(*)'),
-        '<>',
+                '<>',
                 (new SelectStatement())->from('t3')->select('COUNT(*)')
             );
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 HAVING (SELECT COUNT(*) FROM t2) <> (SELECT COUNT(*) FROM t3)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -981,8 +989,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having(['c1 = c2', 'c3 <> c4']);
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 = c2 AND c3 <> c4', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 = c2 AND c3 <> c4', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -994,8 +1002,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->having(['c1' => 1, 'c2' => 2]);
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 = :p1 AND c2 = :p2', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 = :p1 AND c2 = :p2', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -1012,8 +1020,8 @@ class SelectStatementTest extends TestCase
                 ->or('c3', '<', 2)
             );
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 IS NULL AND (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     /**
@@ -1029,8 +1037,8 @@ class SelectStatementTest extends TestCase
                     ->or('c3', '<', 2);
             });
 
-        $this->assertSame('SELECT * FROM tb HAVING c1 IS NULL OR (c2 = :p1 OR c3 < :p2)', $st->toSql());
-        $this->assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
+        self::assertSame('SELECT * FROM tb HAVING c1 IS NULL OR (c2 = :p1 OR c3 < :p2)', $st->toSql());
+        self::assertSame(['p1' => 1, 'p2' => 2], $st->getParams());
     }
 
     //endregion
@@ -1046,8 +1054,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->groupBy('col');
 
-        $this->assertSame('SELECT * FROM tb GROUP BY col', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb GROUP BY col', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1059,8 +1067,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->groupBy('col', 'DESC');
 
-        $this->assertSame('SELECT * FROM tb GROUP BY col DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb GROUP BY col DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1072,8 +1080,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->groupBy(['c1', 'c2', 'c3']);
 
-        $this->assertSame('SELECT * FROM tb GROUP BY c1, c2, c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb GROUP BY c1, c2, c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1085,8 +1093,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->groupBy(['c1' => 'ASC', 'c2' => 'DESC', 'c3' => '']);
 
-        $this->assertSame('SELECT * FROM tb GROUP BY c1 ASC, c2 DESC, c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb GROUP BY c1 ASC, c2 DESC, c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1100,8 +1108,8 @@ class SelectStatementTest extends TestCase
             ->groupBy('c2', 'ASC')
             ->groupBy('c3', 'DESC');
 
-        $this->assertSame('SELECT * FROM tb GROUP BY c1, c2 ASC, c3 DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb GROUP BY c1, c2 ASC, c3 DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1113,8 +1121,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->groupBy((new SelectStatement())->from('t2')->select('t2.id'), 'DESC');
 
-        $this->assertSame('SELECT * FROM t1 GROUP BY (SELECT t2.id FROM t2) DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 GROUP BY (SELECT t2.id FROM t2) DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1130,11 +1138,11 @@ class SelectStatementTest extends TestCase
             ->groupBy(['c5' => 'DESC'])
             ->groupBy((new SelectStatement())->from('t2')->select('t2.id'));
 
-        $this->assertEquals(
+        self::assertEquals(
             'SELECT * FROM t1 GROUP BY c1 ASC, c2 DESC, c3, c4, c5 DESC, (SELECT t2.id FROM t2)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -1150,8 +1158,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->orderBy('col');
 
-        $this->assertEquals('SELECT * FROM tb ORDER BY col', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertEquals('SELECT * FROM tb ORDER BY col', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1163,8 +1171,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->orderBy('col', 'DESC');
 
-        $this->assertSame('SELECT * FROM tb ORDER BY col DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb ORDER BY col DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1176,8 +1184,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->orderBy(['c1', 'c2', 'c3']);
 
-        $this->assertSame('SELECT * FROM tb ORDER BY c1, c2, c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb ORDER BY c1, c2, c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1189,8 +1197,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->orderBy(['c1' => 'ASC', 'c2' => 'DESC', 'c3' => '']);
 
-        $this->assertSame('SELECT * FROM tb ORDER BY c1 ASC, c2 DESC, c3', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb ORDER BY c1 ASC, c2 DESC, c3', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1204,8 +1212,8 @@ class SelectStatementTest extends TestCase
             ->orderBy('c2', 'ASC')
             ->orderBy('c3', 'DESC');
 
-        $this->assertSame('SELECT * FROM tb ORDER BY c1, c2 ASC, c3 DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb ORDER BY c1, c2 ASC, c3 DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1217,8 +1225,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->orderBy((new SelectStatement())->from('t2')->select('t2.id'), 'DESC');
 
-        $this->assertSame('SELECT * FROM t1 ORDER BY (SELECT t2.id FROM t2) DESC', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM t1 ORDER BY (SELECT t2.id FROM t2) DESC', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1234,11 +1242,11 @@ class SelectStatementTest extends TestCase
             ->orderBy(['c5' => 'DESC'])
             ->orderBy((new SelectStatement())->from('t2')->select('t2.id'));
 
-        $this->assertSame(
+        self::assertSame(
             'SELECT * FROM t1 ORDER BY c1 ASC, c2 DESC, c3, c4, c5 DESC, (SELECT t2.id FROM t2)',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -1254,8 +1262,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->limit(10);
 
-        $this->assertSame('SELECT * FROM tb LIMIT 10', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb LIMIT 10', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1267,8 +1275,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->offset(12);
 
-        $this->assertSame('SELECT * FROM tb OFFSET 12', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb OFFSET 12', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1281,8 +1289,8 @@ class SelectStatementTest extends TestCase
             ->offset(5)
             ->limit(12);
 
-        $this->assertSame('SELECT * FROM tb LIMIT 12 OFFSET 5', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb LIMIT 12 OFFSET 5', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1294,8 +1302,8 @@ class SelectStatementTest extends TestCase
             ->from('tb')
             ->paginate(3, 7);
 
-        $this->assertSame('SELECT * FROM tb LIMIT 7 OFFSET 21', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('SELECT * FROM tb LIMIT 7 OFFSET 21', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -1311,8 +1319,8 @@ class SelectStatementTest extends TestCase
             ->from('t1')
             ->union((new SelectStatement())->from('t2'));
 
-        $this->assertSame('(SELECT * FROM t1) UNION (SELECT * FROM t2)', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('(SELECT * FROM t1) UNION (SELECT * FROM t2)', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1334,12 +1342,12 @@ class SelectStatementTest extends TestCase
             )
             ->orderBy('id', 'DESC');
 
-        $this->assertSame(
+        self::assertSame(
             '(SELECT * FROM t1) UNION (SELECT * FROM t2 ORDER BY t2.id ASC) UNION ' .
             '(SELECT * FROM t3 ORDER BY t3.id DESC) ORDER BY id DESC',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1356,7 +1364,7 @@ class SelectStatementTest extends TestCase
             ->unionExceptAll((new SelectStatement())->from('t6'))
             ->paginate(10, 5);
 
-        $this->assertEquals(
+        self::assertEquals(
             '(SELECT * FROM t1) ' .
             'UNION ALL (SELECT * FROM t2) ' .
             'INTERSECT (SELECT * FROM t3) ' .
@@ -1366,7 +1374,7 @@ class SelectStatementTest extends TestCase
             'LIMIT 5 OFFSET 50',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion
@@ -1382,8 +1390,8 @@ class SelectStatementTest extends TestCase
             ->with((new SelectStatement())->from('t1'), 'tb')
             ->from('tb');
 
-        $this->assertSame('WITH tb AS (SELECT * FROM t1) SELECT * FROM tb', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame('WITH tb AS (SELECT * FROM t1) SELECT * FROM tb', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1397,11 +1405,11 @@ class SelectStatementTest extends TestCase
             ->with(null, 'n2')
             ->from('tb');
 
-        $this->assertSame(
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1), n1 AS NULL, n2 AS NULL SELECT * FROM tb',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1430,12 +1438,12 @@ class SelectStatementTest extends TestCase
             ->select('product')
             ->select([
                 'product_units' => 'SUM(quantity)',
-                'product_sales' => 'SUM(amount)'
+                'product_sales' => 'SUM(amount)',
             ])
             ->where('region', 'IN', (new SelectStatement())->from('top_regions')->select('region'))
             ->orderBy(['region', 'product']);
 
-        $this->assertSame(
+        self::assertSame(
             'WITH regional_sales AS (SELECT region, SUM(amount) total_sales FROM orders GROUP BY region), ' .
             'top_regions AS (SELECT region, SUM(total_sales) / 10 FROM regional_sales WHERE total_sales > ' .
             '(SELECT * FROM regional_sales)) SELECT region, product, SUM(quantity) product_units, ' .
@@ -1443,7 +1451,7 @@ class SelectStatementTest extends TestCase
             'ORDER BY region, product',
             $st->toSql()
         );
-        $this->assertEmpty($st->getParams());
+        self::assertEmpty($st->getParams());
     }
 
     /**
@@ -1466,12 +1474,12 @@ class SelectStatementTest extends TestCase
             ->from('t')
             ->select('SUM(n)');
 
-        $this->assertSame(
+        self::assertSame(
             'WITH RECURSIVE t(n) AS ((VALUES (:p1)) UNION ALL (SELECT n + 1 FROM t WHERE n < :p2)) ' .
             'SELECT SUM(n) FROM t',
             $st->toSql()
         );
-        $this->assertSame(['p1' => 1, 'p2' => 100], $st->getParams());
+        self::assertSame(['p1' => 1, 'p2' => 100], $st->getParams());
     }
 
     //endregion
@@ -1510,7 +1518,7 @@ class SelectStatementTest extends TestCase
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        $this->assertSame(7, $st->scalar());
+        self::assertSame(7, $st->scalar());
     }
 
     /**
@@ -1531,7 +1539,7 @@ class SelectStatementTest extends TestCase
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        $this->assertSame(7, $st->scalar('c1'));
+        self::assertSame(7, $st->scalar('c1'));
     }
 
     /**
@@ -1554,7 +1562,7 @@ class SelectStatementTest extends TestCase
             ->groupBy('c2')
             ->limit(10);
 
-        $this->assertSame(7, $st->count());
+        self::assertSame(7, $st->count());
     }
 
     /**
@@ -1577,7 +1585,7 @@ class SelectStatementTest extends TestCase
             ->groupBy('c2')
             ->limit(10);
 
-        $this->assertSame(7, $st->countWithNonConditionalClauses());
+        self::assertSame(7, $st->countWithNonConditionalClauses());
     }
 
     /**
@@ -1600,7 +1608,7 @@ class SelectStatementTest extends TestCase
             ->groupBy('c2')
             ->limit(10);
 
-        $this->assertSame(7, $st->count('c4'));
+        self::assertSame(7, $st->count('c4'));
     }
 
     /**
@@ -1623,7 +1631,7 @@ class SelectStatementTest extends TestCase
             ->groupBy('c2')
             ->limit(10);
 
-        $this->assertSame(7, $st->countWithNonConditionalClauses('c4'));
+        self::assertSame(7, $st->countWithNonConditionalClauses('c4'));
     }
 
     /**
@@ -1644,7 +1652,7 @@ class SelectStatementTest extends TestCase
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        $this->assertSame([7], $st->column());
+        self::assertSame([7], $st->column());
     }
 
     /**
@@ -1665,7 +1673,7 @@ class SelectStatementTest extends TestCase
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        $this->assertSame([7], $st->column('c1'));
+        self::assertSame([7], $st->column('c1'));
     }
 
     /**
@@ -1686,7 +1694,7 @@ class SelectStatementTest extends TestCase
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        $this->assertSame([7], $st->row());
+        self::assertSame([7], $st->row());
     }
 
     /**
@@ -1707,7 +1715,7 @@ class SelectStatementTest extends TestCase
             ->select('c1, c2')
             ->where('c3', '=', 5);
 
-        $this->assertSame([[7]], $st->rows());
+        self::assertSame([[7]], $st->rows());
     }
 
     /**
@@ -1726,22 +1734,22 @@ class SelectStatementTest extends TestCase
      */
     public function pairs(): void
     {
-        $this->assertSame(
+        self::assertSame(
             ['v1' => 'v2', 'v3' => 'v4', 'v5' => 'v6'],
             $this->getSelectStatementMock()->pairs()
         );
 
-        $this->assertSame(
+        self::assertSame(
             ['v1' => 'v2', 'v3' => 'v4', 'v5' => 'v6'],
             $this->getSelectStatementMock()->pairs('c1')
         );
 
-        $this->assertSame(
+        self::assertSame(
             ['v2' => 'v1', 'v4' => 'v3', 'v6' => 'v5'],
             $this->getSelectStatementMock()->pairs('c2')
         );
 
-        $this->assertSame(
+        self::assertSame(
             ['a' => 'v1', 'b' => 'v5'],
             $this->getSelectStatementMock()->pairs('c3')
         );
@@ -1763,19 +1771,19 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByKeyWithKey(): void
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 'v2' => ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 'v4' => ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
-                'v6' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+                'v6' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c2')
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
-                'b' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+                'b' => ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c3')
         );
@@ -1786,19 +1794,19 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByKeyWithoutKey(): void
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 'v1' => ['c2' => 'v2', 'c3' => 'a'],
                 'v3' => ['c2' => 'v4', 'c3' => 'b'],
-                'v5' => ['c2' => 'v6', 'c3' => 'b']
+                'v5' => ['c2' => 'v6', 'c3' => 'b'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c1', true)
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => ['c1' => 'v1', 'c2' => 'v2'],
-                'b' => ['c1' => 'v5', 'c2' => 'v6']
+                'b' => ['c1' => 'v5', 'c2' => 'v6'],
             ],
             $this->getSelectStatementMock()->rowsByKey('c3', true)
         );
@@ -1820,30 +1828,30 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByGroupWithKey(): void
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 'v2' => [
-                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a']
+                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 ],
                 'v4' => [
-                    ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b']
+                    ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
                 ],
                 'v6' => [
-                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
-                ]
+                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c2')
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => [
-                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a']
+                    ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
                 ],
                 'b' => [
                     ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
-                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
-                ]
+                    ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c3')
         );
@@ -1854,30 +1862,30 @@ class SelectStatementTest extends TestCase
      */
     public function rowsByGroupWithoutKey(): void
     {
-        $this->assertSame(
+        self::assertSame(
             [
                 'v2' => [
-                    ['c1' => 'v1', 'c3' => 'a']
+                    ['c1' => 'v1', 'c3' => 'a'],
                 ],
                 'v4' => [
-                    ['c1' => 'v3', 'c3' => 'b']
+                    ['c1' => 'v3', 'c3' => 'b'],
                 ],
                 'v6' => [
-                    ['c1' => 'v5', 'c3' => 'b']
-                ]
+                    ['c1' => 'v5', 'c3' => 'b'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c2', true)
         );
 
-        $this->assertSame(
+        self::assertSame(
             [
                 'a' => [
-                    ['c1' => 'v1', 'c2' => 'v2']
+                    ['c1' => 'v1', 'c2' => 'v2'],
                 ],
                 'b' => [
                     ['c1' => 'v3', 'c2' => 'v4'],
-                    ['c1' => 'v5', 'c2' => 'v6']
-                ]
+                    ['c1' => 'v5', 'c2' => 'v6'],
+                ],
             ],
             $this->getSelectStatementMock()->rowsByGroup('c3', true)
         );
@@ -1891,7 +1899,7 @@ class SelectStatementTest extends TestCase
         $st = $this->getSelectStatementMockWithGenerator();
         $pages = $st->pages(0);
 
-        $this->assertEmpty(iterator_to_array($pages));
+        self::assertEmpty(iterator_to_array($pages));
     }
 
     /**
@@ -1905,11 +1913,11 @@ class SelectStatementTest extends TestCase
         $i = 0;
         foreach ($pages as $row) {
             if ($i === 0) {
-                $this->assertSame(['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'], $row);
-            } else if ($i === 1) {
-                $this->assertSame(['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'], $row);
+                self::assertSame(['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'], $row);
+            } elseif ($i === 1) {
+                self::assertSame(['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'], $row);
             } else {
-                $this->assertSame(['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'], $row);
+                self::assertSame(['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'], $row);
             }
             ++$i;
         }
@@ -1924,7 +1932,7 @@ class SelectStatementTest extends TestCase
         $pages = $st->pages(2, 1);
 
         foreach ($pages as $row) {
-            $this->assertSame(['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'], $row);
+            self::assertSame(['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'], $row);
         }
     }
 
@@ -1936,7 +1944,7 @@ class SelectStatementTest extends TestCase
         $st = $this->getSelectStatementMockWithGenerator();
         $pages = $st->batches(0);
 
-        $this->assertEmpty(iterator_to_array($pages));
+        self::assertEmpty(iterator_to_array($pages));
     }
 
     /**
@@ -1950,17 +1958,17 @@ class SelectStatementTest extends TestCase
         $i = 0;
         foreach ($pages as $row) {
             if ($i === 0) {
-                $this->assertSame(
+                self::assertSame(
                     [
                         ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
-                        ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b']
+                        ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
                     ],
                     $row
                 );
             } else {
-                $this->assertSame(
+                self::assertSame(
                     [
-                        ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+                        ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
                     ],
                     $row
                 );
@@ -1978,7 +1986,7 @@ class SelectStatementTest extends TestCase
         $pages = $st->batches(2, 1);
 
         foreach ($pages as $row) {
-            $this->assertSame([['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']], $row);
+            self::assertSame([['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']], $row);
         }
     }
 
@@ -2012,10 +2020,10 @@ class SelectStatementTest extends TestCase
 
     private function getRowSet(): array
     {
-         return [
+        return [
             ['c1' => 'v1', 'c2' => 'v2', 'c3' => 'a'],
             ['c1' => 'v3', 'c2' => 'v4', 'c3' => 'b'],
-            ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b']
+            ['c1' => 'v5', 'c2' => 'v6', 'c3' => 'b'],
          ];
     }
 
@@ -2049,17 +2057,17 @@ class SelectStatementTest extends TestCase
 
         $copy = $st->copy();
 
-        $this->assertSame($executor, $copy->getStatementExecutor());
-        $this->assertSame(
+        self::assertSame($executor, $copy->getStatementExecutor());
+        self::assertSame(
             'WITH tb AS (SELECT * FROM t1) ' .
             'SELECT c1, c2 FROM tb1 t INNER JOIN tb ON tb.id = t.id WHERE c1 > :p1 ' .
             'GROUP BY c4 DESC HAVING c2 < :p2 ORDER BY c3 LIMIT 10 OFFSET 5',
             $copy->toSql()
         );
-        $this->assertSame(
+        self::assertSame(
             [
                 'p1' => 0,
-                'p2' => 1
+                'p2' => 1,
             ],
             $copy->getParams()
         );
@@ -2086,9 +2094,9 @@ class SelectStatementTest extends TestCase
 
         $st->clean();
 
-        $this->assertSame($executor, $st->getStatementExecutor());
-        $this->assertSame('SELECT *', $st->toSql());
-        $this->assertEmpty($st->getParams());
+        self::assertSame($executor, $st->getStatementExecutor());
+        self::assertSame('SELECT *', $st->toSql());
+        self::assertEmpty($st->getParams());
     }
 
     //endregion

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\Clause\UnionClause;
@@ -13,10 +15,10 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 class ValuesStatement extends AbstractValuesStatement
 {
-    use UnionClause,
-        ValuesClause,
-        OffsetClause,
-        DataFetching;
+    use UnionClause;
+    use ValuesClause;
+    use OffsetClause;
+    use DataFetching;
 
     public function __construct(
         StatementExecutor $db = null,
@@ -52,8 +54,6 @@ class ValuesStatement extends AbstractValuesStatement
     }
 
     /**
-     * @param int $page
-     * @param int $size
      * @return static
      */
     public function paginate(int $page, int $size)

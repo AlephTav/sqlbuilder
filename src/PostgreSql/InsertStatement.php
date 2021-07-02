@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\Clause\ConflictClause;
 use AlephTools\SqlBuilder\PostgreSql\Clause\InsertClause;
 use AlephTools\SqlBuilder\PostgreSql\Clause\ValueListClause;
+use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\AbstractInsertStatement;
 use AlephTools\SqlBuilder\Sql\Clause\ReturningClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
@@ -17,16 +20,15 @@ use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
-use AlephTools\SqlBuilder\Query;
 
 class InsertStatement extends AbstractInsertStatement
 {
-    use WithClause,
-        InsertClause,
-        ValueListClause,
-        ConflictClause,
-        ReturningClause,
-        DataFetching;
+    use WithClause;
+    use InsertClause;
+    use ValueListClause;
+    use ConflictClause;
+    use ReturningClause;
+    use DataFetching;
 
     public function __construct(
         StatementExecutor $db = null,

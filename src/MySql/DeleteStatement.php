@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql;
 
 use AlephTools\SqlBuilder\MySql\Clause\DeleteClause;
@@ -16,10 +18,10 @@ use AlephTools\SqlBuilder\StatementExecutor;
 
 class DeleteStatement extends AbstractDeleteStatement
 {
-    use DeleteClause,
-        PartitionClause,
-        OrderClause,
-        LimitClause;
+    use DeleteClause;
+    use PartitionClause;
+    use OrderClause;
+    use LimitClause;
 
     public function __construct(
         StatementExecutor $db = null,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
 use AlephTools\SqlBuilder\Query;
@@ -10,7 +12,6 @@ trait UnionClause
     use BaseUnionClause;
 
     /**
-     * @param Query $query
      * @return static
      */
     public function unionIntersect(Query $query)
@@ -19,7 +20,6 @@ trait UnionClause
     }
 
     /**
-     * @param Query $query
      * @return static
      */
     public function unionIntersectAll(Query $query)
@@ -28,7 +28,6 @@ trait UnionClause
     }
 
     /**
-     * @param Query $query
      * @return static
      */
     public function unionExcept(Query $query)
@@ -37,7 +36,6 @@ trait UnionClause
     }
 
     /**
-     * @param Query $query
      * @return static
      */
     public function unionExceptAll(Query $query)

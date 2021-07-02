@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\MySql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
@@ -14,7 +16,6 @@ trait RowAliasClause
     protected $columnAliases;
 
     /**
-     * @param string $rowAlias
      * @param mixed $columnAliases
      * @return static
      */

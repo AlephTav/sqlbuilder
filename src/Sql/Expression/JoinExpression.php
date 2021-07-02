@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use Closure;
@@ -14,7 +16,6 @@ class JoinExpression extends AbstractExpression
     }
 
     /**
-     * @param string $type
      * @param mixed $table
      * @param mixed $alias
      * @param mixed $condition
