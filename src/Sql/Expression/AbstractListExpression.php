@@ -1,45 +1,44 @@
 <?php
 
-declare(strict_types=1);
-
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
 
-class ListExpression extends AbstractExpression
+abstract class AbstractListExpression extends AbstractExpression
 {
-    public function __construct($column = null, $alias = null)
+    private bool $reverseOrder;
+
+    public function __construct(bool $reverseOrder)
     {
-        if ($column !== null || $alias !== null) {
-            $this->append($column, $alias);
-        }
+        $this->reverseOrder = $reverseOrder;
     }
 
     /**
-     * @param mixed $column
+     * @param mixed $name
      * @param mixed $alias
      * @return static
      */
-    public function append($column, $alias = null)
+    protected function appendName($name, $alias)
     {
         if ($this->sql !== '') {
             $this->sql .= ', ';
         }
-        $this->sql .= $this->convertNameToString($this->mapToExpression($column, $alias));
+        $this->sql .= $this->convertNameToString($this->mapToExpression($name, $alias));
         return $this;
     }
 
-    protected function mapToExpression($column, $alias)
+    protected function mapToExpression($name, $alias)
     {
-        if ($alias === null) {
-            return $column;
+        if ($alias === null && !$this->reverseOrder) {
+            return $name;
+        }
+        if ($name === null && $this->reverseOrder) {
+            return $alias;
         }
         if (is_scalar($alias)) {
-            $expression = [$alias => $column];
-        } else {
-            $expression = [[$alias, $column]];
+            return [$alias => $name];
         }
-        return $expression;
+        return [[$alias, $name]];
     }
 
     protected function convertNameToString($expression): string
@@ -71,16 +70,24 @@ class ListExpression extends AbstractExpression
     protected function arrayToString(array $expression): string
     {
         $list = [];
-        foreach ($expression as $alias => $column) {
+        foreach ($expression as $alias => $name) {
             if (is_numeric($alias)) {
-                if (is_array($column) && \count($column) === 2) {
-                    [$alias, $column] = $column;
+                if (is_array($name) && \count($name) === 2) {
+                    [$alias, $name] = $name;
+                } elseif ($this->reverseOrder) {
+                    $alias = $name;
+                    $name = null;
                 } else {
                     $alias = null;
                 }
             }
+            if ($this->reverseOrder) {
+                $tmp = $name;
+                $name = $alias;
+                $alias = $tmp;
+            }
             $alias = $alias === null ? '' : $this->convertNameToString($alias);
-            $list[] = $this->convertNameToString($column) . ($alias === '' ? '' : " $alias");
+            $list[] = $this->convertNameToString($name) . ($alias === '' ? '' : " $alias");
         }
         return implode(', ', $list);
     }

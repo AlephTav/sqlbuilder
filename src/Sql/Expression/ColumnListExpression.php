@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
-class SelectExpression extends AbstractListExpression
+class ColumnListExpression extends AbstractListExpression
 {
     public function __construct($column = null, $alias = null)
     {

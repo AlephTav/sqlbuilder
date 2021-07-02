@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
-class FromExpression extends ListExpression
+class FromExpression extends AbstractListExpression
 {
     public function __construct($table = null, $alias = null)
     {
-        parent::__construct($table, $alias);
+        parent::__construct(false);
+        if ($table !== null) {
+            $this->append($table, $alias);
+        }
     }
 
     /**
@@ -18,6 +21,6 @@ class FromExpression extends ListExpression
      */
     public function append($table, $alias = null)
     {
-        return parent::append($table, $alias);
+        return $this->appendName($table, $alias);
     }
 }

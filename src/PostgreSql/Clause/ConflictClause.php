@@ -6,12 +6,12 @@ namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait ConflictClause
 {
     /**
-     * @var ListExpression
+     * @var ColumnListExpression
      */
     protected $indexColumn;
 
@@ -63,7 +63,7 @@ trait ConflictClause
      */
     public function onConflict($indexColumn = '', $indexPredicate = null)
     {
-        $this->indexColumn = $this->indexColumn ?? new ListExpression();
+        $this->indexColumn = $this->indexColumn ?? new ColumnListExpression();
         $this->indexColumn->append($indexColumn);
         if ($indexPredicate !== null) {
             if ($this->indexPredicate) {
