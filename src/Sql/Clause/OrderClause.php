@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
 trait OrderClause
 {
     /**
-     * @var OrderExpression
+     * @var OrderExpression|null
      */
     protected $order;
 

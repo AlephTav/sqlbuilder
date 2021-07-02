@@ -16,4 +16,6 @@ interface Statement
     public function copy();
 
     public function clean(): void;
+
+    public function __toString(): string;
 }

@@ -44,7 +44,6 @@ abstract class AbstractInsertStatement extends AbstractStatement implements Comm
      */
     public function exec(string $sequence = null)
     {
-        $this->validateAndBuild();
-        return $this->db->insert($this->toSql(), $this->getParams(), $sequence);
+        return $this->db()->insert($this->toSql(), $this->getParams(), $sequence);
     }
 }

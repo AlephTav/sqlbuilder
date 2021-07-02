@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\JoinExpression;
 trait JoinClause
 {
     /**
-     * @var JoinExpression
+     * @var JoinExpression|null
      */
     protected $join;
 

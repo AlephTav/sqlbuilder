@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 trait ValueListClause
 {
     /**
-     * @var ValueListExpression
+     * @var ValueListExpression|null
      */
     protected $values;
 

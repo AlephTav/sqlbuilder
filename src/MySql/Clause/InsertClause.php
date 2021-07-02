@@ -81,7 +81,7 @@ trait InsertClause
     protected function buildInsert(): void
     {
         $this->sql .= 'INSERT';
-        if (strlen($this->modifiers)) {
+        if (strlen((string)$this->modifiers)) {
             $this->sql .= " $this->modifiers";
         }
         if ($this->table) {

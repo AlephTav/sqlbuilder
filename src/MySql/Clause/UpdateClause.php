@@ -41,7 +41,7 @@ trait UpdateClause
     protected function buildUpdate(): void
     {
         $this->sql .= 'UPDATE';
-        if (strlen($this->modifiers)) {
+        if (strlen((string)$this->modifiers)) {
             $this->sql .= " $this->modifiers";
         }
         if ($this->table) {

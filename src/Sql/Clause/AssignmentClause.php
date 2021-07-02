@@ -8,7 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 
 trait AssignmentClause
 {
-    /** @var AssignmentExpression */
+    /**
+     * @var AssignmentExpression|null
+     */
     protected $assignment;
 
     /**

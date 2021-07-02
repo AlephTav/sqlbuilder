@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
 trait WhereClause
 {
     /**
-     * @var WhereExpression
+     * @var WhereExpression|null
      */
     protected $where;
 

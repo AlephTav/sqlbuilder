@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
 trait ReturningClause
 {
     /**
-     * @var ReturningExpression
+     * @var ReturningExpression|null
      */
     protected $returning;
 

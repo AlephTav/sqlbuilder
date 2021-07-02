@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\HavingExpression;
 trait HavingClause
 {
     /**
-     * @var HavingExpression
+     * @var HavingExpression|null
      */
     protected $having;
 

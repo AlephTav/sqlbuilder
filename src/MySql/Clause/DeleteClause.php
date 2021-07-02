@@ -49,7 +49,7 @@ trait DeleteClause
     protected function buildDelete(): void
     {
         $this->sql .= 'DELETE';
-        if (strlen($this->modifiers)) {
+        if (strlen((string)$this->modifiers)) {
             $this->sql .= " $this->modifiers";
         }
         if ($this->from) {

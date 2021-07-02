@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 trait DuplicateKeyClause
 {
     /**
-     * @var AssignmentExpression
+     * @var AssignmentExpression|null
      */
     protected $assignmentOnUpdate;
 

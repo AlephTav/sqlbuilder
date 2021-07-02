@@ -11,7 +11,7 @@ trait RowAliasClause
     protected ?string $rowAlias = null;
 
     /**
-     * @var ColumnListExpression
+     * @var ColumnListExpression|null
      */
     protected $columnAliases;
 
@@ -32,7 +32,7 @@ trait RowAliasClause
 
     protected function buildRowAndColumnAliases(): void
     {
-        if (strlen($this->rowAlias)) {
+        if (strlen((string)$this->rowAlias)) {
             $this->sql .= "AS $this->rowAlias";
             if ($this->columnAliases) {
                 $this->sql .= " ($this->columnAliases)";

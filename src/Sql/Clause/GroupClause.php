@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\GroupExpression;
 trait GroupClause
 {
     /**
-     * @var GroupExpression
+     * @var GroupExpression|null
      */
     protected $group;
 

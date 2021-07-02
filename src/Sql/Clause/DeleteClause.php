@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 trait DeleteClause
 {
     /**
-     * @var FromExpression
+     * @var FromExpression|null
      */
     protected $from;
 

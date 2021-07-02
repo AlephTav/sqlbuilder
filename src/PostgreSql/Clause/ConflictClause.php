@@ -11,22 +11,22 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 trait ConflictClause
 {
     /**
-     * @var ColumnListExpression
+     * @var ColumnListExpression|null
      */
     protected $indexColumn;
 
     /**
-     * @var ConditionalExpression
+     * @var ConditionalExpression|null
      */
     protected $indexPredicate;
 
     /**
-     * @var AssignmentExpression
+     * @var AssignmentExpression|null
      */
     protected $assignment;
 
     /**
-     * @var ConditionalExpression
+     * @var ConditionalExpression|null
      */
     protected $assignmentPredicate;
 

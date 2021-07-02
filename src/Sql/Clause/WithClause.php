@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
 trait WithClause
 {
     /**
-     * @var WithExpression
+     * @var WithExpression|null
      */
     protected $with;
 

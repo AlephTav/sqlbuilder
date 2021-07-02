@@ -10,8 +10,7 @@ trait DataFetching
 {
     public function rows(): array
     {
-        $this->validateAndBuild();
-        return $this->db->rows($this->toSql(), $this->getParams());
+        return $this->db()->rows($this->toSql(), $this->getParams());
     }
 
     public function pairs(string $key = ''): array
@@ -82,19 +81,16 @@ trait DataFetching
 
     public function row(): array
     {
-        $this->validateAndBuild();
-        return $this->db->row($this->toSql(), $this->getParams());
+        return $this->db()->row($this->toSql(), $this->getParams());
     }
 
     public function column(): array
     {
-        $this->validateAndBuild();
-        return $this->db->column($this->toSql(), $this->getParams());
+        return $this->db()->column($this->toSql(), $this->getParams());
     }
 
     public function scalar()
     {
-        $this->validateAndBuild();
-        return $this->db->scalar($this->toSql(), $this->getParams());
+        return $this->db()->scalar($this->toSql(), $this->getParams());
     }
 }

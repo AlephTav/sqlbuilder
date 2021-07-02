@@ -68,6 +68,13 @@ abstract class AbstractStatement implements Statement
         return $this->toSql();
     }
 
+    protected function db(): StatementExecutor
+    {
+        $this->validateAndBuild();
+        /** @var StatementExecutor */
+        return $this->db;
+    }
+
     protected function validateAndBuild(): void
     {
         if ($this->db === null) {

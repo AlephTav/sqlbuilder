@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\SelectExpression;
 trait SelectClause
 {
     /**
-     * @var SelectExpression
+     * @var SelectExpression|null
      */
     protected $select;
 

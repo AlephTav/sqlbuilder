@@ -29,6 +29,11 @@ abstract class AbstractListExpression extends AbstractExpression
         return $this;
     }
 
+    /**
+     * @param mixed $name
+     * @param mixed $alias
+     * @return mixed
+     */
     protected function mapToExpression($name, $alias)
     {
         if ($alias === null && !$this->reverseOrder) {
@@ -38,7 +43,7 @@ abstract class AbstractListExpression extends AbstractExpression
             return $alias;
         }
         if (is_scalar($alias)) {
-            return [$alias => $name];
+            return [(string)$alias => $name];
         }
         return [[$alias, $name]];
     }

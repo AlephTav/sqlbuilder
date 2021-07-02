@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 trait ColumnsClause
 {
     /**
-     * @var ColumnListExpression
+     * @var ColumnListExpression|null
      */
     protected $columns;
 

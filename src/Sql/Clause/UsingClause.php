@@ -9,7 +9,7 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 trait UsingClause
 {
     /**
-     * @var FromExpression
+     * @var FromExpression|null
      */
     protected $using;
 
