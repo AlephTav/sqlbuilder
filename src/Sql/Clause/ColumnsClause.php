@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Clause;
 
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait ColumnsClause
 {
     /**
-     * @var ListExpression
+     * @var ColumnListExpression
      */
     protected $columns;
 
@@ -27,7 +27,7 @@ trait ColumnsClause
 
     protected function createColumnsExpression()
     {
-        return new ListExpression();
+        return new ColumnListExpression();
     }
 
     protected function buildColumns(): void

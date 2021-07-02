@@ -13,8 +13,8 @@ use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\AbstractInsertStatement;
 use AlephTools\SqlBuilder\Sql\Clause\AssignmentClause;
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
 
@@ -31,10 +31,10 @@ class InsertStatement extends AbstractInsertStatement
         StatementExecutor $db = null,
         string $modifiers = null,
         FromExpression $table = null,
-        ListExpression $partition = null,
-        ListExpression $columns = null,
+        ColumnListExpression $partition = null,
+        ColumnListExpression $columns = null,
         string $rowAlias = null,
-        ListExpression $columnAliases = null,
+        ColumnListExpression $columnAliases = null,
         ValueListExpression $values = null,
         Query $query = null,
         AssignmentExpression $assignment = null,

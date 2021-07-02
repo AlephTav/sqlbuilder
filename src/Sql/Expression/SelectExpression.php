@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
-class SelectExpression extends ListExpression
+class SelectExpression extends ColumnListExpression
 {
 }

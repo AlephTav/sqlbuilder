@@ -13,9 +13,9 @@ use AlephTools\SqlBuilder\Sql\Clause\ReturningClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
 use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
@@ -34,10 +34,10 @@ class InsertStatement extends AbstractInsertStatement
         StatementExecutor $db = null,
         WithExpression $with = null,
         FromExpression $table = null,
-        ListExpression $columns = null,
+        ColumnListExpression $columns = null,
         ValueListExpression $values = null,
         Query $query = null,
-        ListExpression $indexColumn = null,
+        ColumnListExpression $indexColumn = null,
         ConditionalExpression $indexPredicate = null,
         string $indexConstraint = null,
         AssignmentExpression $assignment = null,

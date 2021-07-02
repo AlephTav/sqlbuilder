@@ -9,8 +9,8 @@ use AlephTools\SqlBuilder\MySql\Clause\PartitionClause;
 use AlephTools\SqlBuilder\Sql\AbstractDeleteStatement;
 use AlephTools\SqlBuilder\Sql\Clause\LimitClause;
 use AlephTools\SqlBuilder\Sql\Clause\OrderClause;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
 use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
 use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
@@ -28,7 +28,7 @@ class DeleteStatement extends AbstractDeleteStatement
         WithExpression $with = null,
         string $modifiers = null,
         FromExpression $from = null,
-        ListExpression $partition = null,
+        ColumnListExpression $partition = null,
         FromExpression $using = null,
         WhereExpression $where = null,
         OrderExpression $order = null,

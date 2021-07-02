@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
-class OrderExpression extends ListExpression
+use AlephTools\SqlBuilder\Query;
+
+class OrderExpression extends AbstractExpression
 {
     public function __construct($column = null, $order = null)
     {
-        parent::__construct($column, $order);
+        if ($column !== null || $order !== null) {
+            $this->append($column, $order);
+        }
     }
 
     /**
@@ -18,10 +22,40 @@ class OrderExpression extends ListExpression
      */
     public function append($column, $order = null)
     {
-        return parent::append($order, $column);
+        if ($this->sql !== '') {
+            $this->sql .= ', ';
+        }
+        $this->sql .= $this->convertNameToString($this->mapToExpression($column, $order));
+        return $this;
     }
 
-    protected function mapToExpression($order, $column)
+    protected function convertNameToString($expression): string
+    {
+        if ($expression === null) {
+            return $this->nullToString();
+        }
+        if ($expression instanceof RawExpression) {
+            return $this->rawExpressionToString($expression);
+        }
+        if ($expression instanceof Query) {
+            return $this->queryToString($expression);
+        }
+        if ($expression instanceof ValueListExpression) {
+            return $this->valueListExpressionToString($expression);
+        }
+        if (is_array($expression)) {
+            return $this->arrayToString($expression);
+        }
+        return (string)$expression;
+    }
+
+    protected function valueListExpressionToString(ValueListExpression $expression): string
+    {
+        $this->addParams($expression->getParams());
+        return "(VALUES $expression)";
+    }
+
+    protected function mapToExpression($column, $order)
     {
         if ($order === null) {
             return $column;
