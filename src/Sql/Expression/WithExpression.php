@@ -22,7 +22,7 @@ class WithExpression extends AbstractExpression
      */
     public function append($query, $alias = null, bool $recursive = false)
     {
-        if (strlen($this->sql) > 0) {
+        if ($this->sql !== '') {
             $this->sql .= ', ';
         }
         if ($alias === null) {
