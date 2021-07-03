@@ -2029,7 +2029,7 @@ class SelectStatementTest extends TestCase
     }
 
     /**
-     * @psalm-return MockObject&StatementExecutor
+     * @return MockObject&StatementExecutor
      */
     private function getExecutorMock()
     {
