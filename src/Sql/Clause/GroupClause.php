@@ -26,6 +26,9 @@ trait GroupClause
         return $this;
     }
 
+    /**
+     * @return GroupExpression
+     */
     protected function createGroupExpression()
     {
         return new GroupExpression();

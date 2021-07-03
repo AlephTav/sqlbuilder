@@ -17,15 +17,6 @@ use AlephTools\SqlBuilder\Sql\Clause\UnionClause;
 use AlephTools\SqlBuilder\Sql\Clause\WhereClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
-use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\GroupExpression;
-use AlephTools\SqlBuilder\Sql\Expression\HavingExpression;
-use AlephTools\SqlBuilder\Sql\Expression\JoinExpression;
-use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
-use AlephTools\SqlBuilder\Sql\Expression\SelectExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 use Generator;
 
 abstract class AbstractSelectStatement extends AbstractStatement implements Query
@@ -46,50 +37,23 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
             DataFetching::scalar as parentScalar;
         }
 
-    public function __construct(
-        StatementExecutor $db = null,
-        WithExpression $with = null,
-        FromExpression $from = null,
-        SelectExpression $select = null,
-        JoinExpression $join = null,
-        WhereExpression $where = null,
-        GroupExpression $group = null,
-        HavingExpression $having = null,
-        OrderExpression $order = null,
-        int $limit = null,
-        int $offset = null
-    ) {
-        parent::__construct($db);
-        $this->with = $with;
-        $this->from = $from;
-        $this->select = $select;
-        $this->join = $join;
-        $this->where = $where;
-        $this->group = $group;
-        $this->having = $having;
-        $this->order = $order;
-        $this->limit = $limit;
-        $this->offset = $offset;
-    }
-
     /**
      * @return static
      */
     public function copy()
     {
-        return new static(
-            $this->db,
-            $this->with ? clone $this->with : null,
-            $this->from ? clone $this->from : null,
-            $this->select ? clone $this->select : null,
-            $this->join ? clone $this->join : null,
-            $this->where ? clone $this->where : null,
-            $this->group ? clone $this->group : null,
-            $this->having ? clone $this->having : null,
-            $this->order ? clone $this->order : null,
-            $this->limit,
-            $this->offset
-        );
+        $copy = new static($this->db);
+        $copy->with = $this->with ? clone $this->with : null;
+        $copy->from = $this->from ? clone $this->from : null;
+        $copy->select = $this->select ? clone $this->select : null;
+        $copy->join = $this->join ? clone $this->join : null;
+        $copy->where = $this->where ? clone $this->where : null;
+        $copy->group = $this->group ? clone $this->group : null;
+        $copy->having = $this->having ? clone $this->having : null;
+        $copy->order = $this->order ? clone $this->order : null;
+        $copy->limit = $this->limit;
+        $copy->offset = $this->offset;
+        return $copy;
     }
 
     public function clean(): void
@@ -147,6 +111,9 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
 
     //region Data Fetching
 
+    /**
+     * @param mixed $column
+     */
     public function column($column = null): array
     {
         if ($column !== null && $column !== '') {
@@ -162,6 +129,10 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         return $this->parentColumn();
     }
 
+    /**
+     * @param mixed $column
+     * @return mixed
+     */
     public function scalar($column = null)
     {
         if ($column !== null && $column !== '') {
@@ -203,8 +174,6 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         return (int)$total;
     }
 
-    /**
-     */
     public function pages(int $size = 1000, int $page = 0): Generator
     {
         if ($size <= 0) {
@@ -227,8 +196,6 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         }
     }
 
-    /**
-     */
     public function batches(int $size = 1000, int $page = 0): Generator
     {
         if ($size <= 0) {

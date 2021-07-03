@@ -48,6 +48,9 @@ abstract class AbstractListExpression extends AbstractExpression
         return [[$alias, $name]];
     }
 
+    /**
+     * @param mixed $expression
+     */
     protected function convertNameToString($expression): string
     {
         if ($expression === null) {

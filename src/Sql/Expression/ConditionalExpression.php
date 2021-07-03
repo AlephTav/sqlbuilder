@@ -9,6 +9,11 @@ use Closure;
 
 class ConditionalExpression extends AbstractExpression
 {
+    /**
+     * @param mixed $column
+     * @param mixed $operator
+     * @param mixed $value
+     */
     public function __construct($column = null, $operator = null, $value = null)
     {
         if ($column !== null) {
@@ -95,6 +100,9 @@ class ConditionalExpression extends AbstractExpression
         return $this;
     }
 
+    /**
+     * @param mixed $expression
+     */
     protected function convertOperandToString($expression): string
     {
         if ($expression === null) {
@@ -118,6 +126,9 @@ class ConditionalExpression extends AbstractExpression
         return (string)$expression;
     }
 
+    /**
+     * @param mixed $expression
+     */
     private function convertValueToString($expression, string $operator): string
     {
         if ($expression === null) {

@@ -6,6 +6,10 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 class GroupExpression extends AbstractListExpression
 {
+    /**
+     * @param mixed $column
+     * @param mixed $order
+     */
     public function __construct($column = null, $order = null)
     {
         parent::__construct(true);

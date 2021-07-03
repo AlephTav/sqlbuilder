@@ -8,11 +8,6 @@ use AlephTools\SqlBuilder\PostgreSql\Clause\DeleteClause;
 use AlephTools\SqlBuilder\Sql\AbstractDeleteStatement;
 use AlephTools\SqlBuilder\Sql\Clause\ReturningClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
-use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 
 class DeleteStatement extends AbstractDeleteStatement
 {
@@ -20,34 +15,19 @@ class DeleteStatement extends AbstractDeleteStatement
     use ReturningClause;
     use DataFetching;
 
-    public function __construct(
-        StatementExecutor $db = null,
-        WithExpression $with = null,
-        FromExpression $from = null,
-        bool $only = false,
-        FromExpression $using = null,
-        WhereExpression $where = null,
-        ReturningExpression $returning = null
-    ) {
-        parent::__construct($db, $with, $from, $using, $where);
-        $this->only = $only;
-        $this->returning = $returning;
-    }
-
     /**
      * @return static
      */
     public function copy()
     {
-        return new static(
-            $this->db,
-            $this->with ? clone $this->with : null,
-            $this->from ? clone $this->from : null,
-            $this->only,
-            $this->using ? clone $this->using : null,
-            $this->where ? clone $this->where : null,
-            $this->returning ? clone $this->returning : null
-        );
+        $copy = new static($this->db);
+        $copy->with = $this->with ? clone $this->with : null;
+        $copy->from = $this->from ? clone $this->from : null;
+        $copy->only = $this->only;
+        $copy->using = $this->using ? clone $this->using : null;
+        $copy->where = $this->where ? clone $this->where : null;
+        $copy->returning = $this->returning ? clone $this->returning : null;
+        return $copy;
     }
 
     public function clean(): void

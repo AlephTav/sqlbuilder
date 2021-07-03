@@ -26,6 +26,9 @@ trait ReturningClause
         return $this;
     }
 
+    /**
+     * @return ReturningExpression
+     */
     protected function createReturningExpression()
     {
         return new ReturningExpression();

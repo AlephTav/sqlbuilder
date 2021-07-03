@@ -8,12 +8,6 @@ use AlephTools\SqlBuilder\MySql\Clause\UpdateClause;
 use AlephTools\SqlBuilder\Sql\AbstractUpdateStatement;
 use AlephTools\SqlBuilder\Sql\Clause\LimitClause;
 use AlephTools\SqlBuilder\Sql\Clause\OrderClause;
-use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
-use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 
 class UpdateStatement extends AbstractUpdateStatement
 {
@@ -21,37 +15,20 @@ class UpdateStatement extends AbstractUpdateStatement
     use OrderClause;
     use LimitClause;
 
-    public function __construct(
-        StatementExecutor $db = null,
-        WithExpression $with = null,
-        string $modifiers = null,
-        FromExpression $table = null,
-        AssignmentExpression $assignment = null,
-        WhereExpression $where = null,
-        OrderExpression $order = null,
-        int $limit = null
-    ) {
-        parent::__construct($db, $with, $table, $assignment, $where);
-        $this->modifiers = $modifiers;
-        $this->order = $order;
-        $this->limit = $limit;
-    }
-
     /**
      * @return static
      */
     public function copy()
     {
-        return new static(
-            $this->db,
-            $this->with ? clone $this->with : null,
-            $this->modifiers,
-            $this->table ? clone $this->table : null,
-            $this->assignment ? clone $this->assignment : null,
-            $this->where ? clone $this->where : null,
-            $this->order ? clone $this->order : null,
-            $this->limit
-        );
+        $copy = new static($this->db);
+        $copy->with = $this->with ? clone $this->with : null;
+        $copy->modifiers = $this->modifiers;
+        $copy->table = $this->table ? clone $this->table : null;
+        $copy->assignment = $this->assignment ? clone $this->assignment : null;
+        $copy->where = $this->where ? clone $this->where : null;
+        $copy->order = $this->order ? clone $this->order : null;
+        $copy->limit = $this->limit;
+        return $copy;
     }
 
     public function clean(): void

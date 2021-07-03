@@ -8,6 +8,10 @@ use AlephTools\SqlBuilder\Query;
 
 class AssignmentExpression extends AbstractExpression
 {
+    /**
+     * @param mixed $column
+     * @param mixed $value
+     */
     public function __construct($column = null, $value = null)
     {
         if ($column !== null) {
@@ -36,6 +40,9 @@ class AssignmentExpression extends AbstractExpression
         return $this;
     }
 
+    /**
+     * @param mixed $expression
+     */
     protected function convertNameToString($expression): string
     {
         if ($expression === null) {
@@ -67,6 +74,9 @@ class AssignmentExpression extends AbstractExpression
         return implode(', ', $list);
     }
 
+    /**
+     * @param mixed $expression
+     */
     private function convertValueToString($expression): string
     {
         if ($expression === null) {

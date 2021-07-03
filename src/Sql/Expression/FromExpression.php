@@ -6,6 +6,10 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 class FromExpression extends AbstractListExpression
 {
+    /**
+     * @param mixed $table
+     * @param mixed $alias
+     */
     public function __construct($table = null, $alias = null)
     {
         parent::__construct(false);

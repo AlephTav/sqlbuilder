@@ -16,6 +16,9 @@ trait RowListClause
      */
     protected $values;
 
+    /**
+     * @return RowListExpression
+     */
     protected function createValuesExpression()
     {
         return new RowListExpression();

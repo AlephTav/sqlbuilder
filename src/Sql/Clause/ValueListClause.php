@@ -39,11 +39,17 @@ trait ValueListClause
         return $this;
     }
 
+    /**
+     * @param mixed $items
+     */
     private function isAssociativeArray($items): bool
     {
         return is_array($items) && is_string(key($items));
     }
 
+    /**
+     * @return ValueListExpression
+     */
     protected function createValueListExpression()
     {
         return new ValueListExpression();

@@ -39,6 +39,9 @@ trait WithClause
         return $this;
     }
 
+    /**
+     * @return WithExpression
+     */
     protected function createWithExpression()
     {
         return new WithExpression();

@@ -25,6 +25,9 @@ trait ValuesClause
         return $this;
     }
 
+    /**
+     * @return ValueListExpression
+     */
     protected function createValuesExpression()
     {
         return new ValueListExpression();

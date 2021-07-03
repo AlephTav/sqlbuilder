@@ -19,7 +19,7 @@ abstract class AbstractStatement implements Statement
      */
     protected bool $built = false;
 
-    public function __construct(StatementExecutor $db = null)
+    final public function __construct(StatementExecutor $db = null)
     {
         $this->db = $db;
     }

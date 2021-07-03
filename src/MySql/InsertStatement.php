@@ -9,14 +9,8 @@ use AlephTools\SqlBuilder\MySql\Clause\InsertClause;
 use AlephTools\SqlBuilder\MySql\Clause\PartitionClause;
 use AlephTools\SqlBuilder\MySql\Clause\RowAliasClause;
 use AlephTools\SqlBuilder\MySql\Clause\ValueListClause;
-use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\AbstractInsertStatement;
 use AlephTools\SqlBuilder\Sql\Clause\AssignmentClause;
-use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
-use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 
 class InsertStatement extends AbstractInsertStatement
 {
@@ -27,46 +21,24 @@ class InsertStatement extends AbstractInsertStatement
     use AssignmentClause;
     use DuplicateKeyClause;
 
-    public function __construct(
-        StatementExecutor $db = null,
-        string $modifiers = null,
-        FromExpression $table = null,
-        ColumnListExpression $partition = null,
-        ColumnListExpression $columns = null,
-        string $rowAlias = null,
-        ColumnListExpression $columnAliases = null,
-        ValueListExpression $values = null,
-        Query $query = null,
-        AssignmentExpression $assignment = null,
-        AssignmentExpression $assignmentOnUpdate = null
-    ) {
-        parent::__construct($db, $table, $columns, $values, $query);
-        $this->modifiers = $modifiers;
-        $this->partition = $partition;
-        $this->rowAlias = $rowAlias;
-        $this->columnAliases = $columnAliases;
-        $this->assignment = $assignment;
-        $this->assignmentOnUpdate = $assignmentOnUpdate;
-    }
-
     /**
      * @return static
      */
     public function copy()
     {
-        return new static(
-            $this->db,
-            $this->modifiers,
-            $this->table ? clone $this->table : null,
-            $this->partition ? clone $this->partition : null,
-            $this->columns ? clone $this->columns : null,
-            $this->rowAlias,
-            $this->columnAliases ? clone $this->columnAliases : null,
-            $this->values ? clone $this->values : null,
-            $this->query ? $this->query->copy() : null,
-            $this->assignment ? clone $this->assignment : $this->assignment,
-            $this->assignmentOnUpdate ? clone $this->assignmentOnUpdate : $this->assignmentOnUpdate
-        );
+        $copy = new static($this->db);
+        $copy->modifiers = $this->modifiers;
+        $copy->table = $this->table ? clone $this->table : null;
+        $copy->partition = $this->partition ? clone $this->partition : null;
+        $copy->columns = $this->columns ? clone $this->columns : null;
+        $copy->rowAlias = $this->rowAlias;
+        $copy->columnAliases = $this->columnAliases ? clone $this->columnAliases : null;
+        $copy->values = $this->values ? clone $this->values : null;
+        $copy->query = $this->query ? $this->query->copy() : null;
+        $copy->assignment = $this->assignment ? clone $this->assignment : $this->assignment;
+        $copy->assignmentOnUpdate = $this->assignmentOnUpdate ?
+            clone $this->assignmentOnUpdate : $this->assignmentOnUpdate;
+        return $copy;
     }
 
     public function clean(): void

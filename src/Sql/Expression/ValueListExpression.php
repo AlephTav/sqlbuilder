@@ -8,6 +8,9 @@ use AlephTools\SqlBuilder\Query;
 
 class ValueListExpression extends AbstractExpression
 {
+    /**
+     * @param mixed $values
+     */
     public function __construct($values = null)
     {
         if ($values !== null) {
@@ -28,6 +31,9 @@ class ValueListExpression extends AbstractExpression
         return $this;
     }
 
+    /**
+     * @param mixed $expression
+     */
     protected function convertValueListToString($expression): string
     {
         if ($expression instanceof RawExpression) {
@@ -57,6 +63,9 @@ class ValueListExpression extends AbstractExpression
         return '(' . implode(', ', $values) . ')';
     }
 
+    /**
+     * @param mixed $expression
+     */
     protected function convertValueToString($expression): string
     {
         if ($expression === null) {

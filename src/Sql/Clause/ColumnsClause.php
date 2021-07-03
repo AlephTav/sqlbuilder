@@ -25,6 +25,9 @@ trait ColumnsClause
         return $this;
     }
 
+    /**
+     * @return ColumnListExpression
+     */
     protected function createColumnsExpression()
     {
         return new ColumnListExpression();

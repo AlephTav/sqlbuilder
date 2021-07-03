@@ -8,6 +8,11 @@ use Closure;
 
 class JoinExpression extends AbstractExpression
 {
+    /**
+     * @param mixed $table
+     * @param mixed $alias
+     * @param mixed $condition
+     */
     public function __construct(string $type = '', $table = null, $alias = null, $condition = null)
     {
         if ($table !== null) {
@@ -31,6 +36,10 @@ class JoinExpression extends AbstractExpression
         return $this;
     }
 
+    /**
+     * @param mixed $table
+     * @param mixed $alias
+     */
     protected function convertTableToString($table, $alias): string
     {
         $tb = new ColumnListExpression($table, $alias);
@@ -41,6 +50,9 @@ class JoinExpression extends AbstractExpression
         return $tb->toSql();
     }
 
+    /**
+     * @param mixed $condition
+     */
     protected function addCondition($condition): void
     {
         if ($condition === null) {
@@ -56,6 +68,9 @@ class JoinExpression extends AbstractExpression
         $this->addParams($conditions->getParams());
     }
 
+    /**
+     * @param mixed $expression
+     */
     private function isConditionalExpression($expression): bool
     {
         return is_string($expression) ||

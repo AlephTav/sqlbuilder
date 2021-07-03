@@ -7,19 +7,10 @@ namespace AlephTools\SqlBuilder\PostgreSql;
 use AlephTools\SqlBuilder\PostgreSql\Clause\ConflictClause;
 use AlephTools\SqlBuilder\PostgreSql\Clause\InsertClause;
 use AlephTools\SqlBuilder\PostgreSql\Clause\ValueListClause;
-use AlephTools\SqlBuilder\Query;
 use AlephTools\SqlBuilder\Sql\AbstractInsertStatement;
 use AlephTools\SqlBuilder\Sql\Clause\ReturningClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
-use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
-use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
-use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 
 class InsertStatement extends AbstractInsertStatement
 {
@@ -30,46 +21,24 @@ class InsertStatement extends AbstractInsertStatement
     use ReturningClause;
     use DataFetching;
 
-    public function __construct(
-        StatementExecutor $db = null,
-        WithExpression $with = null,
-        FromExpression $table = null,
-        ColumnListExpression $columns = null,
-        ValueListExpression $values = null,
-        Query $query = null,
-        ColumnListExpression $indexColumn = null,
-        ConditionalExpression $indexPredicate = null,
-        string $indexConstraint = null,
-        AssignmentExpression $assignment = null,
-        ConditionalExpression $assignmentPredicate = null,
-        ReturningExpression $returning = null
-    ) {
-        parent::__construct($db, $table, $columns, $values, $query);
-        $this->with = $with;
-        $this->indexColumn = $indexColumn;
-        $this->indexPredicate = $indexPredicate;
-        $this->indexConstraint = $indexConstraint;
-        $this->assignment = $assignment;
-        $this->assignmentPredicate = $assignmentPredicate;
-        $this->returning = $returning;
-    }
-
+    /**
+     * @return static
+     */
     public function copy()
     {
-        return new static(
-            $this->db,
-            $this->with ? clone $this->with : null,
-            $this->table ? clone $this->table : null,
-            $this->columns ? clone $this->columns : null,
-            $this->values ? clone $this->values : null,
-            $this->query ? $this->query->copy() : null,
-            $this->indexColumn ? clone $this->indexColumn : null,
-            $this->indexPredicate ? clone $this->indexPredicate : null,
-            $this->indexConstraint,
-            $this->assignment ? clone $this->assignment : null,
-            $this->assignmentPredicate ? clone $this->assignmentPredicate : null,
-            $this->returning ? clone $this->returning : null
-        );
+        $copy = new static($this->db);
+        $copy->with = $this->with ? clone $this->with : null;
+        $copy->table = $this->table ? clone $this->table : null;
+        $copy->columns = $this->columns ? clone $this->columns : null;
+        $copy->values = $this->values ? clone $this->values : null;
+        $copy->query = $this->query ? $this->query->copy() : null;
+        $copy->indexColumn = $this->indexColumn ? clone $this->indexColumn : null;
+        $copy->indexPredicate = $this->indexPredicate ? clone $this->indexPredicate : null;
+        $copy->indexConstraint = $this->indexConstraint;
+        $copy->assignment = $this->assignment ? clone $this->assignment : null;
+        $copy->assignmentPredicate = $this->assignmentPredicate ? clone $this->assignmentPredicate : null;
+        $copy->returning = $this->returning ? clone $this->returning : null;
+        return $copy;
     }
 
     public function clean(): void

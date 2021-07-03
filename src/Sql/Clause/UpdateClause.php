@@ -26,6 +26,9 @@ trait UpdateClause
         return $this;
     }
 
+    /**
+     * @return FromExpression
+     */
     protected function createTableExpression()
     {
         return new FromExpression();

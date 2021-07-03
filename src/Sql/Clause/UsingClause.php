@@ -26,6 +26,9 @@ trait UsingClause
         return $this;
     }
 
+    /**
+     * @return FromExpression
+     */
     protected function createUsingExpression()
     {
         return new FromExpression();

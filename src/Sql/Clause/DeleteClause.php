@@ -26,6 +26,9 @@ trait DeleteClause
         return $this;
     }
 
+    /**
+     * @return FromExpression
+     */
     protected function createFromExpression()
     {
         return new FromExpression();

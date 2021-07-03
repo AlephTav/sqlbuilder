@@ -6,6 +6,10 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 class SelectExpression extends AbstractListExpression
 {
+    /**
+     * @param mixed $column
+     * @param mixed $alias
+     */
     public function __construct($column = null, $alias = null)
     {
         parent::__construct(false);

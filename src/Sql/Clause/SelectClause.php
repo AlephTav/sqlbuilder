@@ -26,6 +26,9 @@ trait SelectClause
         return $this;
     }
 
+    /**
+     * @return SelectExpression
+     */
     protected function createSelectExpression()
     {
         return new SelectExpression();

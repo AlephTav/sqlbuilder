@@ -165,6 +165,9 @@ trait JoinClause
         return $this;
     }
 
+    /**
+     * @return JoinExpression
+     */
     protected function createJoinExpression()
     {
         return new JoinExpression();

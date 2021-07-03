@@ -49,6 +49,9 @@ trait WhereClause
         return $this;
     }
 
+    /**
+     * @return WhereExpression
+     */
     protected function createWhereExpression()
     {
         return new WhereExpression();

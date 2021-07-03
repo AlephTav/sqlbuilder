@@ -26,6 +26,9 @@ trait OrderClause
         return $this;
     }
 
+    /**
+     * @return OrderExpression
+     */
     protected function createOrderExpression()
     {
         return new OrderExpression();

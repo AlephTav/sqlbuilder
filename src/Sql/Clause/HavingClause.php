@@ -49,6 +49,9 @@ trait HavingClause
         return $this;
     }
 
+    /**
+     * @return HavingExpression
+     */
     protected function createHavingExpression()
     {
         return new HavingExpression();

@@ -11,6 +11,7 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 use AlephTools\SqlBuilder\StatementExecutor;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 
@@ -1998,7 +1999,7 @@ class SelectStatementTest extends TestCase
             ->onlyMethods(['paginate', 'rows'])
             ->getMock();
 
-        $st->method('paginate')->willReturnCallback(function ($page, $size) use (&$p, &$s, $st) {
+        $st->method('paginate')->willReturnCallback(function (int $page, int $size) use (&$p, &$s, $st) {
             $p = $page;
             $s = $size;
             return $st;
@@ -2027,6 +2028,9 @@ class SelectStatementTest extends TestCase
          ];
     }
 
+    /**
+     * @psalm-return MockObject&StatementExecutor
+     */
     private function getExecutorMock()
     {
         return $this->getMockBuilder(StatementExecutor::class)->getMock();

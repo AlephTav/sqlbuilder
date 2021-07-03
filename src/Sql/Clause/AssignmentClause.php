@@ -26,6 +26,9 @@ trait AssignmentClause
         return $this;
     }
 
+    /**
+     * @return AssignmentExpression
+     */
     protected function createAssignmentExpression()
     {
         return new AssignmentExpression();

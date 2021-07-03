@@ -9,9 +9,6 @@ use AlephTools\SqlBuilder\Sql\AbstractValuesStatement;
 use AlephTools\SqlBuilder\Sql\Clause\OffsetClause;
 use AlephTools\SqlBuilder\Sql\Clause\ValuesClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
-use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
-use AlephTools\SqlBuilder\StatementExecutor;
 
 class ValuesStatement extends AbstractValuesStatement
 {
@@ -20,29 +17,17 @@ class ValuesStatement extends AbstractValuesStatement
     use OffsetClause;
     use DataFetching;
 
-    public function __construct(
-        StatementExecutor $db = null,
-        ValueListExpression $values = null,
-        OrderExpression $order = null,
-        int $limit = null,
-        int $offset = null
-    ) {
-        parent::__construct($db, $order, $limit);
-        $this->values = $values;
-        $this->order = $order;
-        $this->limit = $limit;
-        $this->offset = $offset;
-    }
-
+    /**
+     * @return static
+     */
     public function copy()
     {
-        return new static(
-            $this->db,
-            $this->values ? clone $this->values : null,
-            $this->order ? clone $this->order : null,
-            $this->limit,
-            $this->offset
-        );
+        $copy = new static($this->db);
+        $copy->values = $this->values ? clone $this->values : null;
+        $copy->order = $this->order ? clone $this->order : null;
+        $copy->limit = $this->limit;
+        $copy->offset = $this->offset;
+        return $copy;
     }
 
     public function clean(): void
