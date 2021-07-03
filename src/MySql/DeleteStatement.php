@@ -37,7 +37,7 @@ class DeleteStatement extends AbstractDeleteStatement
     public function clean(): void
     {
         $this->with = null;
-        $this->modifiers = null;
+        $this->modifiers = '';
         $this->from = null;
         $this->partition = null;
         $this->using = null;

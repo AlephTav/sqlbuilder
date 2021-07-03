@@ -10,7 +10,7 @@ trait InsertClause
 {
     use BaseInsertClause;
 
-    protected ?string $modifiers = null;
+    protected string $modifiers = '';
 
     /**
      * @return static
@@ -81,7 +81,7 @@ trait InsertClause
     protected function buildInsert(): void
     {
         $this->sql .= 'INSERT';
-        if ($this->modifiers !== null && $this->modifiers !== '') {
+        if ($this->modifiers !== '') {
             $this->sql .= " $this->modifiers";
         }
         if ($this->table) {

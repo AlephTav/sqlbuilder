@@ -43,7 +43,7 @@ class InsertStatement extends AbstractInsertStatement
 
     public function clean(): void
     {
-        $this->modifiers = null;
+        $this->modifiers = '';
         $this->table = null;
         $this->partition = null;
         $this->columns = null;

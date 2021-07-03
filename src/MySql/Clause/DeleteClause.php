@@ -10,7 +10,7 @@ trait DeleteClause
 {
     use BaseDeleteClause;
 
-    protected ?string $modifiers = null;
+    protected string $modifiers = '';
 
     /**
      * @return static
@@ -49,7 +49,7 @@ trait DeleteClause
     protected function buildDelete(): void
     {
         $this->sql .= 'DELETE';
-        if ($this->modifiers !== null && $this->modifiers !== '') {
+        if ($this->modifiers !== '') {
             $this->sql .= " $this->modifiers";
         }
         if ($this->from) {

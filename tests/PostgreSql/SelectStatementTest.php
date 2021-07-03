@@ -1993,7 +1993,7 @@ class SelectStatementTest extends TestCase
 
     private function getSelectStatementMockWithGenerator(): SelectStatement
     {
-        $p = $s = null;
+        $p = $s = 0;
 
         $st = $this->getMockBuilder(SelectStatement::class)
             ->onlyMethods(['paginate', 'rows'])

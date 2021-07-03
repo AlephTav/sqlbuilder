@@ -8,6 +8,9 @@ use RuntimeException;
 
 trait DataFetching
 {
+    /**
+     * @psalm-return list<array<string,mixed>>
+     */
     public function rows(): array
     {
         return $this->db()->rows($this->toSql(), $this->getParams());

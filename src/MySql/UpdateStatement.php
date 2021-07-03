@@ -34,7 +34,7 @@ class UpdateStatement extends AbstractUpdateStatement
     public function clean(): void
     {
         $this->with = null;
-        $this->modifiers = null;
+        $this->modifiers = '';
         $this->table = null;
         $this->assignment = null;
         $this->where = null;

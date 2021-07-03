@@ -10,7 +10,7 @@ trait UpdateClause
 {
     use BaseUpdateClause;
 
-    protected ?string $modifiers = null;
+    protected string $modifiers = '';
 
     /**
      * @return static
@@ -41,7 +41,7 @@ trait UpdateClause
     protected function buildUpdate(): void
     {
         $this->sql .= 'UPDATE';
-        if ($this->modifiers !== null && $this->modifiers !== '') {
+        if ($this->modifiers !== '') {
             $this->sql .= " $this->modifiers";
         }
         if ($this->table) {

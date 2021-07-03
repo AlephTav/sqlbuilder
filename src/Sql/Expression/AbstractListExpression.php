@@ -77,6 +77,10 @@ abstract class AbstractListExpression extends AbstractExpression
         return "(VALUES $expression)";
     }
 
+    /**
+     * @param array $expression
+     * @return string
+     */
     protected function arrayToString(array $expression): string
     {
         $list = [];

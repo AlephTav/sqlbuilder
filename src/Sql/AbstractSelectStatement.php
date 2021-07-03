@@ -162,16 +162,16 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
             $prevOrder = $this->order;
             $prevGroup = $this->group;
             $this->limit = $this->offset = $this->order = $this->group = null;
-            $total = $this->scalar("COUNT($column)");
+            $total = (int)$this->scalar("COUNT($column)");
             $this->order = $prevOrder;
             $this->limit = $prevLimit;
             $this->offset = $prevOffset;
             $this->group = $prevGroup;
         } else {
-            $total = $this->scalar("COUNT($column)");
+            $total = (int)$this->scalar("COUNT($column)");
         }
         $this->built = false;
-        return (int)$total;
+        return $total;
     }
 
     public function pages(int $size = 1000, int $page = 0): Generator
