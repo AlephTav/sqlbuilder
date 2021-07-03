@@ -40,7 +40,6 @@ interface StatementExecutor
      *
      * @param string $sql The SQL statement.
      * @param array $params The parameters to be bound to the SQL statement.
-     * @return array
      * @psalm-return array<string,mixed>
      */
     public function row(string $sql, array $params): array;
@@ -50,7 +49,6 @@ interface StatementExecutor
      *
      * @param string $sql The SQL statement.
      * @param array $params The parameters to be bound to the SQL statement.
-     * @return array
      * @psalm-return list<mixed>
      */
     public function column(string $sql, array $params): array;

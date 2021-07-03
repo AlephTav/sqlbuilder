@@ -78,8 +78,6 @@ abstract class AbstractListExpression extends AbstractExpression
     }
 
     /**
-     * @param array $expression
-     * @return string
      */
     protected function arrayToString(array $expression): string
     {
