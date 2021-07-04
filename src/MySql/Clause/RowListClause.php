@@ -12,11 +12,6 @@ trait RowListClause
     use ValuesClause;
 
     /**
-     * @var RowListExpression|null $values
-     */
-    protected $values;
-
-    /**
      * @return RowListExpression
      */
     protected function createValuesExpression()
