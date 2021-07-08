@@ -77,8 +77,6 @@ abstract class AbstractListExpression extends AbstractExpression
         return "(VALUES $expression)";
     }
 
-    /**
-     */
     protected function arrayToString(array $expression): string
     {
         $list = [];
