@@ -6,7 +6,6 @@ namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\InsertStatement;
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
-use AlephTools\SqlBuilder\Sql\AbstractStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
@@ -570,12 +569,15 @@ class InsertStatementTest extends TestCase
         $st = (new InsertStatement())
             ->into('tb1')
             ->values(['c1' => 'v1'])
-            ->returning([
+            ->returning(
+                [
                 'a' => (new ConditionalExpression())
-                    ->where('NOT EXISTS', (new SelectStatement())
+                    ->where(
+                        'NOT EXISTS',
+                        (new SelectStatement())
                         ->from('tb2')
                         ->where('c2', '=', 0)
-                    )
+                    ),
                 ]
             );
 
