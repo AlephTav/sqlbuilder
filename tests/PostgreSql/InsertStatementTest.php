@@ -569,8 +569,7 @@ class InsertStatementTest extends TestCase
         $st = (new InsertStatement())
             ->into('tb1')
             ->values(['c1' => 'v1'])
-            ->returning(
-                [
+            ->returning([
                 'a' => (new ConditionalExpression())
                     ->where(
                         'NOT EXISTS',
