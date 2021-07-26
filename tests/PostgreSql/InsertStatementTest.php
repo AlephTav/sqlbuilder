@@ -570,15 +570,13 @@ class InsertStatementTest extends TestCase
             ->into('tb1')
             ->values(['c1' => 'v1'])
             ->returning([
-                'a' => (new ConditionalExpression())
-                    ->where(
-                        'NOT EXISTS',
-                        (new SelectStatement())
-                            ->from('tb2')
-                            ->where('c2', '=', 0)
-                    ),
-                ]
-            );
+                'a' => new ConditionalExpression(
+                    'NOT EXISTS',
+                    (new SelectStatement())
+                        ->from('tb2')
+                        ->where('c2', '=', 0)
+                )
+            ]);
 
         self::assertSame(
             'INSERT INTO tb1 (c1) VALUES (:p1) RETURNING (NOT EXISTS (SELECT * FROM tb2 WHERE c2 = :p2)) a',
