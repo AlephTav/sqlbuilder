@@ -574,8 +574,8 @@ class InsertStatementTest extends TestCase
                     ->where(
                         'NOT EXISTS',
                         (new SelectStatement())
-                        ->from('tb2')
-                        ->where('c2', '=', 0)
+                            ->from('tb2')
+                            ->where('c2', '=', 0)
                     ),
                 ]
             );
