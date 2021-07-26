@@ -65,6 +65,9 @@ abstract class AbstractListExpression extends AbstractExpression
         if ($expression instanceof ValueListExpression) {
             return $this->valueListExpressionToString($expression);
         }
+        if ($expression instanceof ConditionalExpression) {
+            return $this->conditionToString($expression);
+        }
         if (is_array($expression)) {
             return $this->arrayToString($expression);
         }
@@ -75,6 +78,12 @@ abstract class AbstractListExpression extends AbstractExpression
     {
         $this->addParams($expression->getParams());
         return "(VALUES $expression)";
+    }
+
+    protected function conditionToString(ConditionalExpression $expression): string
+    {
+        $this->addParams($expression->getParams());
+        return "($expression)";
     }
 
     protected function arrayToString(array $expression): string

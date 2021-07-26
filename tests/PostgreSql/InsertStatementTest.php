@@ -6,6 +6,7 @@ namespace Tests\AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\PostgreSql\InsertStatement;
 use AlephTools\SqlBuilder\PostgreSql\SelectStatement;
+use AlephTools\SqlBuilder\Sql\AbstractStatement;
 use AlephTools\SqlBuilder\Sql\Expression\AbstractExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
@@ -559,6 +560,30 @@ class InsertStatementTest extends TestCase
 
         self::assertSame('INSERT INTO tb (c1) VALUES (:p1) RETURNING c1 a, c2 b, c3 c', $st->toSql());
         self::assertSame(['p1' => 'v1'], $st->getParams());
+    }
+
+    /**
+     * @test
+     */
+    public function returningQueryWithAlias(): void
+    {
+        $st = (new InsertStatement())
+            ->into('tb1')
+            ->values(['c1' => 'v1'])
+            ->returning([
+                'a' => (new ConditionalExpression())
+                    ->where('NOT EXISTS', (new SelectStatement())
+                        ->from('tb2')
+                        ->where('c2', '=', 0)
+                    )
+                ]
+            );
+
+        self::assertSame(
+            'INSERT INTO tb1 (c1) VALUES (:p1) RETURNING (NOT EXISTS (SELECT * FROM tb2 WHERE c2 = :p2)) a',
+            $st->toSql()
+        );
+        self::assertSame(['p1' => 'v1', 'p2' => 0], $st->getParams());
     }
 
     //endregion
