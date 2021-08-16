@@ -575,7 +575,7 @@ class InsertStatementTest extends TestCase
                     (new SelectStatement())
                         ->from('tb2')
                         ->where('c2', '=', 0)
-                )
+                ),
             ]);
 
         self::assertSame(
