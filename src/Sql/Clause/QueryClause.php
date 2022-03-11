@@ -10,10 +10,7 @@ trait QueryClause
 {
     protected ?Query $query = null;
 
-    /**
-     * @return static
-     */
-    public function select(Query $query)
+    public function select(Query $query): static
     {
         $this->query = $query;
         $this->built = false;
@@ -26,5 +23,15 @@ trait QueryClause
             $this->sql .= " $this->query";
             $this->addParams($this->query->getParams());
         }
+    }
+
+    protected function cloneQuery(mixed $copy): void
+    {
+        $copy->query = $this->query?->copy();
+    }
+
+    protected function cleanQuery(): void
+    {
+        $this->query = null;
     }
 }

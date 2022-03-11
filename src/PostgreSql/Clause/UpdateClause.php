@@ -8,19 +8,29 @@ use AlephTools\SqlBuilder\Sql\Clause\UpdateClause as BaseUpdateClause;
 
 trait UpdateClause
 {
-    use BaseUpdateClause;
+    use BaseUpdateClause {
+        BaseUpdateClause::cloneUpdate as parentCloneUpdate;
+        BaseUpdateClause::cleanUpdate as parentCleanUpdate;
+    }
 
     protected bool $only = false;
 
-    /**
-     * @param mixed $table
-     * @param mixed $alias
-     * @return static
-     */
-    public function onlyTable($table, $alias = null)
+    public function onlyTable(mixed $table, mixed $alias = null): static
     {
         $this->only = true;
         return $this->table($table, $alias);
+    }
+
+    protected function cloneUpdate(mixed $copy): void
+    {
+        $this->parentCloneUpdate($copy);
+        $copy->only = $this->only;
+    }
+
+    protected function cleanUpdate(): void
+    {
+        $this->parentCleanUpdate();
+        $this->only = false;
     }
 
     protected function buildUpdate(): void

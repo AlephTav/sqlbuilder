@@ -8,14 +8,21 @@ trait OffsetClause
 {
     protected ?int $offset = null;
 
-    /**
-     * @return static
-     */
-    public function offset(?int $offset)
+    public function offset(?int $offset): static
     {
         $this->offset = $offset;
         $this->built = false;
         return $this;
+    }
+
+    protected function cloneOffset(mixed $copy): void
+    {
+        $copy->offset = $this->offset;
+    }
+
+    protected function cleanOffset(): void
+    {
+        $this->offset = null;
     }
 
     protected function buildOffset(): void

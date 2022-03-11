@@ -10,64 +10,32 @@ use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
 
 trait ConflictClause
 {
-    /**
-     * @var ColumnListExpression|null
-     */
-    protected $indexColumn;
-
-    /**
-     * @var ConditionalExpression|null
-     */
-    protected $indexPredicate;
-
-    /**
-     * @var AssignmentExpression|null
-     */
-    protected $assignment;
-
-    /**
-     * @var ConditionalExpression|null
-     */
-    protected $assignmentPredicate;
-
+    protected ?ColumnListExpression $indexColumn = null;
+    protected ?ConditionalExpression $indexPredicate = null;
+    protected ?AssignmentExpression $assignment = null;
+    protected ?ConditionalExpression $assignmentPredicate = null;
     protected ?string $indexConstraint = null;
-
     private bool $whereBelongsToConflict = false;
 
-    /**
-     * @param mixed $indexColumn
-     * @return static
-     */
-    public function onConflictDoNothing($indexColumn = '')
+    public function onConflictDoNothing(mixed $indexColumn = ''): static
     {
         return $this->onConflict($indexColumn)
             ->doNothing();
     }
 
-    /**
-     * @param mixed $indexColumn
-     * @param mixed $column
-     * @param mixed $value
-     * @return static
-     */
-    public function onConflictDoUpdate($indexColumn, $column, $value = null)
+    public function onConflictDoUpdate(mixed $indexColumn, mixed $column, mixed $value = null): static
     {
         return $this->onConflict($indexColumn)
             ->doUpdate($column, $value);
     }
 
-    /**
-     * @param mixed $indexColumn
-     * @param mixed $indexPredicate
-     * @return static
-     */
-    public function onConflict($indexColumn = '', $indexPredicate = null)
+    public function onConflict(mixed $indexColumn = '', mixed $indexPredicate = null): static
     {
         $this->indexColumn = $this->indexColumn ?? new ColumnListExpression();
         $this->indexColumn->append($indexColumn);
         if ($indexPredicate !== null) {
             if ($this->indexPredicate) {
-                $this->indexPredicate->with($indexPredicate);
+                $this->indexPredicate->and($indexPredicate);
             } else {
                 $this->indexPredicate = $indexPredicate instanceof ConditionalExpression ?
                     $indexPredicate : new ConditionalExpression($indexPredicate);
@@ -78,32 +46,21 @@ trait ConflictClause
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function onConstraint(string $indexConstraint)
+    public function onConstraint(string $indexConstraint): static
     {
         $this->indexConstraint = $indexConstraint;
         $this->built = false;
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function doNothing()
+    public function doNothing(): static
     {
         $this->assignment = null;
         $this->built = false;
         return $this;
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $value
-     * @return static
-     */
-    public function doUpdate($column, $value = null)
+    public function doUpdate(mixed $column, mixed $value = null): static
     {
         $this->assignment = $this->assignment ?? new AssignmentExpression();
         $this->assignment->append($column, $value);
@@ -112,14 +69,11 @@ trait ConflictClause
         return $this;
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $valueOrAssignmentPredicate
-     * @param mixed $assignmentPredicate
-     * @return static
-     */
-    public function doUpdateWithCondition($column, $valueOrAssignmentPredicate, $assignmentPredicate = null)
-    {
+    public function doUpdateWithCondition(
+        mixed $column,
+        mixed $valueOrAssignmentPredicate,
+        mixed $assignmentPredicate = null
+    ): static {
         if ($assignmentPredicate === null) {
             $value = null;
             $assignmentPredicate = $valueOrAssignmentPredicate;
@@ -130,7 +84,7 @@ trait ConflictClause
         $this->assignment->append($column, $value);
         if ($assignmentPredicate !== null) {
             if ($this->assignmentPredicate) {
-                $this->assignmentPredicate->with($assignmentPredicate);
+                $this->assignmentPredicate->and($assignmentPredicate);
             } else {
                 $this->assignmentPredicate = $assignmentPredicate instanceof ConditionalExpression ?
                     $assignmentPredicate : new ConditionalExpression($assignmentPredicate);
@@ -141,35 +95,17 @@ trait ConflictClause
         return $this;
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function andWhere($column, $operator = null, $value = null)
+    public function andWhere(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->where($column, $operator, $value);
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function orWhere($column, $operator = null, $value = null)
+    public function orWhere(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->where($column, $operator, $value, 'OR');
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function where($column, $operator = null, $value = null, string $connector = 'AND')
+    public function where(mixed $column, mixed $operator = null, mixed $value = null, string $connector = 'AND'): static
     {
         if ($this->whereBelongsToConflict) {
             $this->indexPredicate = $this->indexPredicate ?? new ConditionalExpression();
@@ -180,6 +116,25 @@ trait ConflictClause
         }
         $this->built = false;
         return $this;
+    }
+
+    protected function cloneConflict(mixed $copy): void
+    {
+        $copy->indexColumn = $this->indexColumn ? clone $this->indexColumn : null;
+        $copy->indexPredicate = $this->indexPredicate ? clone $this->indexPredicate : null;
+        $copy->indexConstraint = $this->indexConstraint;
+        $copy->assignment = $this->assignment ? clone $this->assignment : null;
+        $copy->assignmentPredicate = $this->assignmentPredicate ? clone $this->assignmentPredicate : null;
+    }
+
+    protected function cleanConflict(): void
+    {
+        $this->indexColumn = null;
+        $this->indexPredicate = null;
+        $this->indexConstraint = null;
+        $this->assignment = null;
+        $this->assignmentPredicate = null;
+        $this->whereBelongsToConflict = false;
     }
 
     protected function buildOnConflictDoUpdate(): void

@@ -8,151 +8,113 @@ use AlephTools\SqlBuilder\Sql\Expression\JoinExpression;
 
 trait JoinClause
 {
-    /**
-     * @var JoinExpression|null
-     */
-    protected $join;
+    protected ?JoinExpression $join = null;
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function join($table, $aliasOrCondition = null, $condition = null)
+    public function join(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function crossJoin($table, $aliasOrCondition = null, $condition = null)
+    public function crossJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('CROSS JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function innerJoin($table, $aliasOrCondition = null, $condition = null)
+    public function innerJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('INNER JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function leftJoin($table, $aliasOrCondition = null, $condition = null)
+    public function leftJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('LEFT JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function rightJoin($table, $aliasOrCondition = null, $condition = null)
+    public function rightJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('RIGHT JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function naturalInnerJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalInnerJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('NATURAL INNER JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function naturalLeftJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalLeftJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('NATURAL LEFT JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function naturalRightJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalRightJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('NATURAL RIGHT JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function leftOuterJoin($table, $aliasOrCondition = null, $condition = null)
+    public function leftOuterJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('LEFT OUTER JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function rightOuterJoin($table, $aliasOrCondition = null, $condition = null)
+    public function rightOuterJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('RIGHT OUTER JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function naturalLeftOuterJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalLeftOuterJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('NATURAL LEFT OUTER JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    public function naturalRightOuterJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalRightOuterJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null)
     {
         return $this->typeJoin('NATURAL RIGHT OUTER JOIN', $table, $aliasOrCondition, $condition);
     }
 
     /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
      * @return static
      */
-    protected function typeJoin(string $type, $table, $aliasOrCondition = null, $condition = null)
-    {
+    protected function typeJoin(
+        string $type,
+        mixed $table,
+        mixed $aliasOrCondition = null,
+        mixed $condition = null
+    ) {
         if ($condition !== null) {
             $alias = $aliasOrCondition;
         } else {
@@ -165,12 +127,19 @@ trait JoinClause
         return $this;
     }
 
-    /**
-     * @return JoinExpression
-     */
-    protected function createJoinExpression()
+    protected function createJoinExpression(): JoinExpression
     {
         return new JoinExpression();
+    }
+
+    protected function cloneJoin(mixed $copy): void
+    {
+        $copy->join = $this->join ? clone $this->join : null;
+    }
+
+    protected function cleanJoin(): void
+    {
+        $this->join = null;
     }
 
     protected function buildJoin(): void

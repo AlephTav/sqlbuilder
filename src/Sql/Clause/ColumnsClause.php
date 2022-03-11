@@ -8,16 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 
 trait ColumnsClause
 {
-    /**
-     * @var ColumnListExpression|null
-     */
-    protected $columns;
+    protected ?ColumnListExpression $columns = null;
 
-    /**
-     * @param mixed $columns
-     * @return static
-     */
-    public function columns($columns)
+    public function columns(mixed $columns): static
     {
         $this->columns = $this->columns ?? $this->createColumnsExpression();
         $this->columns->append($columns);
@@ -25,12 +18,19 @@ trait ColumnsClause
         return $this;
     }
 
-    /**
-     * @return ColumnListExpression
-     */
-    protected function createColumnsExpression()
+    protected function createColumnsExpression(): ColumnListExpression
     {
         return new ColumnListExpression();
+    }
+
+    protected function cloneColumns(mixed $copy): void
+    {
+        $copy->columns = $this->columns ? clone $this->columns : null;
+    }
+
+    protected function cleanColumns(): void
+    {
+        $this->columns = null;
     }
 
     protected function buildColumns(): void

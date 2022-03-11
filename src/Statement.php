@@ -10,12 +10,9 @@ interface Statement
 
     public function toSql(): string;
 
-    /**
-     * @return static
-     */
-    public function copy();
+    public function copy(): static;
 
-    public function clean(): void;
+    public function clean(): static;
 
     public function __toString(): string;
 }

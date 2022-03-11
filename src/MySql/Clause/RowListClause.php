@@ -11,10 +11,7 @@ trait RowListClause
 {
     use ValuesClause;
 
-    /**
-     * @return RowListExpression
-     */
-    protected function createValuesExpression()
+    protected function createValuesExpression(): RowListExpression
     {
         return new RowListExpression();
     }

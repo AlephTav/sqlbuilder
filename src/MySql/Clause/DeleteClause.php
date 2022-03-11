@@ -8,42 +8,45 @@ use AlephTools\SqlBuilder\Sql\Clause\DeleteClause as BaseDeleteClause;
 
 trait DeleteClause
 {
-    use BaseDeleteClause;
+    use BaseDeleteClause {
+        BaseDeleteClause::cloneDelete as parentCloneDelete;
+        BaseDeleteClause::cleanDelete as parentCleanDelete;
+    }
 
     protected string $modifiers = '';
 
-    /**
-     * @return static
-     */
-    public function lowPriority()
+    public function lowPriority(): static
     {
         return $this->modifier('LOW_PRIORITY');
     }
 
-    /**
-     * @return static
-     */
-    public function quick()
+    public function quick(): static
     {
         return $this->modifier('QUICK');
     }
 
-    /**
-     * @return static
-     */
-    public function ignore()
+    public function ignore(): static
     {
         return $this->modifier('IGNORE');
     }
 
-    /**
-     * @return static
-     */
-    public function modifier(string $modifier)
+    public function modifier(string $modifier): static
     {
         $this->modifiers .= " $modifier";
         $this->built = true;
         return $this;
+    }
+
+    protected function cloneDelete(mixed $copy): void
+    {
+        $this->parentCloneDelete($copy);
+        $copy->modifiers = $this->modifiers;
+    }
+
+    protected function cleanDelete(): void
+    {
+        $this->parentCleanDelete();
+        $this->modifiers = '';
     }
 
     protected function buildDelete(): void

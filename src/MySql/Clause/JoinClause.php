@@ -10,13 +10,7 @@ trait JoinClause
 {
     use BaseJoinClause;
 
-    /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
-     * @return static
-     */
-    public function straightJoin($table, $aliasOrCondition = null, $condition = null)
+    public function straightJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null): static
     {
         return $this->typeJoin('STRAIGHT_JOIN', $table, $aliasOrCondition, $condition);
     }

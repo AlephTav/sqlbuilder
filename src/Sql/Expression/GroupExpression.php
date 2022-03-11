@@ -6,11 +6,7 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 class GroupExpression extends AbstractListExpression
 {
-    /**
-     * @param mixed $column
-     * @param mixed $order
-     */
-    public function __construct($column = null, $order = null)
+    public function __construct(mixed $column = null, mixed $order = null)
     {
         parent::__construct(true);
         if ($column !== null) {
@@ -18,12 +14,7 @@ class GroupExpression extends AbstractListExpression
         }
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $order
-     * @return static
-     */
-    public function append($column, $order = null)
+    public function append(mixed $column, mixed $order = null): static
     {
         return $this->appendName($order, $column);
     }

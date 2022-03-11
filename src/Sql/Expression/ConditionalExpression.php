@@ -6,61 +6,37 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
 use Closure;
+use function implode;
+use function is_array;
+use function is_numeric;
+use function is_string;
+use function strtolower;
 
 class ConditionalExpression extends AbstractExpression
 {
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     */
-    public function __construct($column = null, $operator = null, $value = null)
+    public function __construct(mixed $column = null, mixed $operator = null, mixed $value = null)
     {
         if ($column !== null) {
-            $this->with($column, $operator, $value);
+            $this->and($column, $operator, $value);
         }
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function andWhere($column, $operator = null, $value = null)
+    public function andWhere(mixed $column, mixed $operator = null, mixed $value = null): static
     {
-        return $this->with($column, $operator, $value);
+        return $this->with($column, $operator, $value, 'AND');
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function orWhere($column, $operator = null, $value = null)
+    public function orWhere(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->with($column, $operator, $value, 'OR');
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function where($column, $operator = null, $value = null, string $connector = 'AND')
+    public function where(mixed $column, mixed $operator = null, mixed $value = null, string $connector = 'AND'): static
     {
         return $this->with($column, $operator, $value, $connector);
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function and($column, $operator = null, $value = null)
+    public function and(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->with($column, $operator, $value, 'AND');
     }
@@ -71,18 +47,12 @@ class ConditionalExpression extends AbstractExpression
      * @param mixed $value
      * @return static
      */
-    public function or($column, $operator = null, $value = null)
+    public function or(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->with($column, $operator, $value, 'OR');
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function with($column, $operator = null, $value = null, string $connector = 'AND')
+    protected function with(mixed $column, mixed $operator, mixed $value, string $connector): static
     {
         if ($this->sql !== '') {
             $this->sql .= " $connector ";
@@ -100,10 +70,7 @@ class ConditionalExpression extends AbstractExpression
         return $this;
     }
 
-    /**
-     * @param mixed $expression
-     */
-    protected function convertOperandToString($expression): string
+    protected function convertOperandToString(mixed $expression): string
     {
         if ($expression === null) {
             return $this->nullToString();
@@ -126,10 +93,7 @@ class ConditionalExpression extends AbstractExpression
         return (string)$expression;
     }
 
-    /**
-     * @param mixed $expression
-     */
-    private function convertValueToString($expression, string $operator): string
+    private function convertValueToString(mixed $expression, string $operator): string
     {
         if ($expression === null) {
             return $this->nullToString();

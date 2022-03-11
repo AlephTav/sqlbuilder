@@ -8,17 +8,12 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 
 trait DeleteClause
 {
-    /**
-     * @var FromExpression|null
-     */
-    protected $from;
+    protected ?FromExpression $from = null;
 
     /**
-     * @param mixed $table
-     * @param mixed $alias
      * @return static
      */
-    public function from($table, $alias = null)
+    public function from(mixed $table, mixed $alias = null)
     {
         $this->from = $this->from ?? $this->createFromExpression();
         $this->from->append($table, $alias);
@@ -26,11 +21,18 @@ trait DeleteClause
         return $this;
     }
 
-    /**
-     * @return FromExpression
-     */
-    protected function createFromExpression()
+    protected function createFromExpression(): FromExpression
     {
         return new FromExpression();
+    }
+
+    protected function cloneDelete(mixed $copy): void
+    {
+        $copy->from = $this->from ? clone $this->from : null;
+    }
+
+    protected function cleanDelete(): void
+    {
+        $this->from = null;
     }
 }

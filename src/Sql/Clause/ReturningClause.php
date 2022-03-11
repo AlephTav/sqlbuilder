@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\ReturningExpression;
 
 trait ReturningClause
 {
-    /**
-     * @var ReturningExpression|null
-     */
-    protected $returning;
+    protected ?ReturningExpression $returning = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $alias
-     * @return static
-     */
-    public function returning($column = null, $alias = null)
+    public function returning(mixed $column = null, mixed $alias = null): static
     {
         $this->returning = $this->returning ?? $this->createReturningExpression();
         $this->returning->append($column ?? '*', $alias);
@@ -26,12 +18,19 @@ trait ReturningClause
         return $this;
     }
 
-    /**
-     * @return ReturningExpression
-     */
-    protected function createReturningExpression()
+    protected function createReturningExpression(): ReturningExpression
     {
         return new ReturningExpression();
+    }
+
+    protected function cloneReturning(mixed $copy): void
+    {
+        $copy->returning = $this->returning ? clone $this->returning : null;
+    }
+
+    protected function cleanReturning(): void
+    {
+        $this->returning = null;
     }
 
     protected function buildReturning(): void

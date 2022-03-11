@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
+use function count;
+use function implode;
+use function is_array;
+use function is_numeric;
+use function is_scalar;
 
 abstract class AbstractListExpression extends AbstractExpression
 {
@@ -15,12 +20,7 @@ abstract class AbstractListExpression extends AbstractExpression
         $this->reverseOrder = $reverseOrder;
     }
 
-    /**
-     * @param mixed $name
-     * @param mixed $alias
-     * @return static
-     */
-    protected function appendName($name, $alias)
+    protected function appendName(mixed $name, mixed $alias): static
     {
         if ($this->sql !== '') {
             $this->sql .= ', ';
@@ -29,12 +29,7 @@ abstract class AbstractListExpression extends AbstractExpression
         return $this;
     }
 
-    /**
-     * @param mixed $name
-     * @param mixed $alias
-     * @return mixed
-     */
-    protected function mapToExpression($name, $alias)
+    protected function mapToExpression(mixed $name, mixed $alias): mixed
     {
         if ($alias === null && !$this->reverseOrder) {
             return $name;
@@ -48,10 +43,7 @@ abstract class AbstractListExpression extends AbstractExpression
         return [[$alias, $name]];
     }
 
-    /**
-     * @param mixed $expression
-     */
-    protected function convertNameToString($expression): string
+    protected function convertNameToString(mixed $expression): string
     {
         if ($expression === null) {
             return $this->nullToString();
@@ -91,7 +83,7 @@ abstract class AbstractListExpression extends AbstractExpression
         $list = [];
         foreach ($expression as $alias => $name) {
             if (is_numeric($alias)) {
-                if (is_array($name) && \count($name) === 2) {
+                if (is_array($name) && count($name) === 2) {
                     [$alias, $name] = $name;
                 } elseif ($this->reverseOrder) {
                     $alias = $name;

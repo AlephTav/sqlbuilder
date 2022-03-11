@@ -471,7 +471,7 @@ class SelectStatementTest extends TestCase
         $st = (new SelectStatement())
             ->from('t1')
             ->join('t2', function (ConditionalExpression $condition) {
-                return $condition->with('t2.id', '=', new RawExpression('t1.id'))
+                return $condition->where('t2.id', '=', new RawExpression('t1.id'))
                     ->and('t1.f1', '>', 5)
                     ->or('t2.f3', '<>', 'a');
             });
@@ -493,7 +493,7 @@ class SelectStatementTest extends TestCase
             ->join(
                 't2',
                 (new ConditionalExpression())
-                ->with('t2.id', '=', new RawExpression('t1.id'))
+                ->where('t2.id', '=', new RawExpression('t1.id'))
                 ->andWhere('t1.f1', '>', new RawExpression('t2.f2'))
                 ->orWhere('t2.f3', '<>', new RawExpression('t1.f3'))
                 ->or(null)
@@ -1304,6 +1304,64 @@ class SelectStatementTest extends TestCase
             ->paginate(3, 7);
 
         self::assertSame('SELECT * FROM tb LIMIT 7 OFFSET 21', $st->toSql());
+        self::assertEmpty($st->getParams());
+    }
+
+    //endregion
+
+    //region LOCK
+
+    /**
+     * @test
+     */
+    public function selectForLock(): void
+    {
+        $st = (new SelectStatement())
+            ->from('t1')
+            ->forUpdate();
+
+        self::assertSame('SELECT * FROM t1 FOR UPDATE', $st->toSql());
+        self::assertEmpty($st->getParams());
+    }
+
+    /**
+     * @test
+     */
+    public function selectForLockWithTables(): void
+    {
+        $st = (new SelectStatement())
+            ->from('t1')
+            ->limit(1)
+            ->offset(0)
+            ->forShare(['t1', 't2']);
+
+        self::assertSame('SELECT * FROM t1 LIMIT 1 OFFSET 0 FOR SHARE OF t1, t2', $st->toSql());
+        self::assertEmpty($st->getParams());
+    }
+
+    /**
+     * @test
+     */
+    public function selectForLockWithOption(): void
+    {
+        $st = (new SelectStatement())
+            ->from('t1')
+            ->forNoKeyUpdate(null, 'NOWAIT');
+
+        self::assertSame('SELECT * FROM t1 FOR NO KEY UPDATE NOWAIT', $st->toSql());
+        self::assertEmpty($st->getParams());
+    }
+
+    /**
+     * @test
+     */
+    public function selectForLockWithTablesAndOption(): void
+    {
+        $st = (new SelectStatement())
+            ->from('t1')
+            ->forKeyShare('t1', 'SKIP LOCKED');
+
+        self::assertSame('SELECT * FROM t1 FOR KEY SHARE OF t1 SKIP LOCKED', $st->toSql());
         self::assertEmpty($st->getParams());
     }
 

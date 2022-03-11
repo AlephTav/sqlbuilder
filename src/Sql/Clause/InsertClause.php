@@ -8,17 +8,12 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 
 trait InsertClause
 {
-    /**
-     * @var FromExpression|null
-     */
-    protected $table;
+    protected ?FromExpression $table = null;
 
     /**
-     * @param mixed $table
-     * @param mixed $alias
      * @return static
      */
-    public function into($table, $alias = null)
+    public function into(mixed $table, mixed $alias = null)
     {
         $this->table = $this->table ?? $this->createTableExpression();
         $this->table->append($table, $alias);
@@ -26,11 +21,18 @@ trait InsertClause
         return $this;
     }
 
-    /**
-     * @return FromExpression
-     */
-    protected function createTableExpression()
+    protected function createTableExpression(): FromExpression
     {
         return new FromExpression();
+    }
+
+    protected function cloneInsert(mixed $copy): void
+    {
+        $copy->table = $this->table ? clone $this->table : null;
+    }
+
+    protected function cleanInsert(): void
+    {
+        $this->table = null;
     }
 }

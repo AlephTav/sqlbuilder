@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\SelectExpression;
 
 trait SelectClause
 {
-    /**
-     * @var SelectExpression|null
-     */
-    protected $select;
+    protected ?SelectExpression $select = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $alias
-     * @return static
-     */
-    public function select($column, $alias = null)
+    public function select(mixed $column, mixed $alias = null): static
     {
         $this->select = $this->select ?? $this->createSelectExpression();
         $this->select->append($column, $alias);
@@ -26,12 +18,19 @@ trait SelectClause
         return $this;
     }
 
-    /**
-     * @return SelectExpression
-     */
-    protected function createSelectExpression()
+    protected function createSelectExpression(): SelectExpression
     {
         return new SelectExpression();
+    }
+
+    protected function cloneSelect(mixed $copy): void
+    {
+        $copy->select = $this->select ? clone $this->select : null;
+    }
+
+    protected function cleanSelect(): void
+    {
+        $this->select = null;
     }
 
     protected function buildSelect(): void

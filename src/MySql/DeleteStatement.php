@@ -17,36 +17,32 @@ class DeleteStatement extends AbstractDeleteStatement
     use OrderClause;
     use LimitClause;
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->with = $this->with ? clone $this->with : null;
-        $copy->modifiers = $this->modifiers;
-        $copy->from = $this->from ? clone $this->from : null;
-        $copy->partition = $this->partition ? clone $this->partition : null;
-        $copy->using = $this->using ? clone $this->using : null;
-        $copy->where = $this->where ? clone $this->where : null;
-        $copy->order = $this->order ? clone $this->order : null;
-        $copy->limit = $this->limit;
+        $this->cloneWith($copy);
+        $this->cloneDelete($copy);
+        $this->clonePartition($copy);
+        $this->cloneUsing($copy);
+        $this->cloneWhere($copy);
+        $this->cloneOrderBy($copy);
+        $this->cloneLimit($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->with = null;
-        $this->modifiers = '';
-        $this->from = null;
-        $this->partition = null;
-        $this->using = null;
-        $this->where = null;
-        $this->order = null;
-        $this->limit = null;
+        $this->cleanWith();
+        $this->cleanDelete();
+        $this->cleanPartition();
+        $this->cleanUsing();
+        $this->cleanWhere();
+        $this->cleanOrderBy();
+        $this->cleanLimit();
+        return $this;
     }
 
-    public function build()
+    public function build(): static
     {
         if ($this->built) {
             return $this;

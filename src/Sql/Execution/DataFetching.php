@@ -89,10 +89,7 @@ trait DataFetching
         return $this->db()->column($this->toSql(), $this->getParams());
     }
 
-    /**
-     * @return mixed
-     */
-    public function scalar()
+    public function scalar(): mixed
     {
         return $this->db()->scalar($this->toSql(), $this->getParams());
     }

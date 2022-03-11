@@ -15,35 +15,28 @@ class DeleteStatement extends AbstractDeleteStatement
     use ReturningClause;
     use DataFetching;
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->with = $this->with ? clone $this->with : null;
-        $copy->from = $this->from ? clone $this->from : null;
-        $copy->only = $this->only;
-        $copy->using = $this->using ? clone $this->using : null;
-        $copy->where = $this->where ? clone $this->where : null;
-        $copy->returning = $this->returning ? clone $this->returning : null;
+        $this->cloneWith($copy);
+        $this->cloneDelete($copy);
+        $this->cloneUsing($copy);
+        $this->cloneWhere($copy);
+        $this->cloneReturning($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->with = null;
-        $this->from = null;
-        $this->only = false;
-        $this->using = null;
-        $this->where = null;
-        $this->returning = null;
+        $this->cleanWith();
+        $this->cleanDelete();
+        $this->cleanUsing();
+        $this->cleanWhere();
+        $this->cleanReturning();
+        return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function build()
+    public function build(): static
     {
         if ($this->built) {
             return $this;

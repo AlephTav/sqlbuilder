@@ -8,53 +8,39 @@ use AlephTools\SqlBuilder\Sql\Expression\HavingExpression;
 
 trait HavingClause
 {
-    /**
-     * @var HavingExpression|null
-     */
-    protected $having;
+    protected ?HavingExpression $having = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function andHaving($column, $operator = null, $value = null)
+    public function andHaving(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->having($column, $operator, $value);
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function orHaving($column, $operator = null, $value = null)
+    public function orHaving(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->having($column, $operator, $value, 'OR');
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function having($column, $operator = null, $value = null, string $connector = 'AND')
+    public function having(mixed $column, mixed $operator = null, mixed $value = null, string $connector = 'AND'): static
     {
         $this->having = $this->having ?? $this->createHavingExpression();
-        $this->having->with($column, $operator, $value, $connector);
+        $this->having->where($column, $operator, $value, $connector);
         $this->built = false;
         return $this;
     }
 
-    /**
-     * @return HavingExpression
-     */
-    protected function createHavingExpression()
+    protected function createHavingExpression(): HavingExpression
     {
         return new HavingExpression();
+    }
+
+    protected function cloneHaving(mixed $copy): void
+    {
+        $copy->having = $this->having ? clone $this->having : null;
+    }
+
+    protected function cleanHaving(): void
+    {
+        $this->having = null;
     }
 
     protected function buildHaving(): void

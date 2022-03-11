@@ -17,31 +17,26 @@ class ValuesStatement extends AbstractValuesStatement
     use OffsetClause;
     use DataFetching;
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->values = $this->values ? clone $this->values : null;
-        $copy->order = $this->order ? clone $this->order : null;
-        $copy->limit = $this->limit;
-        $copy->offset = $this->offset;
+        $this->cloneValues($copy);
+        $this->cloneOrderBy($copy);
+        $this->cloneLimit($copy);
+        $this->cloneOffset($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->values = null;
-        $this->order = null;
-        $this->limit = null;
-        $this->offset = null;
+        $this->cleanValues();
+        $this->cleanOrderBy();
+        $this->cleanLimit();
+        $this->cleanOffset();
+        return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function paginate(int $page, int $size)
+    public function paginate(int $page, int $size): static
     {
         $this->offset = $size * $page;
         $this->limit = $size;
@@ -49,10 +44,7 @@ class ValuesStatement extends AbstractValuesStatement
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function build()
+    public function build(): static
     {
         if ($this->built) {
             return $this;

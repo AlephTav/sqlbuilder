@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\OrderExpression;
 
 trait OrderClause
 {
-    /**
-     * @var OrderExpression|null
-     */
-    protected $order;
+    protected ?OrderExpression $order = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $order
-     * @return static
-     */
-    public function orderBy($column, $order = null)
+    public function orderBy(mixed $column, mixed $order = null): static
     {
         $this->order = $this->order ?? $this->createOrderExpression();
         $this->order->append($column, $order);
@@ -26,12 +18,19 @@ trait OrderClause
         return $this;
     }
 
-    /**
-     * @return OrderExpression
-     */
-    protected function createOrderExpression()
+    protected function createOrderExpression(): OrderExpression
     {
         return new OrderExpression();
+    }
+
+    protected function cloneOrderBy(mixed $copy): void
+    {
+        $copy->order = $this->order ? clone $this->order : null;
+    }
+
+    protected function cleanOrderBy(): void
+    {
+        $this->order = null;
     }
 
     protected function buildOrderBy(): void

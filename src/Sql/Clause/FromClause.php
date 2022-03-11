@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\FromExpression;
 
 trait FromClause
 {
-    /**
-     * @var FromExpression|null
-     */
-    protected $from;
+    protected ?FromExpression $from = null;
 
-    /**
-     * @param mixed $table
-     * @param mixed $alias
-     * @return static
-     */
-    public function from($table, $alias = null)
+    public function from(mixed $table, mixed $alias = null): static
     {
         $this->from = $this->from ?? $this->createFromExpression();
         $this->from->append($table, $alias);
@@ -26,12 +18,19 @@ trait FromClause
         return $this;
     }
 
-    /**
-     * @return FromExpression
-     */
-    protected function createFromExpression()
+    protected function createFromExpression(): FromExpression
     {
         return new FromExpression();
+    }
+
+    protected function cloneFrom(mixed $copy): void
+    {
+        $copy->from = $this->from ? clone $this->from : null;
+    }
+
+    protected function cleanFrom(): void
+    {
+        $this->from = null;
     }
 
     protected function buildFrom(): void

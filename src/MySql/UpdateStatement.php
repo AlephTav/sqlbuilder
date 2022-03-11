@@ -15,31 +15,27 @@ class UpdateStatement extends AbstractUpdateStatement
     use OrderClause;
     use LimitClause;
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->with = $this->with ? clone $this->with : null;
-        $copy->modifiers = $this->modifiers;
-        $copy->table = $this->table ? clone $this->table : null;
-        $copy->assignment = $this->assignment ? clone $this->assignment : null;
-        $copy->where = $this->where ? clone $this->where : null;
-        $copy->order = $this->order ? clone $this->order : null;
-        $copy->limit = $this->limit;
+        $this->cloneWith($copy);
+        $this->cloneUpdate($copy);
+        $this->cloneAssignment($copy);
+        $this->cloneWhere($copy);
+        $this->cloneOrderBy($copy);
+        $this->cloneLimit($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->with = null;
-        $this->modifiers = '';
-        $this->table = null;
-        $this->assignment = null;
-        $this->where = null;
-        $this->order = null;
-        $this->limit = null;
+        $this->cleanWith();
+        $this->cleanUpdate();
+        $this->cleanAssignment();
+        $this->cleanWhere();
+        $this->cleanOrderBy();
+        $this->cleanLimit();
+        return $this;
     }
 
     /**

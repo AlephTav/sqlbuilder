@@ -18,6 +18,16 @@ trait LimitClause
         return $this;
     }
 
+    protected function cloneLimit(mixed $copy): void
+    {
+        $copy->limit = $this->limit;
+    }
+
+    protected function cleanLimit(): void
+    {
+        $this->limit = null;
+    }
+
     protected function buildLimit(): void
     {
         if ($this->limit !== null) {

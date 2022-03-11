@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\WithExpression;
 
 trait WithClause
 {
-    /**
-     * @var WithExpression|null
-     */
-    protected $with;
+    protected ?WithExpression $with = null;
 
-    /**
-     * @param mixed $query
-     * @param mixed $alias
-     * @return $this
-     */
-    public function with($query, $alias = null)
+    public function with(mixed $query, mixed $alias = null): static
     {
         $this->with = $this->with ?? $this->createWithExpression();
         $this->with->append($query, $alias);
@@ -26,12 +18,7 @@ trait WithClause
         return $this;
     }
 
-    /**
-     * @param mixed $query
-     * @param mixed $alias
-     * @return $this
-     */
-    public function withRecursive($query, $alias = null)
+    public function withRecursive(mixed $query, mixed $alias = null): static
     {
         $this->with = $this->with ?? $this->createWithExpression();
         $this->with->append($query, $alias, true);
@@ -39,12 +26,19 @@ trait WithClause
         return $this;
     }
 
-    /**
-     * @return WithExpression
-     */
-    protected function createWithExpression()
+    protected function createWithExpression(): WithExpression
     {
         return new WithExpression();
+    }
+
+    protected function cloneWith(mixed $copy): void
+    {
+        $copy->with = $this->with ? clone $this->with : null;
+    }
+
+    protected function cleanWith(): void
+    {
+        $this->with = null;
     }
 
     protected function buildWith(): void

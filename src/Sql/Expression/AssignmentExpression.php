@@ -5,26 +5,21 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
+use function implode;
+use function is_array;
+use function is_numeric;
+use function is_scalar;
 
 class AssignmentExpression extends AbstractExpression
 {
-    /**
-     * @param mixed $column
-     * @param mixed $value
-     */
-    public function __construct($column = null, $value = null)
+    public function __construct(mixed $column = null, mixed $value = null)
     {
         if ($column !== null) {
             $this->append($column, $value);
         }
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $value
-     * @return static
-     */
-    public function append($column, $value = null)
+    public function append(mixed $column, mixed $value = null): static
     {
         if ($this->sql !== '') {
             $this->sql .= ', ';
@@ -40,10 +35,7 @@ class AssignmentExpression extends AbstractExpression
         return $this;
     }
 
-    /**
-     * @param mixed $expression
-     */
-    protected function convertNameToString($expression): string
+    protected function convertNameToString(mixed $expression): string
     {
         if ($expression === null) {
             return $this->nullToString();
@@ -74,10 +66,7 @@ class AssignmentExpression extends AbstractExpression
         return implode(', ', $list);
     }
 
-    /**
-     * @param mixed $expression
-     */
-    private function convertValueToString($expression): string
+    private function convertValueToString(mixed $expression): string
     {
         if ($expression === null) {
             return $this->nullToString();

@@ -5,26 +5,22 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
+use function count;
+use function implode;
+use function is_array;
+use function is_numeric;
+use function is_scalar;
 
 class WithExpression extends AbstractExpression
 {
-    /**
-     * @param mixed $query
-     * @param mixed $alias
-     */
-    public function __construct($query = null, $alias = null, bool $recursive = false)
+    public function __construct(mixed $query = null, mixed $alias = null, bool $recursive = false)
     {
         if ($query !== null) {
             $this->append($query, $alias, $recursive);
         }
     }
 
-    /**
-     * @param mixed $query
-     * @param mixed $alias
-     * @return static
-     */
-    public function append($query, $alias = null, bool $recursive = false)
+    public function append(mixed $query, mixed $alias = null, bool $recursive = false): static
     {
         if ($this->sql !== '') {
             $this->sql .= ', ';
@@ -40,10 +36,7 @@ class WithExpression extends AbstractExpression
         return $this;
     }
 
-    /**
-     * @param mixed $expression
-     */
-    protected function convertNameToString($expression): string
+    protected function convertNameToString(mixed $expression): string
     {
         if ($expression === null) {
             return $this->nullToString();
@@ -65,7 +58,7 @@ class WithExpression extends AbstractExpression
         $list = [];
         foreach ($expression as $alias => $query) {
             if (is_numeric($alias)) {
-                if (is_array($query) && \count($query) === 2) {
+                if (is_array($query) && count($query) === 2) {
                     [$alias, $query] = $query;
                 } else {
                     $alias = null;

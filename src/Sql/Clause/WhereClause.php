@@ -8,53 +8,39 @@ use AlephTools\SqlBuilder\Sql\Expression\WhereExpression;
 
 trait WhereClause
 {
-    /**
-     * @var WhereExpression|null
-     */
-    protected $where;
+    protected ?WhereExpression $where = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function andWhere($column, $operator = null, $value = null)
+    public function andWhere(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->where($column, $operator, $value);
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function orWhere($column, $operator = null, $value = null)
+    public function orWhere(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         return $this->where($column, $operator, $value, 'OR');
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $operator
-     * @param mixed $value
-     * @return static
-     */
-    public function where($column, $operator = null, $value = null, string $connector = 'AND')
+    public function where(mixed $column, mixed $operator = null, mixed $value = null, string $connector = 'AND'): static
     {
         $this->where = $this->where ?? $this->createWhereExpression();
-        $this->where->with($column, $operator, $value, $connector);
+        $this->where->where($column, $operator, $value, $connector);
         $this->built = false;
         return $this;
     }
 
-    /**
-     * @return WhereExpression
-     */
-    protected function createWhereExpression()
+    protected function createWhereExpression(): WhereExpression
     {
         return new WhereExpression();
+    }
+
+    protected function cloneWhere(mixed $copy): void
+    {
+        $copy->where = $this->where ? clone $this->where : null;
+    }
+
+    protected function cleanWhere(): void
+    {
+        $this->where = null;
     }
 
     protected function buildWhere(): void

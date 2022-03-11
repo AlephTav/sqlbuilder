@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\GroupExpression;
 
 trait GroupClause
 {
-    /**
-     * @var GroupExpression|null
-     */
-    protected $group;
+    protected ?GroupExpression $group = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $order
-     * @return static
-     */
-    public function groupBy($column, $order = null)
+    public function groupBy(mixed $column, mixed $order = null): static
     {
         $this->group = $this->group ?? $this->createGroupExpression();
         $this->group->append($column, $order);
@@ -26,12 +18,19 @@ trait GroupClause
         return $this;
     }
 
-    /**
-     * @return GroupExpression
-     */
-    protected function createGroupExpression()
+    protected function createGroupExpression(): GroupExpression
     {
         return new GroupExpression();
+    }
+
+    protected function cloneGroupBy(mixed $copy): void
+    {
+        $copy->group = $this->group ? clone $this->group : null;
+    }
+
+    protected function cleanGroupBy(): void
+    {
+        $this->group = null;
     }
 
     protected function buildGroupBy(): void

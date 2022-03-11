@@ -8,74 +8,65 @@ use AlephTools\SqlBuilder\Sql\Clause\InsertClause as BaseInsertClause;
 
 trait InsertClause
 {
-    use BaseInsertClause;
+    use BaseInsertClause {
+        BaseInsertClause::cloneInsert as parentCloneInsert;
+        BaseInsertClause::cleanInsert as parentCleanInsert;
+    }
 
     protected string $modifiers = '';
 
-    /**
-     * @return static
-     */
-    public function lowPriority()
+    public function lowPriority(): static
     {
         return $this->modifier('LOW_PRIORITY');
     }
 
-    /**
-     * @return static
-     */
-    public function highPriority()
+    public function highPriority(): static
     {
         return $this->modifier('HIGH_PRIORITY');
     }
 
-    /**
-     * @return static
-     */
-    public function delayed()
+    public function delayed(): static
     {
         return $this->modifier('DELAYED');
     }
 
-    /**
-     * @return static
-     */
-    public function ignore()
+    public function ignore(): static
     {
         return $this->modifier('IGNORE');
     }
 
-    /**
-     * @return static
-     */
-    public function lowPriorityIgnore()
+    public function lowPriorityIgnore(): static
     {
         return $this->modifier('LOW_PRIORITY IGNORE');
     }
 
-    /**
-     * @return static
-     */
-    public function highPriorityIgnore()
+    public function highPriorityIgnore(): static
     {
         return $this->modifier('HIGH_PRIORITY IGNORE');
     }
 
-    /**
-     * @return static
-     */
-    public function delayedIgnore()
+    public function delayedIgnore(): static
     {
         return $this->modifier('DELAYED IGNORE');
     }
 
-    /**
-     * @return static
-     */
-    public function modifier(string $modifier)
+    public function modifier(string $modifier): static
     {
         $this->modifiers .= " $modifier";
         $this->built = true;
         return $this;
+    }
+
+    protected function cloneInsert(mixed $copy): void
+    {
+        $this->parentCloneInsert($copy);
+        $copy->modifiers = $this->modifiers;
+    }
+
+    protected function cleanInsert(): void
+    {
+        $this->parentCleanInsert();
+        $this->modifiers = '';
     }
 
     protected function buildInsert(): void

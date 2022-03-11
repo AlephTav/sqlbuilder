@@ -5,24 +5,20 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
+use function implode;
+use function is_array;
+use function reset;
 
 class ValueListExpression extends AbstractExpression
 {
-    /**
-     * @param mixed $values
-     */
-    public function __construct($values = null)
+    public function __construct(mixed $values = null)
     {
         if ($values !== null) {
             $this->append($values);
         }
     }
 
-    /**
-     * @param mixed $values
-     * @return static
-     */
-    public function append($values)
+    public function append(mixed $values): static
     {
         if ($this->sql !== '') {
             $this->sql .= ', ';
@@ -31,10 +27,7 @@ class ValueListExpression extends AbstractExpression
         return $this;
     }
 
-    /**
-     * @param mixed $expression
-     */
-    protected function convertValueListToString($expression): string
+    protected function convertValueListToString(mixed $expression): string
     {
         if ($expression instanceof RawExpression) {
             return $this->rawExpressionToString($expression);
@@ -63,10 +56,7 @@ class ValueListExpression extends AbstractExpression
         return '(' . implode(', ', $values) . ')';
     }
 
-    /**
-     * @param mixed $expression
-     */
-    protected function convertValueToString($expression): string
+    protected function convertValueToString(mixed $expression): string
     {
         if ($expression === null) {
             return $this->nullToString();

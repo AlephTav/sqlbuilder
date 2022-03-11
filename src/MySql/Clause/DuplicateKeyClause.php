@@ -8,22 +8,25 @@ use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 
 trait DuplicateKeyClause
 {
-    /**
-     * @var AssignmentExpression|null
-     */
-    protected $assignmentOnUpdate;
+    protected ?AssignmentExpression $assignmentOnUpdate = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $value
-     * @return static
-     */
-    public function onDuplicateKeyUpdate($column, $value = null)
+    public function onDuplicateKeyUpdate(mixed $column, mixed $value = null): static
     {
         $this->assignmentOnUpdate = $this->assignmentOnUpdate ?? new AssignmentExpression();
         $this->assignmentOnUpdate->append($column, $value);
         $this->built = false;
         return $this;
+    }
+
+    protected function cloneDuplicateKey(mixed $copy): void
+    {
+        $copy->assignmentOnUpdate = $this->assignmentOnUpdate ?
+            clone $this->assignmentOnUpdate : $this->assignmentOnUpdate;
+    }
+
+    protected function cleanDuplicateKey(): void
+    {
+        $this->assignmentOnUpdate = null;
     }
 
     protected function buildOnDuplicateKeyUpdate(): void

@@ -11,10 +11,7 @@ trait UnionClause
 {
     use BaseUnionClause;
 
-    /**
-     * @return static
-     */
-    public function unionDistinct(Query $query)
+    public function unionDistinct(Query $query): static
     {
         return $this->typeUnion('UNION DISTINCT', $query);
     }

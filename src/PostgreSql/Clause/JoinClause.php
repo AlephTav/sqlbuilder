@@ -10,46 +10,22 @@ trait JoinClause
 {
     use BaseJoinClause;
 
-    /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
-     * @return static
-     */
-    public function fullJoin($table, $aliasOrCondition = null, $condition = null)
+    public function fullJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null): static
     {
         return $this->typeJoin('FULL JOIN', $table, $aliasOrCondition, $condition);
     }
 
-    /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
-     * @return static
-     */
-    public function fullOuterJoin($table, $aliasOrCondition = null, $condition = null)
+    public function fullOuterJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null): static
     {
         return $this->typeJoin('FULL OUTER JOIN', $table, $aliasOrCondition, $condition);
     }
 
-    /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
-     * @return static
-     */
-    public function naturalFullJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalFullJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null): static
     {
         return $this->typeJoin('NATURAL FULL JOIN', $table, $aliasOrCondition, $condition);
     }
 
-    /**
-     * @param mixed $table
-     * @param mixed $aliasOrCondition
-     * @param mixed $condition
-     * @return static
-     */
-    public function naturalFullOuterJoin($table, $aliasOrCondition = null, $condition = null)
+    public function naturalFullOuterJoin(mixed $table, mixed $aliasOrCondition = null, mixed $condition = null): static
     {
         return $this->typeJoin('NATURAL FULL OUTER JOIN', $table, $aliasOrCondition, $condition);
     }

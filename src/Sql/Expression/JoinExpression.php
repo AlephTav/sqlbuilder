@@ -5,28 +5,20 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use Closure;
+use function count;
+use function is_array;
+use function is_string;
 
 class JoinExpression extends AbstractExpression
 {
-    /**
-     * @param mixed $table
-     * @param mixed $alias
-     * @param mixed $condition
-     */
-    public function __construct(string $type = '', $table = null, $alias = null, $condition = null)
+    public function __construct(string $type = '', mixed $table = null, mixed $alias = null, mixed $condition = null)
     {
         if ($table !== null) {
             $this->append($type, $table, $alias, $condition);
         }
     }
 
-    /**
-     * @param mixed $table
-     * @param mixed $alias
-     * @param mixed $condition
-     * @return static
-     */
-    public function append(string $type, $table, $alias = null, $condition = null)
+    public function append(string $type, mixed $table, mixed $alias = null, mixed $condition = null): static
     {
         if ($this->sql !== '') {
             $this->sql .= ' ';
@@ -36,24 +28,17 @@ class JoinExpression extends AbstractExpression
         return $this;
     }
 
-    /**
-     * @param mixed $table
-     * @param mixed $alias
-     */
-    protected function convertTableToString($table, $alias): string
+    protected function convertTableToString(mixed $table, mixed $alias): string
     {
         $tb = new ColumnListExpression($table, $alias);
         $this->addParams($tb->getParams());
-        if (is_array($table) && \count($table) > 1) {
+        if (is_array($table) && count($table) > 1) {
             return "($tb)";
         }
         return $tb->toSql();
     }
 
-    /**
-     * @param mixed $condition
-     */
-    protected function addCondition($condition): void
+    protected function addCondition(mixed $condition): void
     {
         if ($condition === null) {
             return;
@@ -68,10 +53,7 @@ class JoinExpression extends AbstractExpression
         $this->addParams($conditions->getParams());
     }
 
-    /**
-     * @param mixed $expression
-     */
-    private function isConditionalExpression($expression): bool
+    private function isConditionalExpression(mixed $expression): bool
     {
         return is_string($expression) ||
             $expression instanceof RawExpression ||

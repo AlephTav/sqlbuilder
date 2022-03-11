@@ -13,26 +13,24 @@ class ValuesStatement extends AbstractValuesStatement
     use RowListClause;
     use LimitByClause;
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->values = $this->values ? clone $this->values : null;
-        $copy->order = $this->order ? clone $this->order : null;
-        $copy->limit = $this->limit;
+        $this->cloneValues($copy);
+        $this->cloneOrderBy($copy);
+        $this->cloneLimit($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->values = null;
-        $this->order = null;
-        $this->limit = null;
+        $this->cleanValues();
+        $this->cleanOrderBy();
+        $this->cleanLimit();
+        return $this;
     }
 
-    public function build()
+    public function build(): static
     {
         if ($this->built) {
             return $this;

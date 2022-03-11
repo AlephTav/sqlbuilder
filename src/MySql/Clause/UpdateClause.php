@@ -8,34 +8,40 @@ use AlephTools\SqlBuilder\Sql\Clause\UpdateClause as BaseUpdateClause;
 
 trait UpdateClause
 {
-    use BaseUpdateClause;
+    use BaseUpdateClause {
+        BaseUpdateClause::cloneUpdate as parentCloneUpdate;
+        BaseUpdateClause::cleanUpdate as parentCleanUpdate;
+    }
 
     protected string $modifiers = '';
 
-    /**
-     * @return static
-     */
-    public function lowPriority()
+    public function lowPriority(): static
     {
         return $this->modifier('LOW_PRIORITY');
     }
 
-    /**
-     * @return static
-     */
-    public function ignore()
+    public function ignore(): static
     {
         return $this->modifier('IGNORE');
     }
 
-    /**
-     * @return static
-     */
-    public function modifier(string $modifier)
+    public function modifier(string $modifier): static
     {
         $this->modifiers .= " $modifier";
         $this->built = true;
         return $this;
+    }
+
+    protected function cloneUpdate(mixed $copy): void
+    {
+        $this->parentCloneUpdate($copy);
+        $copy->modifiers = $this->modifiers;
+    }
+
+    protected function cleanUpdate(): void
+    {
+        $this->parentCleanUpdate();
+        $this->modifiers = '';
     }
 
     protected function buildUpdate(): void

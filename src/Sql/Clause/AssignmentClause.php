@@ -8,17 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
 
 trait AssignmentClause
 {
-    /**
-     * @var AssignmentExpression|null
-     */
-    protected $assignment;
+    protected ?AssignmentExpression $assignment = null;
 
-    /**
-     * @param mixed $column
-     * @param mixed $value
-     * @return static
-     */
-    public function assign($column, $value = null)
+    public function assign(mixed $column, mixed $value = null): static
     {
         $this->assignment = $this->assignment ?? $this->createAssignmentExpression();
         $this->assignment->append($column, $value);
@@ -26,12 +18,19 @@ trait AssignmentClause
         return $this;
     }
 
-    /**
-     * @return AssignmentExpression
-     */
-    protected function createAssignmentExpression()
+    protected function createAssignmentExpression(): AssignmentExpression
     {
         return new AssignmentExpression();
+    }
+
+    protected function cloneAssignment(mixed $copy): void
+    {
+        $copy->assignment = $this->assignment ? clone $this->assignment : null;
+    }
+
+    protected function cleanAssignment(): void
+    {
+        $this->assignment = null;
     }
 
     protected function buildAssignment(): void

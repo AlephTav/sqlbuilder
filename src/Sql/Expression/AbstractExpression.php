@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
 use AlephTools\SqlBuilder\Query;
+use function array_merge;
 
 abstract class AbstractExpression
 {

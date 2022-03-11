@@ -24,12 +24,9 @@ abstract class AbstractStatement implements Statement
         $this->db = $db;
     }
 
-    /**
-     * @return static
-     */
-    abstract public function copy();
+    abstract public function copy(): static;
 
-    abstract public function clean(): void;
+    abstract public function clean(): static;
 
     public function getStatementExecutor(): ?StatementExecutor
     {

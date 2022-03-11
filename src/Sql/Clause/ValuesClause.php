@@ -8,16 +8,9 @@ use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 
 trait ValuesClause
 {
-    /**
-     * @var ValueListExpression|null
-     */
-    protected $values;
+    protected ?ValueListExpression $values = null;
 
-    /**
-     * @param mixed $values
-     * @return static
-     */
-    public function values($values)
+    public function values(mixed $values): static
     {
         $this->values = $this->values ?? $this->createValuesExpression();
         $this->values->append($values);
@@ -25,12 +18,19 @@ trait ValuesClause
         return $this;
     }
 
-    /**
-     * @return ValueListExpression
-     */
-    protected function createValuesExpression()
+    protected function createValuesExpression(): ValueListExpression
     {
         return new ValueListExpression();
+    }
+
+    protected function cloneValues(mixed $copy): void
+    {
+        $copy->values = $this->values ? clone $this->values : null;
+    }
+
+    protected function cleanValues(): void
+    {
+        $this->values = null;
     }
 
     protected function buildValues(): void

@@ -10,16 +10,9 @@ trait RowAliasClause
 {
     protected ?string $rowAlias = null;
 
-    /**
-     * @var ColumnListExpression|null
-     */
-    protected $columnAliases;
+    protected ?ColumnListExpression $columnAliases = null;
 
-    /**
-     * @param mixed $columnAliases
-     * @return static
-     */
-    public function as(string $rowAlias, $columnAliases = null)
+    public function as(string $rowAlias, mixed $columnAliases = null): static
     {
         $this->rowAlias = $rowAlias;
         if ($columnAliases !== null) {
@@ -28,6 +21,18 @@ trait RowAliasClause
         }
         $this->built = false;
         return $this;
+    }
+
+    protected function cloneRowAlias(mixed $copy): void
+    {
+        $copy->columnAliases = $this->columnAliases ? clone $this->columnAliases : null;
+        $copy->rowAlias = $this->rowAlias;
+    }
+
+    protected function cleanRowAlias(): void
+    {
+        $this->columnAliases = null;
+        $this->rowAlias = null;
     }
 
     protected function buildRowAndColumnAliases(): void

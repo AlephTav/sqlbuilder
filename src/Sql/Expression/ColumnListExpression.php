@@ -6,11 +6,7 @@ namespace AlephTools\SqlBuilder\Sql\Expression;
 
 class ColumnListExpression extends AbstractListExpression
 {
-    /**
-     * @param mixed $column
-     * @param mixed $alias
-     */
-    public function __construct($column = null, $alias = null)
+    public function __construct(mixed $column = null, mixed $alias = null)
     {
         parent::__construct(false);
         if ($column !== null || $alias !== null) {
@@ -18,12 +14,7 @@ class ColumnListExpression extends AbstractListExpression
         }
     }
 
-    /**
-     * @param mixed $column
-     * @param mixed $alias
-     * @return static
-     */
-    public function append($column, $alias = null)
+    public function append(mixed $column, mixed $alias = null): static
     {
         return $this->appendName($column, $alias);
     }

@@ -23,7 +23,7 @@ abstract class AbstractInsertStatement extends AbstractStatement implements Comm
      * @param string|null $sequence Name of the sequence object from which the ID should be returned.
      * @return mixed Returns the ID of the last inserted row or sequence value.
      */
-    public function exec(string $sequence = null)
+    public function exec(string $sequence = null): mixed
     {
         return $this->db()->insert($this->toSql(), $this->getParams(), $sequence);
     }

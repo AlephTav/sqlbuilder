@@ -11,34 +11,22 @@ trait UnionClause
 {
     use BaseUnionClause;
 
-    /**
-     * @return static
-     */
-    public function unionIntersect(Query $query)
+    public function unionIntersect(Query $query): static
     {
         return $this->typeUnion('INTERSECT', $query);
     }
 
-    /**
-     * @return static
-     */
-    public function unionIntersectAll(Query $query)
+    public function unionIntersectAll(Query $query): static
     {
         return $this->typeUnion('INTERSECT ALL', $query);
     }
 
-    /**
-     * @return static
-     */
-    public function unionExcept(Query $query)
+    public function unionExcept(Query $query): static
     {
         return $this->typeUnion('EXCEPT', $query);
     }
 
-    /**
-     * @return static
-     */
-    public function unionExceptAll(Query $query)
+    public function unionExceptAll(Query $query): static
     {
         return $this->typeUnion('EXCEPT ALL', $query);
     }

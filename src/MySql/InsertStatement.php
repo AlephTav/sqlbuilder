@@ -21,44 +21,34 @@ class InsertStatement extends AbstractInsertStatement
     use AssignmentClause;
     use DuplicateKeyClause;
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->modifiers = $this->modifiers;
-        $copy->table = $this->table ? clone $this->table : null;
-        $copy->partition = $this->partition ? clone $this->partition : null;
-        $copy->columns = $this->columns ? clone $this->columns : null;
-        $copy->rowAlias = $this->rowAlias;
-        $copy->columnAliases = $this->columnAliases ? clone $this->columnAliases : null;
-        $copy->values = $this->values ? clone $this->values : null;
-        $copy->query = $this->query ? $this->query->copy() : null;
-        $copy->assignment = $this->assignment ? clone $this->assignment : $this->assignment;
-        $copy->assignmentOnUpdate = $this->assignmentOnUpdate ?
-            clone $this->assignmentOnUpdate : $this->assignmentOnUpdate;
+        $this->cloneInsert($copy);
+        $this->clonePartition($copy);
+        $this->cloneColumns($copy);
+        $this->cloneRowAlias($copy);
+        $this->cloneValueList($copy);
+        $this->cloneQuery($copy);
+        $this->cloneAssignment($copy);
+        $this->cloneDuplicateKey($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->modifiers = '';
-        $this->table = null;
-        $this->partition = null;
-        $this->columns = null;
-        $this->rowAlias = null;
-        $this->columnAliases = null;
-        $this->values = null;
-        $this->query = null;
-        $this->assignment = null;
-        $this->assignmentOnUpdate = null;
+        $this->cleanInsert();
+        $this->cleanPartition();
+        $this->cleanColumns();
+        $this->cleanRowAlias();
+        $this->cleanValueList();
+        $this->cleanQuery();
+        $this->cleanAssignment();
+        $this->cleanDuplicateKey();
+        return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function build()
+    public function build(): static
     {
         if ($this->built) {
             return $this;

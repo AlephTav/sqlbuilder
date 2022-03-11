@@ -8,19 +8,29 @@ use AlephTools\SqlBuilder\Sql\Clause\DeleteClause as BaseDeleteClause;
 
 trait DeleteClause
 {
-    use BaseDeleteClause;
+    use BaseDeleteClause {
+        BaseDeleteClause::cloneDelete as parentCloneDelete;
+        BaseDeleteClause::cleanDelete as parentCleanDelete;
+    }
 
     protected bool $only = false;
 
-    /**
-     * @param mixed $table
-     * @param mixed $alias
-     * @return static
-     */
-    public function fromOnly($table, $alias = null)
+    public function fromOnly(mixed $table, mixed $alias = null): static
     {
         $this->only = true;
         return $this->from($table, $alias);
+    }
+
+    protected function cloneDelete(mixed $copy): void
+    {
+        $this->parentCloneDelete($copy);
+        $copy->only = $this->only;
+    }
+
+    protected function cleanDelete(): void
+    {
+        $this->parentCleanDelete();
+        $this->only = false;
     }
 
     protected function buildDelete(): void

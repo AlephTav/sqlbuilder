@@ -10,6 +10,7 @@ use AlephTools\SqlBuilder\Sql\Clause\GroupClause;
 use AlephTools\SqlBuilder\Sql\Clause\HavingClause;
 use AlephTools\SqlBuilder\Sql\Clause\JoinClause;
 use AlephTools\SqlBuilder\Sql\Clause\LimitClause;
+use AlephTools\SqlBuilder\Sql\Clause\LockingClause;
 use AlephTools\SqlBuilder\Sql\Clause\OffsetClause;
 use AlephTools\SqlBuilder\Sql\Clause\OrderClause;
 use AlephTools\SqlBuilder\Sql\Clause\SelectClause;
@@ -18,6 +19,7 @@ use AlephTools\SqlBuilder\Sql\Clause\WhereClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
 use AlephTools\SqlBuilder\Sql\Execution\DataFetching;
 use Generator;
+use function count;
 
 abstract class AbstractSelectStatement extends AbstractStatement implements Query
 {
@@ -32,48 +34,46 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         OrderClause,
         LimitClause,
         OffsetClause,
+        LockingClause,
         DataFetching {
             DataFetching::column as parentColumn;
             DataFetching::scalar as parentScalar;
         }
 
-    /**
-     * @return static
-     */
-    public function copy()
+    public function copy(): static
     {
         $copy = new static($this->db);
-        $copy->with = $this->with ? clone $this->with : null;
-        $copy->from = $this->from ? clone $this->from : null;
-        $copy->select = $this->select ? clone $this->select : null;
-        $copy->join = $this->join ? clone $this->join : null;
-        $copy->where = $this->where ? clone $this->where : null;
-        $copy->group = $this->group ? clone $this->group : null;
-        $copy->having = $this->having ? clone $this->having : null;
-        $copy->order = $this->order ? clone $this->order : null;
-        $copy->limit = $this->limit;
-        $copy->offset = $this->offset;
+        $this->cloneWith($copy);
+        $this->cloneFrom($copy);
+        $this->cloneSelect($copy);
+        $this->cloneJoin($copy);
+        $this->cloneWhere($copy);
+        $this->cloneGroupBy($copy);
+        $this->cloneHaving($copy);
+        $this->cloneOrderBy($copy);
+        $this->cloneLimit($copy);
+        $this->cloneOffset($copy);
+        $this->cloneLock($copy);
         return $copy;
     }
 
-    public function clean(): void
+    public function clean(): static
     {
-        $this->with = null;
-        $this->from = null;
-        $this->select = null;
-        $this->join = null;
-        $this->where = null;
-        $this->group = null;
-        $this->having = null;
-        $this->order = null;
-        $this->limit = null;
-        $this->offset = null;
+        $this->cleanWith();
+        $this->cleanFrom();
+        $this->cleanSelect();
+        $this->cleanJoin();
+        $this->cleanWhere();
+        $this->cleanGroupBy();
+        $this->cleanHaving();
+        $this->cleanOrderBy();
+        $this->cleanLimit();
+        $this->cleanOffset();
+        $this->cleanLock();
+        return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function paginate(int $page, int $size)
+    public function paginate(int $page, int $size): static
     {
         $this->offset = $size * $page;
         $this->limit = $size;
@@ -81,10 +81,7 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         return $this;
     }
 
-    /**
-     * @return static
-     */
-    public function build()
+    public function build(): static
     {
         if ($this->built) {
             return $this;
@@ -93,6 +90,9 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         $this->params = [];
         if ($this->union) {
             $this->buildUnion();
+            $this->buildOrderBy();
+            $this->buildLimit();
+            $this->buildOffset();
         } else {
             $this->buildWith();
             $this->buildSelect();
@@ -101,20 +101,18 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
             $this->buildWhere();
             $this->buildGroupBy();
             $this->buildHaving();
+            $this->buildOrderBy();
+            $this->buildLimit();
+            $this->buildOffset();
+            $this->buildLock();
         }
-        $this->buildOrderBy();
-        $this->buildLimit();
-        $this->buildOffset();
         $this->built = true;
         return $this;
     }
 
     //region Data Fetching
 
-    /**
-     * @param mixed $column
-     */
-    public function column($column = null): array
+    public function column(mixed $column = null): array
     {
         if ($column !== null && $column !== '') {
             $prevSelect = $this->select;
@@ -129,11 +127,7 @@ abstract class AbstractSelectStatement extends AbstractStatement implements Quer
         return $this->parentColumn();
     }
 
-    /**
-     * @param mixed $column
-     * @return mixed
-     */
-    public function scalar($column = null)
+    public function scalar(mixed $column = null): mixed
     {
         if ($column !== null && $column !== '') {
             $prevSelect = $this->select;
