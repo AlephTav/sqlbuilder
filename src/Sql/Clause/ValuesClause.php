@@ -28,7 +28,7 @@ trait ValuesClause
         $copy->values = $this->values ? clone $this->values : null;
     }
 
-    protected function cleanValues(): void
+    public function cleanValues(): void
     {
         $this->values = null;
     }

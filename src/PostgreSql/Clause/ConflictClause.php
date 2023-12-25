@@ -127,7 +127,7 @@ trait ConflictClause
         $copy->assignmentPredicate = $this->assignmentPredicate ? clone $this->assignmentPredicate : null;
     }
 
-    protected function cleanConflict(): void
+    public function cleanConflict(): void
     {
         $this->indexColumn = null;
         $this->indexPredicate = null;

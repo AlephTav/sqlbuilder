@@ -112,19 +112,6 @@ class ConditionalExpression extends AbstractExpression
         return ":$param";
     }
 
-    protected function conditionToString(ConditionalExpression $expression): string
-    {
-        $this->addParams($expression->getParams());
-        return "($expression)";
-    }
-
-    protected function closureToString(Closure $expression): string
-    {
-        $conditions = new ConditionalExpression();
-        $expression($conditions);
-        return $this->convertOperandToString($conditions);
-    }
-
     protected function arrayToString(array $expression): string
     {
         $list = [];

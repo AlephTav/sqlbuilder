@@ -38,7 +38,7 @@ trait UpdateClause
         $copy->modifiers = $this->modifiers;
     }
 
-    protected function cleanUpdate(): void
+    public function cleanUpdate(): void
     {
         $this->parentCleanUpdate();
         $this->modifiers = '';

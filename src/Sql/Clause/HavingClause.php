@@ -38,7 +38,7 @@ trait HavingClause
         $copy->having = $this->having ? clone $this->having : null;
     }
 
-    protected function cleanHaving(): void
+    public function cleanHaving(): void
     {
         $this->having = null;
     }

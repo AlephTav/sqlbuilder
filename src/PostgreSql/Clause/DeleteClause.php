@@ -27,7 +27,7 @@ trait DeleteClause
         $copy->only = $this->only;
     }
 
-    protected function cleanDelete(): void
+    public function cleanDelete(): void
     {
         $this->parentCleanDelete();
         $this->only = false;

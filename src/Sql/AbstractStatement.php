@@ -33,10 +33,7 @@ abstract class AbstractStatement implements Statement
         return $this->db;
     }
 
-    /**
-     * @return static
-     */
-    abstract public function build();
+    abstract public function build(): static;
 
     public function getParams(): array
     {

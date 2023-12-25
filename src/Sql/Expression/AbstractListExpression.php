@@ -72,12 +72,6 @@ abstract class AbstractListExpression extends AbstractExpression
         return "(VALUES $expression)";
     }
 
-    protected function conditionToString(ConditionalExpression $expression): string
-    {
-        $this->addParams($expression->getParams());
-        return "($expression)";
-    }
-
     protected function arrayToString(array $expression): string
     {
         $list = [];

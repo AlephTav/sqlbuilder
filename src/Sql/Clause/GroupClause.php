@@ -28,7 +28,7 @@ trait GroupClause
         $copy->group = $this->group ? clone $this->group : null;
     }
 
-    protected function cleanGroupBy(): void
+    public function cleanGroupBy(): void
     {
         $this->group = null;
     }

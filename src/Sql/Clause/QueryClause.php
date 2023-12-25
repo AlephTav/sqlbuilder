@@ -30,7 +30,7 @@ trait QueryClause
         $copy->query = $this->query?->copy();
     }
 
-    protected function cleanQuery(): void
+    public function cleanQuery(): void
     {
         $this->query = null;
     }

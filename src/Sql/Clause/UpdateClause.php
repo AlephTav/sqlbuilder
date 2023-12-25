@@ -31,7 +31,7 @@ trait UpdateClause
         $copy->table = $this->table ? clone $this->table : null;
     }
 
-    protected function cleanUpdate(): void
+    public function cleanUpdate(): void
     {
         $this->table = null;
     }

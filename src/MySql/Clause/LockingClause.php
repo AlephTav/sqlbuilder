@@ -34,7 +34,7 @@ trait LockingClause
         $copy->lockInShareMode = $this->lockInShareMode;
     }
 
-    protected function cleanLock(): void
+    public function cleanLock(): void
     {
         $this->parentCleanLock();
         $this->lockInShareMode = false;

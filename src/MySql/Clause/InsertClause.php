@@ -63,7 +63,7 @@ trait InsertClause
         $copy->modifiers = $this->modifiers;
     }
 
-    protected function cleanInsert(): void
+    public function cleanInsert(): void
     {
         $this->parentCleanInsert();
         $this->modifiers = '';

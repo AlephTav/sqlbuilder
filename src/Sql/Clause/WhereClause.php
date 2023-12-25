@@ -38,7 +38,7 @@ trait WhereClause
         $copy->where = $this->where ? clone $this->where : null;
     }
 
-    protected function cleanWhere(): void
+    public function cleanWhere(): void
     {
         $this->where = null;
     }

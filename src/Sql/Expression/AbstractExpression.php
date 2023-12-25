@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AlephTools\SqlBuilder\Sql\Expression;
 
+use Closure;
 use AlephTools\SqlBuilder\Query;
 use function array_merge;
 
@@ -58,13 +59,26 @@ abstract class AbstractExpression
 
     protected function nullToString(): string
     {
-        return "NULL";
+        return 'NULL';
     }
 
     protected function rawExpressionToString(RawExpression $expression): string
     {
         $this->addParams($expression->getParams());
         return $expression->toSql();
+    }
+
+    protected function conditionToString(ConditionalExpression $expression): string
+    {
+        $this->addParams($expression->getParams());
+        return "($expression)";
+    }
+
+    protected function closureToString(Closure $expression): string
+    {
+        $conditions = new ConditionalExpression();
+        $expression($conditions);
+        return $this->conditionToString($conditions);
     }
 
     protected function queryToString(Query $expression): string

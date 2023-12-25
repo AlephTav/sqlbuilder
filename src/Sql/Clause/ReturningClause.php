@@ -28,7 +28,7 @@ trait ReturningClause
         $copy->returning = $this->returning ? clone $this->returning : null;
     }
 
-    protected function cleanReturning(): void
+    public function cleanReturning(): void
     {
         $this->returning = null;
     }

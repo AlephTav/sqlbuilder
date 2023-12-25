@@ -31,7 +31,7 @@ trait InsertClause
         $copy->table = $this->table ? clone $this->table : null;
     }
 
-    protected function cleanInsert(): void
+    public function cleanInsert(): void
     {
         $this->table = null;
     }

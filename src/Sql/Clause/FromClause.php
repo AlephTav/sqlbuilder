@@ -28,7 +28,7 @@ trait FromClause
         $copy->from = $this->from ? clone $this->from : null;
     }
 
-    protected function cleanFrom(): void
+    public function cleanFrom(): void
     {
         $this->from = null;
     }

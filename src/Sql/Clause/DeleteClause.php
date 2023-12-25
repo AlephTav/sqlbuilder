@@ -31,7 +31,7 @@ trait DeleteClause
         $copy->from = $this->from ? clone $this->from : null;
     }
 
-    protected function cleanDelete(): void
+    public function cleanDelete(): void
     {
         $this->from = null;
     }

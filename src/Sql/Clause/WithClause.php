@@ -36,7 +36,7 @@ trait WithClause
         $copy->with = $this->with ? clone $this->with : null;
     }
 
-    protected function cleanWith(): void
+    public function cleanWith(): void
     {
         $this->with = null;
     }

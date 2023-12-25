@@ -56,7 +56,7 @@ trait LockingClause
         $copy->lockOf = $this->lockOf ? clone $this->lockOf : null;
     }
 
-    protected function cleanLock(): void
+    public function cleanLock(): void
     {
         $this->lockStrength = '';
         $this->lockOption = '';

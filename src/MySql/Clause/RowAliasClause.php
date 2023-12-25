@@ -29,7 +29,7 @@ trait RowAliasClause
         $copy->rowAlias = $this->rowAlias;
     }
 
-    protected function cleanRowAlias(): void
+    public function cleanRowAlias(): void
     {
         $this->columnAliases = null;
         $this->rowAlias = null;

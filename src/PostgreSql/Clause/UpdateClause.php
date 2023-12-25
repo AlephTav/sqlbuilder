@@ -27,7 +27,7 @@ trait UpdateClause
         $copy->only = $this->only;
     }
 
-    protected function cleanUpdate(): void
+    public function cleanUpdate(): void
     {
         $this->parentCleanUpdate();
         $this->only = false;

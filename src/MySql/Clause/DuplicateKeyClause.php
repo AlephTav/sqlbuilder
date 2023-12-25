@@ -24,7 +24,7 @@ trait DuplicateKeyClause
             clone $this->assignmentOnUpdate : $this->assignmentOnUpdate;
     }
 
-    protected function cleanDuplicateKey(): void
+    public function cleanDuplicateKey(): void
     {
         $this->assignmentOnUpdate = null;
     }

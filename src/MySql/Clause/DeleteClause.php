@@ -43,7 +43,7 @@ trait DeleteClause
         $copy->modifiers = $this->modifiers;
     }
 
-    protected function cleanDelete(): void
+    public function cleanDelete(): void
     {
         $this->parentCleanDelete();
         $this->modifiers = '';

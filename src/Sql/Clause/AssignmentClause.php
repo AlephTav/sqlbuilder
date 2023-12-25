@@ -28,7 +28,7 @@ trait AssignmentClause
         $copy->assignment = $this->assignment ? clone $this->assignment : null;
     }
 
-    protected function cleanAssignment(): void
+    public function cleanAssignment(): void
     {
         $this->assignment = null;
     }

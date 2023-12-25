@@ -23,7 +23,7 @@ trait LimitClause
         $copy->limit = $this->limit;
     }
 
-    protected function cleanLimit(): void
+    public function cleanLimit(): void
     {
         $this->limit = null;
     }

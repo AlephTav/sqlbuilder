@@ -28,7 +28,7 @@ trait OrderClause
         $copy->order = $this->order ? clone $this->order : null;
     }
 
-    protected function cleanOrderBy(): void
+    public function cleanOrderBy(): void
     {
         $this->order = null;
     }

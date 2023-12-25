@@ -137,7 +137,7 @@ trait JoinClause
         $copy->join = $this->join ? clone $this->join : null;
     }
 
-    protected function cleanJoin(): void
+    public function cleanJoin(): void
     {
         $this->join = null;
     }

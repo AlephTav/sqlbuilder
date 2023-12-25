@@ -49,7 +49,7 @@ trait ValueListClause
         $copy->values = $this->values ? clone $this->values : null;
     }
 
-    protected function cleanValueList(): void
+    public function cleanValueList(): void
     {
         $this->values = null;
     }

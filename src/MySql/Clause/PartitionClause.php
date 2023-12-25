@@ -23,7 +23,7 @@ trait PartitionClause
         $copy->partition = $this->partition ? clone $this->partition : null;
     }
 
-    protected function cleanPartition(): void
+    public function cleanPartition(): void
     {
         $this->partition = null;
     }

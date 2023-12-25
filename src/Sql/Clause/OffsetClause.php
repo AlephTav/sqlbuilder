@@ -20,7 +20,7 @@ trait OffsetClause
         $copy->offset = $this->offset;
     }
 
-    protected function cleanOffset(): void
+    public function cleanOffset(): void
     {
         $this->offset = null;
     }

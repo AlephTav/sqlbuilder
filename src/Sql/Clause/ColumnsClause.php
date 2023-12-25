@@ -28,7 +28,7 @@ trait ColumnsClause
         $copy->columns = $this->columns ? clone $this->columns : null;
     }
 
-    protected function cleanColumns(): void
+    public function cleanColumns(): void
     {
         $this->columns = null;
     }

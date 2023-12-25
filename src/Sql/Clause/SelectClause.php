@@ -28,7 +28,7 @@ trait SelectClause
         $copy->select = $this->select ? clone $this->select : null;
     }
 
-    protected function cleanSelect(): void
+    public function cleanSelect(): void
     {
         $this->select = null;
     }

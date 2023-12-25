@@ -28,7 +28,7 @@ trait UsingClause
         $copy->using = $this->using ? clone $this->using : null;
     }
 
-    protected function cleanUsing(): void
+    public function cleanUsing(): void
     {
         $this->using = null;
     }
