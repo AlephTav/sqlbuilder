@@ -3,9 +3,9 @@
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\Command;
+use AlephTools\SqlBuilder\PostgreSql\Clause\MatchClause;
 use AlephTools\SqlBuilder\PostgreSql\Clause\MergeClause;
 use AlephTools\SqlBuilder\PostgreSql\Clause\OnClause;
-use AlephTools\SqlBuilder\PostgreSql\Clause\WhenMatchedClause;
 use AlephTools\SqlBuilder\Sql\AbstractStatement;
 use AlephTools\SqlBuilder\Sql\Clause\UsingClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
@@ -15,7 +15,7 @@ class MergeStatement extends AbstractStatement implements Command
     use MergeClause;
     use UsingClause;
     use OnClause;
-    use WhenMatchedClause;
+    use MatchClause;
     use WithClause;
 
     public function copy(): static

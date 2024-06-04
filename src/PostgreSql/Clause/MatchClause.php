@@ -3,12 +3,11 @@
 namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
 use AlephTools\SqlBuilder\PostgreSql\Expression\WhenMatchedExpression;
-use AlephTools\SqlBuilder\Sql\Expression\AssignmentExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
+use AlephTools\SqlBuilder\PostgreSql\InsertStatement;
+use AlephTools\SqlBuilder\PostgreSql\UpdateStatement;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
-use AlephTools\SqlBuilder\Sql\Expression\ValueListExpression;
 
-trait WhenMatchedClause
+trait MatchClause
 {
     protected ?WhenMatchedExpression $when = null;
 
@@ -22,7 +21,7 @@ trait WhenMatchedClause
     {
         $condition = new ConditionalExpression($column, $operator, $value);
         $this->when(
-            negative: false,
+            matched: false,
             condition: $condition,
         );
 
@@ -39,16 +38,16 @@ trait WhenMatchedClause
     {
         $condition = new ConditionalExpression($column, $operator, $value);
         $this->when(
-            negative: true,
+            matched: true,
             condition: $condition,
         );
         return $this;
     }
 
-    protected function when(mixed $negative = null, mixed $condition = null, mixed $assigment = null): static
+    protected function when(mixed $matched = null, mixed $condition = null, mixed $assigment = null): static
     {
-        $this->when = $this->when ?? $this->createWhenExpression();
-        $this->when->append($negative, $condition, $assigment);
+        $this->when ??= $this->createWhenExpression();
+        $this->when->append($matched, $condition, $assigment);
         $this->built = false;
         return $this;
     }
@@ -78,28 +77,10 @@ trait WhenMatchedClause
         return $this;
     }
 
-    public function thenUpdate(mixed $column, mixed $value = null): static
+    public function then(InsertStatement|UpdateStatement $statement): static
     {
-        $assigment = new AssignmentExpression($column, $value);
-        $this->addParams($assigment->getParams());
         $this->when(
-            assigment: 'UPDATE SET ' . $assigment->toSql(),
-        );
-
-        return $this;
-    }
-
-    public function thenInsert(mixed $columns, mixed $values = null): static
-    {
-        $columns = new ColumnListExpression($columns);
-        $this->addParams($columns->getParams());
-        if ($values !== null) {
-            $values = new ValueListExpression($values);
-            $this->addParams($values->getParams());
-        }
-
-        $this->when(
-            assigment: 'INSERT (' . $columns->toSql() . ')' . ($values ? ' VALUES (' . $values->toSql() . ')' : ''),
+            assigment: $statement,
         );
 
         return $this;
