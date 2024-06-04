@@ -2,26 +2,29 @@
 
 namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
-use AlephTools\SqlBuilder\PostgreSql\Expression\WhenMatchedExpression;
 use AlephTools\SqlBuilder\PostgreSql\InsertStatement;
 use AlephTools\SqlBuilder\PostgreSql\UpdateStatement;
+use AlephTools\SqlBuilder\Sql\Expression\ColumnListExpression;
 use AlephTools\SqlBuilder\Sql\Expression\ConditionalExpression;
+use AlephTools\SqlBuilder\Sql\Expression\RawExpression;
+use Closure;
 
 trait MatchClause
 {
-    protected ?WhenMatchedExpression $when = null;
+    protected string $matchSql = '';
+    protected array $matchParams = [];
 
     public function whenMatched(): static
     {
-        $this->when(false);
+        $this->append(true);
         return $this;
     }
 
     public function whenMatchedAnd(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         $condition = new ConditionalExpression($column, $operator, $value);
-        $this->when(
-            matched: false,
+        $this->append(
+            matched: true,
             condition: $condition,
         );
 
@@ -30,39 +33,24 @@ trait MatchClause
 
     public function whenNotMatched(): static
     {
-        $this->when(true);
+        $this->append(false);
         return $this;
     }
 
     public function whenNotMatchedAnd(mixed $column, mixed $operator = null, mixed $value = null): static
     {
         $condition = new ConditionalExpression($column, $operator, $value);
-        $this->when(
-            matched: true,
+        $this->append(
+            matched: false,
             condition: $condition,
         );
         return $this;
     }
 
-    protected function when(mixed $matched = null, mixed $condition = null, mixed $assigment = null): static
-    {
-        $this->when ??= $this->createWhenExpression();
-        $this->when->append($matched, $condition, $assigment);
-        $this->built = false;
-        return $this;
-    }
-
-    protected function createWhenExpression(): WhenMatchedExpression
-    {
-        return new WhenMatchedExpression();
-    }
-
     public function thenDoNothing(): static
     {
         $assigment = 'DO NOTHING';
-        $this->when(
-            assigment: $assigment
-        );
+        $this->addAssignment($assigment);
 
         return $this;
     }
@@ -70,37 +58,81 @@ trait MatchClause
     public function thenDelete(): static
     {
         $assigment = 'DELETE';
-        $this->when(
-            assigment: $assigment
-        );
+        $this->addAssignment($assigment);
 
         return $this;
     }
 
     public function then(InsertStatement|UpdateStatement $statement): static
     {
-        $this->when(
-            assigment: $statement,
-        );
+        $this->addAssignment($statement);
 
         return $this;
     }
 
+    protected function append(bool $matched, mixed $condition = null, mixed $assignment = null): static
+    {
+        $this->matchSql .= ' WHEN' . ($matched ? '' : ' NOT') . ' MATCHED';
+
+        $this->addCondition($condition);
+        $this->addAssignment($assignment);
+
+        return $this;
+    }
+
+    protected function addCondition(mixed $condition): void
+    {
+        if ($condition === null) {
+            return;
+        }
+        if ($this->isConditionalExpression($condition)) {
+            $conditions = new ConditionalExpression($condition);
+        } else {
+            $conditions = new ColumnListExpression($condition);
+        }
+
+        $this->matchSql .= " AND $conditions";
+        $this->matchParams = array_merge($this->matchParams, $conditions->getParams());
+        $this->addParams($conditions->getParams());
+    }
+
+    private function isConditionalExpression(mixed $expression): bool
+    {
+        return is_string($expression) ||
+            $expression instanceof RawExpression ||
+            $expression instanceof ConditionalExpression ||
+            $expression instanceof Closure;
+    }
+
+    protected function addAssignment(mixed $assigment): void
+    {
+        if ($assigment === null) {
+            return;
+        }
+
+        if (is_string($assigment)) {
+            $assigment = new RawExpression($assigment);
+        }
+
+        $this->matchParams = array_merge($this->matchParams, $assigment->getParams());
+        $this->matchSql .= " THEN $assigment";
+    }
+
     protected function cloneWhenMatched(mixed $copy): void
     {
-        $copy->conditional = $this->condition ? clone $this->condition : null;
+        $copy->matchSql = $this->matchSql;
+        $copy->matchParams = $this->matchParams;
     }
 
     public function cleanWhenMatched(): void
     {
-        $this->condition = null;
+        $this->matchSql = '';
+        $this->matchParams = [];
     }
 
     protected function buildWhenMatched(): void
     {
-        if ($this->when) {
-            $this->sql .= $this->when->toSql();
-            $this->addParams($this->when->getParams());
-        }
+        $this->sql .= $this->matchSql;
+        $this->addParams($this->matchParams);
     }
 }

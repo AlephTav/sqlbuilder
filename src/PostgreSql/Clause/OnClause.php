@@ -10,7 +10,7 @@ trait OnClause
 
     public function on(mixed $column, mixed $operator = null, mixed $value = null, string $connector = 'AND'): static
     {
-        $this->condition = $this->condition ?? $this->createConditionalExpression();
+        $this->condition ??= $this->createConditionalExpression();
         $this->condition->where($column, $operator, $value, $connector);
         return $this;
     }
