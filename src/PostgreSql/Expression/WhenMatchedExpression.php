@@ -10,16 +10,24 @@ use Closure;
 
 class WhenMatchedExpression extends AbstractExpression
 {
-    public function append(bool $negative = false, mixed $condition = null, mixed $assignment = null): static
+    public function append(mixed $negative = null, mixed $condition = null, mixed $assignment = null): static
     {
-        $this->sql .= ' WHEN' . ($negative ? ' NOT' : '') . ' MATCHED';
+        $this->addMatched($negative);
         $this->addCondition($condition);
         $this->addAssignment($assignment);
 
         return $this;
     }
 
-    public function addCondition(mixed $condition): void
+    protected function addMatched(mixed $negative): void
+    {
+        if (!is_bool($negative)) {
+            return;
+        }
+        $this->sql .= ' WHEN' . ($negative ? ' NOT' : '') . ' MATCHED';
+    }
+
+    protected function addCondition(mixed $condition): void
     {
         if ($condition === null) {
             return;
@@ -42,7 +50,7 @@ class WhenMatchedExpression extends AbstractExpression
             $expression instanceof Closure;
     }
 
-    public function addAssignment(mixed $assigment = null): void
+    protected function addAssignment(mixed $assigment = null): void
     {
         if ($assigment === null) {
             return;

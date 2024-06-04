@@ -14,7 +14,7 @@ trait WhenMatchedClause
 
     public function whenMatched(): static
     {
-        $this->when();
+        $this->when(false);
         return $this;
     }
 
@@ -22,6 +22,7 @@ trait WhenMatchedClause
     {
         $condition = new ConditionalExpression($column, $operator, $value);
         $this->when(
+            negative: false,
             condition: $condition,
         );
 
@@ -44,10 +45,10 @@ trait WhenMatchedClause
         return $this;
     }
 
-    protected function when(bool $negative = false, mixed $condition = null, mixed $thenPart = null): static
+    protected function when(mixed $negative = null, mixed $condition = null, mixed $assigment = null): static
     {
         $this->when = $this->when ?? $this->createWhenExpression();
-        $this->when->append($negative, $condition, $thenPart);
+        $this->when->append($negative, $condition, $assigment);
         $this->built = false;
         return $this;
     }
@@ -59,14 +60,20 @@ trait WhenMatchedClause
 
     public function thenDoNothing(): static
     {
-        $this->when->addAssignment('DO NOTHING');
+        $assigment = 'DO NOTHING';
+        $this->when(
+            assigment: $assigment
+        );
 
         return $this;
     }
 
     public function thenDelete(): static
     {
-        $this->when->addAssignment('DELETE');
+        $assigment = 'DELETE';
+        $this->when(
+            assigment: $assigment
+        );
 
         return $this;
     }
@@ -74,8 +81,11 @@ trait WhenMatchedClause
     public function thenUpdate(mixed $column, mixed $value = null): static
     {
         $assigment = new AssignmentExpression($column, $value);
-        $this->when->addAssignment('UPDATE SET ' . $assigment->toSql());
         $this->addParams($assigment->getParams());
+        $this->when(
+            assigment: 'UPDATE SET ' . $assigment->toSql(),
+        );
+
         return $this;
     }
 
@@ -88,7 +98,10 @@ trait WhenMatchedClause
             $this->addParams($values->getParams());
         }
 
-        $this->when->addAssignment('INSERT (' . $columns->toSql() . ')' . ($values ? ' VALUES (' . $values->toSql() . ')' : ''));
+        $this->when(
+            assigment: 'INSERT (' . $columns->toSql() . ')' . ($values ? ' VALUES (' . $values->toSql() . ')' : ''),
+        );
+
         return $this;
     }
 
