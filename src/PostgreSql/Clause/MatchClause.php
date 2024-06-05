@@ -93,7 +93,6 @@ trait MatchClause
 
         $this->matchSql .= " AND $conditions";
         $this->matchParams = array_merge($this->matchParams, $conditions->getParams());
-        $this->addParams($conditions->getParams());
     }
 
     private function isConditionalExpression(mixed $expression): bool
