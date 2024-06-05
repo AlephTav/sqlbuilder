@@ -676,7 +676,7 @@ class InsertStatementTest extends TestCase
         $st->clean();
 
         self::assertSame($executor, $st->getStatementExecutor());
-        self::assertSame('INSERT INTO DEFAULT VALUES', $st->toSql());
+        self::assertSame('INSERT DEFAULT VALUES', $st->toSql());
         self::assertEmpty($st->getParams());
     }
 

@@ -12,9 +12,9 @@ trait InsertClause
 
     protected function buildInsert(): void
     {
-        $this->sql .= 'INSERT INTO';
+        $this->sql .= 'INSERT';
         if ($this->table) {
-            $this->sql .= " $this->table";
+            $this->sql .= " INTO $this->table";
             $this->addParams($this->table->getParams());
         }
     }
