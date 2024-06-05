@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql\Clause;
 
 trait MergeClause
@@ -12,9 +14,9 @@ trait MergeClause
 
     protected function buildMerge(): void
     {
-        $this->sql .= 'MERGE INTO';
+        $this->sql .= 'MERGE';
         if ($this->table) {
-            $this->sql .= " $this->table";
+            $this->sql .= " INTO $this->table";
             $this->addParams($this->table->getParams());
         }
     }

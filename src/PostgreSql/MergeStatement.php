@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlephTools\SqlBuilder\PostgreSql;
 
 use AlephTools\SqlBuilder\Command;
@@ -12,11 +14,11 @@ use AlephTools\SqlBuilder\Sql\Clause\WithClause;
 
 class MergeStatement extends AbstractStatement implements Command
 {
+    use WithClause;
     use MergeClause;
     use UsingClause;
     use OnClause;
     use MatchClause;
-    use WithClause;
 
     public function copy(): static
     {
@@ -25,7 +27,7 @@ class MergeStatement extends AbstractStatement implements Command
         $this->cloneMerge($copy);
         $this->cloneUsing($copy);
         $this->cloneOn($copy);
-        $this->cloneWhenMatched($copy);
+        $this->cloneMatches($copy);
         return $this;
     }
 
@@ -35,7 +37,7 @@ class MergeStatement extends AbstractStatement implements Command
         $this->cleanMerge();
         $this->cleanUsing();
         $this->cleanOn();
-        $this->cleanWhenMatched();
+        $this->cleanMatches();
         return $this;
     }
 
@@ -44,16 +46,14 @@ class MergeStatement extends AbstractStatement implements Command
         if ($this->built) {
             return $this;
         }
-
         $this->sql = '';
         $this->params = [];
         $this->buildWith();
         $this->buildMerge();
         $this->buildUsing();
         $this->buildOn();
-        $this->buildWhenMatched();
+        $this->buildMatches();
         $this->built = true;
-
         return $this;
     }
 }
