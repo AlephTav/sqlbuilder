@@ -11,6 +11,7 @@ use AlephTools\SqlBuilder\PostgreSql\Clause\OnClause;
 use AlephTools\SqlBuilder\Sql\AbstractStatement;
 use AlephTools\SqlBuilder\Sql\Clause\UsingClause;
 use AlephTools\SqlBuilder\Sql\Clause\WithClause;
+use AlephTools\SqlBuilder\Sql\Execution\StatementExecution;
 
 class MergeStatement extends AbstractStatement implements Command
 {
@@ -19,6 +20,7 @@ class MergeStatement extends AbstractStatement implements Command
     use UsingClause;
     use OnClause;
     use MatchClause;
+    use StatementExecution;
 
     public function copy(): static
     {
