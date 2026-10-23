@@ -23,7 +23,7 @@ interface StatementExecutor
      *
      * @return mixed Returns the ID of the last inserted row or sequence value.
      */
-    public function insert(string $sql, array $params, string $sequence = null): mixed;
+    public function insert(string $sql, array $params, ?string $sequence = null): mixed;
 
     /**
      * Executes the SQL statement and returns all rows.
